@@ -46,7 +46,7 @@ npm install
 
 1. Go to [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
 2. Create a new app
-3. Set redirect URI to: `http://localhost:3000/api/auth/spotify/callback`
+3. Set redirect URI to: `http://localhost:3001/api/auth/spotify/callback`
 4. Copy your Client ID and Client Secret
 
 ### 4. Set up Supabase
@@ -82,7 +82,7 @@ NEXTAUTH_SECRET=your_nextauth_secret
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to see the application.
+Open [http://localhost:3001](http://localhost:3001) to see the application.
 
 ## Project Structure
 
