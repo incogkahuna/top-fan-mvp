@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getAccessToken, getSpotifyUser } from '@/lib/spotify'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase'
 
 export async function GET(request: NextRequest) {
   try {
@@ -22,8 +22,13 @@ export async function GET(request: NextRequest) {
     // Get user info from Spotify
     const spotifyUser = await getSpotifyUser(accessToken)
 
-    // Store or update user in Supabase
-    const { data: user, error: userError } = await supabase
+    if (!supabaseAdmin) {
+      console.error('Supabase admin client not available')
+      return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/?error=supabase_not_configured`)
+    }
+
+    // Store or update user in Supabase using admin client (bypasses RLS)
+    const { data: user, error: userError } = await supabaseAdmin
       .from('users')
       .upsert({
         spotify_id: spotifyUser.id,
@@ -42,8 +47,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/?error=database_error`)
     }
 
-    // Store tokens securely (in a real app, you'd want to encrypt these)
-    const { error: tokenError } = await supabase
+    // Store tokens securely using admin client (bypasses RLS)
+    const { error: tokenError } = await supabaseAdmin
       .from('user_tokens')
       .upsert({
         user_id: user.id,

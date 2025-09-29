@@ -50,24 +50,54 @@ export interface SpotifyRecentlyPlayed {
 export async function getSpotifyUser(accessToken: string): Promise<SpotifyUser> {
   spotifyApi.setAccessToken(accessToken)
   const user = await spotifyApi.getMe()
-  return user.body
+  return {
+    id: user.body.id,
+    display_name: user.body.display_name || 'Unknown User',
+    email: user.body.email || '',
+    images: (user.body.images || []).map(img => ({
+      url: img.url,
+      width: img.width || 0,
+      height: img.height || 0
+    }))
+  }
 }
 
-export async function getRecentlyPlayed(accessToken: string, limit = 50): Promise<SpotifyRecentlyPlayed> {
+// Refresh access token using refresh token
+export async function refreshAccessToken(refreshToken: string): Promise<{ access_token: string; expires_in: number }> {
+  const response = await fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': `Basic ${Buffer.from(`${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`).toString('base64')}`
+    },
+    body: new URLSearchParams({
+      grant_type: 'refresh_token',
+      refresh_token: refreshToken
+    })
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to refresh access token')
+  }
+
+  return await response.json()
+}
+
+export async function getRecentlyPlayed(accessToken: string, limit = 50): Promise<any> {
   spotifyApi.setAccessToken(accessToken)
   const recentlyPlayed = await spotifyApi.getMyRecentlyPlayedTracks({ limit })
   return recentlyPlayed.body
 }
 
-export async function getTopTracks(accessToken: string, timeRange = 'medium_term', limit = 50) {
+export async function getTopTracks(accessToken: string, timeRange = 'medium_term', limit = 50): Promise<any> {
   spotifyApi.setAccessToken(accessToken)
-  const topTracks = await spotifyApi.getMyTopTracks({ time_range: timeRange, limit })
+  const topTracks = await spotifyApi.getMyTopTracks({ time_range: timeRange as any, limit })
   return topTracks.body
 }
 
-export async function getTopArtists(accessToken: string, timeRange = 'medium_term', limit = 50) {
+export async function getTopArtists(accessToken: string, timeRange = 'medium_term', limit = 50): Promise<any> {
   spotifyApi.setAccessToken(accessToken)
-  const topArtists = await spotifyApi.getMyTopArtists({ time_range: timeRange, limit })
+  const topArtists = await spotifyApi.getMyTopArtists({ time_range: timeRange as any, limit })
   return topArtists.body
 }
 

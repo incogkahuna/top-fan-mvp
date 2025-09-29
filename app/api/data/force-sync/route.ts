@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getRecentlyPlayed, getTopTracks, refreshAccessToken } from '@/lib/spotify'
+import { getRecentlyPlayed, refreshAccessToken } from '@/lib/spotify'
 
 export async function POST(request: NextRequest) {
   try {
@@ -54,8 +54,8 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Fetch recently played tracks (limit to 20 for faster response)
-    const recentlyPlayed = await getRecentlyPlayed(accessToken, 20)
+    // Force sync - fetch ALL recent tracks (ignore last sync time)
+    const recentlyPlayed = await getRecentlyPlayed(accessToken, 50)
     
     if (!recentlyPlayed.items || recentlyPlayed.items.length === 0) {
       return NextResponse.json({ 
@@ -64,8 +64,8 @@ export async function POST(request: NextRequest) {
         message: 'No tracks found in Spotify API'
       })
     }
-
-    // Process ALL tracks (let upsert handle duplicates)
+    
+    // Process and store ALL listening data (force sync)
     const listeningData = recentlyPlayed.items.map((item: any) => ({
       user_id: userId,
       track_id: item.track.id,
@@ -104,10 +104,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ 
       success: true, 
       synced: listeningData.length,
-      totalPlays: playCount?.length || 0
+      totalPlays: playCount?.length || 0,
+      message: 'Force sync completed - all recent tracks processed'
     })
   } catch (error) {
-    console.error('Data sync error:', error)
-    return NextResponse.json({ error: 'Sync failed' }, { status: 500 })
+    console.error('Force sync error:', error)
+    return NextResponse.json({ error: 'Force sync failed' }, { status: 500 })
   }
 }

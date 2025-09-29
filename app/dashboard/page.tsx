@@ -1,47 +1,394 @@
 'use client'
 
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { Music, Trophy, TrendingUp, Clock, Award, Users } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Music, Trophy, TrendingUp, Clock, Award, Users, AlertCircle, RefreshCw } from 'lucide-react'
+import AutoSync from '@/components/AutoSync'
+
+interface UserStats {
+  totalPlays: number
+  rank: number
+  totalFans: number
+  weeklyPlays: number
+  favoriteArtist: string | null
+  topTrack: string | null
+  totalListeningHours: number
+  uniqueArtists: number
+  uniqueTracks: number
+  topArtists: Array<{ name: string; plays: number }>
+  topTracks: Array<{ name: string; artist: string; plays: number }>
+  recentActivity: Array<{
+    track_name: string
+    artist_name: string
+    played_at: string
+    duration_ms: number
+  }>
+}
+
+// Simple animated number component
+const AnimatedNumber = ({ value }: { value: number }) => {
+  return <span>{value.toLocaleString()}</span>
+}
+
+// Helper function to format time ago
+const getTimeAgo = (date: Date): string => {
+  const now = new Date()
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000)
+  
+  if (diffInSeconds < 60) {
+    return `${diffInSeconds}s ago`
+  } else if (diffInSeconds < 3600) {
+    const minutes = Math.floor(diffInSeconds / 60)
+    return `${minutes}m ago`
+  } else if (diffInSeconds < 86400) {
+    const hours = Math.floor(diffInSeconds / 3600)
+    return `${hours}h ago`
+  } else {
+    const days = Math.floor(diffInSeconds / 86400)
+    return `${days}d ago`
+  }
+}
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('overview')
+  const [userStats, setUserStats] = useState<UserStats | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [syncing, setSyncing] = useState(false)
+  const [syncMessage, setSyncMessage] = useState<string | null>(null)
+  const [userId, setUserId] = useState<string | null>(null)
+  const [isUpdating, setIsUpdating] = useState(false)
 
-  // Mock data
-  const mockStats = {
-    totalPlays: 1247,
-    rank: 15,
-    totalFans: 2847,
-    weeklyPlays: 89,
-    favoriteArtist: 'Taylor Swift',
-    topTrack: 'Anti-Hero',
-    achievements: [
-      { name: 'First Week Warrior', description: 'Listened 7 days in a row', earned: true },
-      { name: 'Super Fan', description: 'Top 10% of listeners', earned: true },
-      { name: 'Playlist Master', description: 'Created 5 playlists', earned: false },
-    ]
+  // Fetch real user data
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        setLoading(true)
+        
+        // Get user data first
+        const userResponse = await fetch('/api/test/user')
+        const userData = await userResponse.json()
+        
+        if (userData.error) {
+          throw new Error(userData.error)
+        }
+
+        const yourUser = userData.users.find((user: any) => user.display_name === 'Daniel Horgan')
+        
+        // Store user ID for auto-sync
+        if (yourUser) {
+          setUserId(yourUser.id)
+        }
+        
+        // Get detailed listening data
+        let listeningData = {
+          totalListeningHours: 0,
+          uniqueArtists: 0,
+          uniqueTracks: 0,
+          topArtists: [],
+          topTracks: [],
+          recentActivity: []
+        }
+
+        if (yourUser) {
+          const listeningResponse = await fetch(`/api/user/listening-data?userId=${yourUser.id}`)
+          const listeningResult = await listeningResponse.json()
+          
+          if (listeningResult.success) {
+            listeningData = listeningResult
+          }
+        }
+
+        setUserStats({
+          totalPlays: yourUser?.total_plays || 0,
+          rank: 1, // Simplified - just show rank 1 for now
+          totalFans: userData.userCount || 1,
+          weeklyPlays: 0, // Will need to implement weekly calculation
+          favoriteArtist: (listeningData.topArtists as any)[0]?.name || null,
+          topTrack: (listeningData.topTracks as any)[0]?.name || null,
+          totalListeningHours: listeningData.totalListeningHours,
+          uniqueArtists: listeningData.uniqueArtists,
+          uniqueTracks: listeningData.uniqueTracks,
+          topArtists: listeningData.topArtists,
+          topTracks: listeningData.topTracks,
+          recentActivity: listeningData.recentActivity
+        })
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load user data')
+        console.error('Dashboard data fetch error:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchUserData()
+  }, [])
+
+  // Handle data refresh from auto-sync (smooth update, no page refresh)
+  const handleDataUpdate = async () => {
+    try {
+      setIsUpdating(true)
+      
+      // Fetch updated data without page refresh
+      const userResponse = await fetch('/api/test/user')
+      const userData = await userResponse.json()
+      
+      if (userData.error) {
+        throw new Error(userData.error)
+      }
+
+      const yourUser = userData.users.find((user: any) => user.display_name === 'Daniel Horgan')
+      
+      if (yourUser) {
+        // Get updated listening data
+        const listeningResponse = await fetch(`/api/user/listening-data?userId=${yourUser.id}`)
+        const listeningResult = await listeningResponse.json()
+        
+        if (listeningResult.success) {
+          // Update stats with smooth animation
+          setUserStats(prevStats => ({
+            ...prevStats,
+            totalPlays: listeningResult.totalPlays || 0,
+            totalListeningHours: listeningResult.totalListeningHours || 0,
+            uniqueArtists: listeningResult.uniqueArtists || 0,
+            uniqueTracks: listeningResult.uniqueTracks || 0,
+            topArtists: listeningResult.topArtists || [],
+            topTracks: listeningResult.topTracks || [],
+            recentActivity: listeningResult.recentActivity || []
+          }))
+        }
+      }
+    } catch (error) {
+      console.error('Background update error:', error)
+    } finally {
+      // Hide update indicator after a short delay
+      setTimeout(() => setIsUpdating(false), 1000)
+    }
+  }
+
+  // Sync data from Spotify
+  const handleSyncData = async () => {
+    try {
+      setSyncing(true)
+      setSyncMessage('Syncing your Spotify data...')
+      
+      // First get the user ID
+      const userResponse = await fetch('/api/test/user')
+      const userData = await userResponse.json()
+      
+      if (userData.error) {
+        throw new Error(userData.error)
+      }
+
+      const yourUser = userData.users.find((user: any) => user.display_name === 'Daniel Horgan')
+      
+      if (!yourUser) {
+        throw new Error('User not found. Please make sure you\'re connected to Spotify.')
+      }
+
+      // Trigger the sync
+      const syncResponse = await fetch('/api/data/sync', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId: yourUser.id })
+      })
+
+      const syncResult = await syncResponse.json()
+      
+      if (syncResult.error) {
+        throw new Error(syncResult.error)
+      }
+
+      setSyncMessage(`✅ Sync complete! Added ${syncResult.synced} new tracks. Total plays: ${syncResult.totalPlays}`)
+      
+      // Smooth background update instead of page refresh
+      setTimeout(() => {
+        handleDataUpdate()
+      }, 1000)
+      
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error'
+      
+      if (errorMessage.includes('reconnect to Spotify')) {
+        setSyncMessage(`❌ Please reconnect to Spotify. Your session has expired.`)
+      } else {
+        setSyncMessage(`❌ Sync failed: ${errorMessage}`)
+      }
+      console.error('Sync error:', err)
+    } finally {
+      setSyncing(false)
+    }
+  }
+
+  // Force sync - bypasses the "no new tracks" check
+  const handleForceSync = async () => {
+    try {
+      setSyncing(true)
+      setSyncMessage('Force syncing all recent tracks...')
+      
+      // First get the user ID
+      const userResponse = await fetch('/api/test/user')
+      const userData = await userResponse.json()
+      
+      if (userData.error) {
+        throw new Error(userData.error)
+      }
+
+      const yourUser = userData.users.find((user: any) => user.display_name === 'Daniel Horgan')
+      
+      if (!yourUser) {
+        throw new Error('User not found. Please make sure you\'re connected to Spotify.')
+      }
+
+      // Call a force sync endpoint that ignores the last sync time
+      const syncResponse = await fetch('/api/data/force-sync', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId: yourUser.id })
+      })
+
+      const syncResult = await syncResponse.json()
+      
+      if (syncResult.error) {
+        throw new Error(syncResult.error)
+      }
+
+      setSyncMessage(`✅ Force sync complete! Processed ${syncResult.synced} tracks.`)
+      
+      // Smooth background update instead of page refresh
+      setTimeout(() => {
+        handleDataUpdate()
+      }, 1000)
+      
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error'
+      setSyncMessage(`❌ Force sync failed: ${errorMessage}`)
+      console.error('Force sync error:', err)
+    } finally {
+      setSyncing(false)
+    }
   }
 
   return (
     <div className="min-h-screen p-6">
+      {/* Auto-sync component */}
+      {userId && <AutoSync onDataUpdate={handleDataUpdate} userId={userId} />}
+      
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
+          <div className="flex items-center justify-between">
+            <div>
           <h1 className="text-4xl font-bold text-white mb-2">Your Dashboard</h1>
           <p className="text-gray-300">Track your progress and compete with other fans</p>
         </div>
 
+            {/* Sync Button */}
+            <div className="flex flex-col items-end space-y-2">
+              <div className="flex items-center space-x-3">
+                {/* Auto-sync indicator */}
+                <div className="flex items-center space-x-2 text-sm text-gray-400">
+                  <div className={`w-2 h-2 rounded-full animate-pulse ${isUpdating ? 'bg-spotify-green' : 'bg-green-500'}`}></div>
+                  <span>{isUpdating ? 'Updating...' : 'Auto-sync enabled'}</span>
+                </div>
+                
+                <div className="flex space-x-2">
+                  <button
+                    onClick={handleSyncData}
+                    disabled={syncing}
+                    className={`flex items-center space-x-2 px-3 py-2 rounded-lg font-semibold transition-colors ${
+                      syncing 
+                        ? 'bg-gray-600 cursor-not-allowed text-gray-400' 
+                        : 'bg-spotify-green hover:bg-green-600 text-white'
+                    }`}
+                  >
+                    {syncing ? (
+                      <>
+                        <RefreshCw className="h-4 w-4 animate-spin" />
+                        <span>Syncing...</span>
+                      </>
+                    ) : (
+                      <>
+                        <RefreshCw className="h-4 w-4" />
+                        <span>Sync Now</span>
+                      </>
+                    )}
+                  </button>
+                  
+                  <button
+                    onClick={handleForceSync}
+                    disabled={syncing}
+                    className={`flex items-center space-x-2 px-3 py-2 rounded-lg font-semibold transition-colors ${
+                      syncing 
+                        ? 'bg-gray-600 cursor-not-allowed text-gray-400' 
+                        : 'bg-blue-600 hover:bg-blue-700 text-white'
+                    }`}
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                    <span>Force</span>
+                  </button>
+                </div>
+              </div>
+              
+              {syncMessage && (
+                <div className={`text-sm px-3 py-1 rounded-md ${
+                  syncMessage.includes('✅') 
+                    ? 'bg-green-900/50 text-green-300' 
+                    : 'bg-red-900/50 text-red-300'
+                }`}>
+                  {syncMessage}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {loading && (
+          <div className="flex items-center justify-center py-12">
+            <div className="text-gray-400">Loading your dashboard...</div>
+          </div>
+        )}
+
+        {error && (
+          <div className="flex items-center justify-center py-12">
+            <div className="text-red-400 flex items-center space-x-2">
+              <AlertCircle className="h-5 w-5" />
+              <span>Error: {error}</span>
+            </div>
+          </div>
+        )}
+
+        {!loading && !error && userStats && (
+          <>
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="card"
+                animate={{ 
+                  opacity: 1, 
+                  y: 0,
+                  scale: isUpdating ? [1, 1.02, 1] : 1
+                }}
+                transition={{ 
+                  duration: 0.5, 
+                  repeat: isUpdating ? Infinity : 0,
+                  repeatType: "reverse"
+                }}
+                className={`card transition-all duration-300 ${isUpdating ? 'ring-2 ring-spotify-green/50 bg-spotify-green/5' : ''}`}
           >
             <div className="flex items-center justify-between">
               <div>
+                    <div className="flex items-center space-x-2">
                 <p className="text-gray-400 text-sm">Total Plays</p>
-                <p className="text-3xl font-bold text-white">{mockStats.totalPlays.toLocaleString()}</p>
+                      {isUpdating && <div className="w-2 h-2 bg-spotify-green rounded-full animate-pulse"></div>}
+                    </div>
+                    <p className="text-3xl font-bold text-white">
+                      <AnimatedNumber value={userStats.totalPlays} />
+                    </p>
               </div>
               <Music className="h-8 w-8 text-spotify-green" />
             </div>
@@ -49,31 +396,60 @@ export default function Dashboard() {
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="card"
+                animate={{ 
+                  opacity: 1, 
+                  y: 0,
+                  scale: isUpdating ? [1, 1.02, 1] : 1
+                }}
+                transition={{ 
+                  delay: 0.1,
+                  duration: 0.5, 
+                  repeat: isUpdating ? Infinity : 0,
+                  repeatType: "reverse"
+                }}
+                className={`card transition-all duration-300 ${isUpdating ? 'ring-2 ring-spotify-green/50 bg-spotify-green/5' : ''}`}
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-400 text-sm">Current Rank</p>
-                <p className="text-3xl font-bold text-white">#{mockStats.rank}</p>
+                    <div className="flex items-center space-x-2">
+                      <p className="text-gray-400 text-sm">Listening Time</p>
+                      {isUpdating && <div className="w-2 h-2 bg-spotify-green rounded-full animate-pulse"></div>}
+                    </div>
+                    <p className="text-3xl font-bold text-white">
+                      <AnimatedNumber value={Math.round(userStats.totalListeningHours * 10) / 10} />
+                      <span className="text-lg text-gray-400">h</span>
+                    </p>
               </div>
-              <Trophy className="h-8 w-8 text-yellow-400" />
+                  <Clock className="h-8 w-8 text-blue-400" />
             </div>
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="card"
+                animate={{ 
+                  opacity: 1, 
+                  y: 0,
+                  scale: isUpdating ? [1, 1.02, 1] : 1
+                }}
+                transition={{ 
+                  delay: 0.2,
+                  duration: 0.5, 
+                  repeat: isUpdating ? Infinity : 0,
+                  repeatType: "reverse"
+                }}
+                className={`card transition-all duration-300 ${isUpdating ? 'ring-2 ring-spotify-green/50 bg-spotify-green/5' : ''}`}
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-400 text-sm">Weekly Plays</p>
-                <p className="text-3xl font-bold text-white">{mockStats.weeklyPlays}</p>
+                    <div className="flex items-center space-x-2">
+                      <p className="text-gray-400 text-sm">Unique Artists</p>
+                      {isUpdating && <div className="w-2 h-2 bg-spotify-green rounded-full animate-pulse"></div>}
+                    </div>
+                    <p className="text-3xl font-bold text-white">
+                      <AnimatedNumber value={userStats.uniqueArtists} />
+                    </p>
               </div>
-              <TrendingUp className="h-8 w-8 text-blue-400" />
+                  <Users className="h-8 w-8 text-purple-400" />
             </div>
           </motion.div>
 
@@ -85,14 +461,18 @@ export default function Dashboard() {
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-400 text-sm">Total Fans</p>
-                <p className="text-3xl font-bold text-white">{mockStats.totalFans.toLocaleString()}</p>
+                    <p className="text-gray-400 text-sm">Current Rank</p>
+                    <p className="text-3xl font-bold text-white">#{userStats.rank}</p>
               </div>
-              <Users className="h-8 w-8 text-purple-400" />
+                  <Trophy className="h-8 w-8 text-yellow-400" />
             </div>
           </motion.div>
         </div>
+          </>
+        )}
 
+        {!loading && !error && userStats && (
+          <>
         {/* Tabs */}
         <div className="flex space-x-1 mb-8 bg-white/10 rounded-lg p-1">
           {[
@@ -116,22 +496,88 @@ export default function Dashboard() {
 
         {/* Tab Content */}
         {activeTab === 'overview' && (
+              <div className="space-y-8">
+                {/* Recently Played Section */}
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="card"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-xl font-semibold text-white">Recently Played</h3>
+                    <div className="text-sm text-gray-400">
+                      {userStats.recentActivity.length} tracks
+                    </div>
+                  </div>
+                  {userStats.recentActivity.length > 0 ? (
+                    <div className="relative">
+                      <div className="max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 space-y-3 pr-2">
+                        {userStats.recentActivity.map((activity, index) => {
+                        const playedAt = new Date(activity.played_at)
+                        const timeAgo = getTimeAgo(playedAt)
+                        const duration = Math.round(activity.duration_ms / 1000 / 60 * 10) / 10
+                        
+                        return (
+                          <div key={index} className="flex items-center justify-between py-3 px-4 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
+                            <div className="flex items-center space-x-4">
+                              <div className="w-10 h-10 bg-gradient-to-br from-spotify-green to-blue-500 rounded-full flex items-center justify-center">
+                                <Music className="h-5 w-5 text-white" />
+                              </div>
+                              <div className="flex-1">
+                                <p className="text-white font-medium">{activity.track_name}</p>
+                                <p className="text-gray-400 text-sm">{activity.artist_name}</p>
+                                <p className="text-gray-500 text-xs">{timeAgo}</p>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-spotify-green font-semibold">{duration}m</p>
+                              <p className="text-gray-400 text-xs">duration</p>
+                            </div>
+                          </div>
+                        )
+                        })}
+                      </div>
+                      {/* Fade effect at bottom to indicate more content */}
+                      <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-gray-900/80 to-transparent pointer-events-none"></div>
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-gray-500">
+                      <Clock className="h-12 w-12 mx-auto mb-4" />
+                      <p>No recent activity. Start listening to music!</p>
+                    </div>
+                  )}
+                </motion.div>
+
           <div className="grid lg:grid-cols-2 gap-8">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               className="card"
             >
-              <h3 className="text-xl font-semibold text-white mb-4">Top Artist</h3>
-              <div className="flex items-center space-x-4">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                  <Music className="h-8 w-8 text-white" />
+                  <h3 className="text-xl font-semibold text-white mb-4">Top Artists</h3>
+                  {userStats.topArtists.length > 0 ? (
+                    <div className="space-y-3">
+                      {userStats.topArtists.slice(0, 3).map((artist, index) => (
+                        <div key={artist.name} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                              <span className="text-white font-bold text-sm">#{index + 1}</span>
                 </div>
                 <div>
-                  <p className="text-lg font-semibold text-white">{mockStats.favoriteArtist}</p>
-                  <p className="text-gray-400">Your #1 artist this month</p>
+                              <p className="font-semibold text-white">{artist.name}</p>
+                              <p className="text-gray-400 text-sm">{artist.plays} plays</p>
+                            </div>
                 </div>
               </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-gray-400">
+                      <Music className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                      <p>No listening data yet</p>
+                      <p className="text-sm">Sync your Spotify data to see your top artists</p>
+                    </div>
+                  )}
             </motion.div>
 
             <motion.div
@@ -139,17 +585,32 @@ export default function Dashboard() {
               animate={{ opacity: 1, x: 0 }}
               className="card"
             >
-              <h3 className="text-xl font-semibold text-white mb-4">Top Track</h3>
-              <div className="flex items-center space-x-4">
-                <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-blue-500 rounded-full flex items-center justify-center">
-                  <Music className="h-8 w-8 text-white" />
+                  <h3 className="text-xl font-semibold text-white mb-4">Top Tracks</h3>
+                  {userStats.topTracks.length > 0 ? (
+                    <div className="space-y-3">
+                      {userStats.topTracks.slice(0, 3).map((track, index) => (
+                        <div key={`${track.name}-${track.artist}`} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-blue-500 rounded-full flex items-center justify-center">
+                              <span className="text-white font-bold text-sm">#{index + 1}</span>
                 </div>
                 <div>
-                  <p className="text-lg font-semibold text-white">{mockStats.topTrack}</p>
-                  <p className="text-gray-400">Most played this week</p>
+                              <p className="font-semibold text-white">{track.name}</p>
+                              <p className="text-gray-400 text-sm">{track.artist} • {track.plays} plays</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-gray-400">
+                      <Music className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                      <p>No listening data yet</p>
+                      <p className="text-sm">Sync your Spotify data to see your top tracks</p>
+                    </div>
+                  )}
+                </motion.div>
                 </div>
-              </div>
-            </motion.div>
           </div>
         )}
 
@@ -157,26 +618,14 @@ export default function Dashboard() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {mockStats.achievements.map((achievement, index) => (
-              <div
-                key={index}
-                className={`card ${achievement.earned ? 'border-spotify-green' : 'border-gray-600'}`}
+                className="card"
               >
-                <div className="flex items-center space-x-3 mb-3">
-                  <Award className={`h-6 w-6 ${achievement.earned ? 'text-spotify-green' : 'text-gray-500'}`} />
-                  <h4 className="font-semibold text-white">{achievement.name}</h4>
+                <h3 className="text-xl font-semibold text-white mb-4">Achievements</h3>
+                <div className="text-center py-12 text-gray-400">
+                  <Award className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                  <p>No achievements yet</p>
+                  <p className="text-sm">Start listening to unlock achievements!</p>
                 </div>
-                <p className="text-gray-400 text-sm">{achievement.description}</p>
-                {achievement.earned && (
-                  <div className="mt-3 flex items-center text-spotify-green text-sm">
-                    <Trophy className="h-4 w-4 mr-1" />
-                    Earned
-                  </div>
-                )}
-              </div>
-            ))}
           </motion.div>
         )}
 
@@ -187,23 +636,43 @@ export default function Dashboard() {
             className="card"
           >
             <h3 className="text-xl font-semibold text-white mb-4">Recent Activity</h3>
+                {userStats.recentActivity.length > 0 ? (
             <div className="space-y-4">
-              {[
-                { action: 'Listened to Anti-Hero', time: '2 hours ago', points: '+5' },
-                { action: 'Climbed to rank #15', time: '1 day ago', points: '+10' },
-                { action: 'Earned First Week Warrior badge', time: '2 days ago', points: '+25' },
-                { action: 'Listened to 1989 (Taylor\'s Version)', time: '3 days ago', points: '+3' },
-              ].map((activity, index) => (
+                    {userStats.recentActivity.map((activity, index) => {
+                      const playedAt = new Date(activity.played_at)
+                      const timeAgo = playedAt.toLocaleString()
+                      const duration = Math.round(activity.duration_ms / 1000 / 60 * 10) / 10
+                      
+                      return (
                 <div key={index} className="flex items-center justify-between py-3 border-b border-white/10 last:border-b-0">
+                          <div className="flex items-center space-x-4">
+                            <div className="w-10 h-10 bg-gradient-to-br from-spotify-green to-blue-500 rounded-full flex items-center justify-center">
+                              <Music className="h-5 w-5 text-white" />
+                            </div>
                   <div>
-                    <p className="text-white">{activity.action}</p>
-                    <p className="text-gray-400 text-sm">{activity.time}</p>
+                              <p className="text-white font-medium">{activity.track_name}</p>
+                              <p className="text-gray-400 text-sm">{activity.artist_name}</p>
+                              <p className="text-gray-500 text-xs">{timeAgo}</p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-spotify-green font-semibold">{duration}m</p>
+                            <p className="text-gray-400 text-xs">duration</p>
+                          </div>
+                        </div>
+                      )
+                    })}
                   </div>
-                  <span className="text-spotify-green font-semibold">{activity.points}</span>
+                ) : (
+                  <div className="text-center py-12 text-gray-400">
+                    <Clock className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                    <p>No recent activity</p>
+                    <p className="text-sm">Sync your Spotify data to see your listening history</p>
                 </div>
-              ))}
-            </div>
+                )}
           </motion.div>
+            )}
+          </>
         )}
       </div>
     </div>

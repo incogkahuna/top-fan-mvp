@@ -3,6 +3,10 @@ import { supabase } from '@/lib/supabase'
 
 export async function GET(request: NextRequest) {
   try {
+    if (!supabase) {
+      return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 })
+    }
+
     const { searchParams } = new URL(request.url)
     const userId = searchParams.get('userId')
     const type = searchParams.get('type')
@@ -39,6 +43,10 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    if (!supabase) {
+      return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 })
+    }
+
     const { userId, type, title, message } = await request.json()
 
     if (!userId || !type || !title || !message) {
@@ -71,6 +79,10 @@ export async function POST(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
+    if (!supabase) {
+      return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 })
+    }
+
     const { notificationId, isRead } = await request.json()
 
     if (!notificationId || typeof isRead !== 'boolean') {

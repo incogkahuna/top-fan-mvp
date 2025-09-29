@@ -3,6 +3,10 @@ import { supabase } from '@/lib/supabase'
 
 export async function GET() {
   try {
+    if (!supabase) {
+      return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 })
+    }
+
     // Test if all required tables exist
     const requiredTables = ['users', 'listening_data', 'prizes', 'notifications', 'achievements']
     
