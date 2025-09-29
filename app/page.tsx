@@ -1,13 +1,37 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Music, Trophy, Users, BarChart3, Bell, Award } from 'lucide-react'
 import Link from 'next/link'
-import SpotifyConnect from '@/components/SpotifyConnect'
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/lib/auth'
 
 export default function Home() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const { user, loading } = useAuth()
+  const router = useRouter()
+
+  // Redirect to dashboard if logged in
+  useEffect(() => {
+    if (!loading && user) {
+      router.push('/dashboard')
+    }
+  }, [user, loading, router])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-spotify-green border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-white text-lg">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (user) {
+    return null // Will redirect to dashboard
+  }
 
   return (
     <div className="min-h-screen">
@@ -18,18 +42,9 @@ export default function Home() {
           <span className="text-2xl font-bold text-white">Top Fan</span>
         </div>
         <div className="flex space-x-4">
-          {!isLoggedIn ? (
-            <SpotifyConnect onConnect={() => setIsLoggedIn(true)} />
-          ) : (
-            <div className="flex space-x-2">
-              <Link href="/dashboard" className="btn-secondary">
-                Dashboard
-              </Link>
-              <Link href="/leaderboard" className="btn-secondary">
-                Leaderboard
-              </Link>
-            </div>
-          )}
+          <Link href="/login" className="btn-primary">
+            Get Started
+          </Link>
         </div>
       </nav>
 
@@ -48,7 +63,9 @@ export default function Home() {
             Gamify your Spotify listening experience. Compete with other fans, 
             earn rewards, and help your favorite artists understand their audience.
           </p>
-          <SpotifyConnect className="text-lg px-8 py-3" />
+          <Link href="/login" className="btn-primary text-lg px-8 py-3">
+            Connect with Spotify
+          </Link>
         </motion.div>
 
         {/* Feature Cards */}

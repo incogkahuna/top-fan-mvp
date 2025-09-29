@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Music, Trophy, TrendingUp, Clock, Award, Users, AlertCircle, RefreshCw } from 'lucide-react'
 import AutoSync from '@/components/AutoSync'
+import CardLayout from './card-layout'
+import ProtectedRoute from '@/components/ProtectedRoute'
+import { useAuth } from '@/lib/auth'
 
 interface UserStats {
   totalPlays: number
@@ -49,7 +52,66 @@ const getTimeAgo = (date: Date): string => {
   }
 }
 
-export default function Dashboard() {
+// Expandable card component
+const ExpandableCard = ({ 
+  id, 
+  title, 
+  icon, 
+  preview, 
+  expandedContent, 
+  isExpanded, 
+  onToggle 
+}: {
+  id: string
+  title: string
+  icon: React.ReactNode
+  preview: React.ReactNode
+  expandedContent: React.ReactNode
+  isExpanded: boolean
+  onToggle: () => void
+}) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="card cursor-pointer hover:bg-white/15 transition-all duration-300"
+      onClick={onToggle}
+    >
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center space-x-3">
+          {icon}
+          <h3 className="text-xl font-semibold text-white">{title}</h3>
+        </div>
+        <motion.div
+          animate={{ rotate: isExpanded ? 180 : 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </motion.div>
+      </div>
+      
+      {!isExpanded && preview}
+      
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            {expandedContent}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  )
+}
+
+function DashboardContent() {
   const [activeTab, setActiveTab] = useState('overview')
   const [userStats, setUserStats] = useState<UserStats | null>(null)
   const [loading, setLoading] = useState(true)
@@ -58,6 +120,8 @@ export default function Dashboard() {
   const [syncMessage, setSyncMessage] = useState<string | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
   const [isUpdating, setIsUpdating] = useState(false)
+  const [expandedCard, setExpandedCard] = useState<string | null>(null)
+  const { user } = useAuth()
 
   // Fetch real user data
   useEffect(() => {
@@ -73,7 +137,7 @@ export default function Dashboard() {
           throw new Error(userData.error)
         }
 
-        const yourUser = userData.users.find((user: any) => user.display_name === 'Daniel Horgan')
+        const yourUser = userData.users.find((user: any) => user.display_name === user?.display_name)
         
         // Store user ID for auto-sync
         if (yourUser) {
@@ -146,16 +210,19 @@ export default function Dashboard() {
         
         if (listeningResult.success) {
           // Update stats with smooth animation
-          setUserStats(prevStats => ({
-            ...prevStats,
-            totalPlays: listeningResult.totalPlays || 0,
-            totalListeningHours: listeningResult.totalListeningHours || 0,
-            uniqueArtists: listeningResult.uniqueArtists || 0,
-            uniqueTracks: listeningResult.uniqueTracks || 0,
-            topArtists: listeningResult.topArtists || [],
-            topTracks: listeningResult.topTracks || [],
-            recentActivity: listeningResult.recentActivity || []
-          }))
+          setUserStats(prevStats => {
+            if (!prevStats) return prevStats
+            return {
+              ...prevStats,
+              totalPlays: listeningResult.totalPlays || 0,
+              totalListeningHours: listeningResult.totalListeningHours || 0,
+              uniqueArtists: listeningResult.uniqueArtists || 0,
+              uniqueTracks: listeningResult.uniqueTracks || 0,
+              topArtists: listeningResult.topArtists || [],
+              topTracks: listeningResult.topTracks || [],
+              recentActivity: listeningResult.recentActivity || []
+            }
+          })
         }
       }
     } catch (error) {
@@ -494,125 +561,16 @@ export default function Dashboard() {
           ))}
         </div>
 
-        {/* Tab Content */}
-        {activeTab === 'overview' && (
-              <div className="space-y-8">
-                {/* Recently Played Section */}
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="card"
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xl font-semibold text-white">Recently Played</h3>
-                    <div className="text-sm text-gray-400">
-                      {userStats.recentActivity.length} tracks
-                    </div>
-                  </div>
-                  {userStats.recentActivity.length > 0 ? (
-                    <div className="relative">
-                      <div className="max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 space-y-3 pr-2">
-                        {userStats.recentActivity.map((activity, index) => {
-                        const playedAt = new Date(activity.played_at)
-                        const timeAgo = getTimeAgo(playedAt)
-                        const duration = Math.round(activity.duration_ms / 1000 / 60 * 10) / 10
-                        
-                        return (
-                          <div key={index} className="flex items-center justify-between py-3 px-4 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
-                            <div className="flex items-center space-x-4">
-                              <div className="w-10 h-10 bg-gradient-to-br from-spotify-green to-blue-500 rounded-full flex items-center justify-center">
-                                <Music className="h-5 w-5 text-white" />
-                              </div>
-                              <div className="flex-1">
-                                <p className="text-white font-medium">{activity.track_name}</p>
-                                <p className="text-gray-400 text-sm">{activity.artist_name}</p>
-                                <p className="text-gray-500 text-xs">{timeAgo}</p>
-                              </div>
-                            </div>
-                            <div className="text-right">
-                              <p className="text-spotify-green font-semibold">{duration}m</p>
-                              <p className="text-gray-400 text-xs">duration</p>
-                            </div>
-                          </div>
-                        )
-                        })}
-                      </div>
-                      {/* Fade effect at bottom to indicate more content */}
-                      <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-gray-900/80 to-transparent pointer-events-none"></div>
-                    </div>
-                  ) : (
-                    <div className="text-center py-8 text-gray-500">
-                      <Clock className="h-12 w-12 mx-auto mb-4" />
-                      <p>No recent activity. Start listening to music!</p>
-                    </div>
-                  )}
-                </motion.div>
+            {/* Tab Content */}
+            {activeTab === 'overview' && userStats && (
+              <CardLayout userStats={userStats} />
+            )}
 
-          <div className="grid lg:grid-cols-2 gap-8">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="card"
-            >
-                  <h3 className="text-xl font-semibold text-white mb-4">Top Artists</h3>
-                  {userStats.topArtists.length > 0 ? (
-                    <div className="space-y-3">
-                      {userStats.topArtists.slice(0, 3).map((artist, index) => (
-                        <div key={artist.name} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
-                          <div className="flex items-center space-x-3">
-                            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                              <span className="text-white font-bold text-sm">#{index + 1}</span>
-                </div>
-                <div>
-                              <p className="font-semibold text-white">{artist.name}</p>
-                              <p className="text-gray-400 text-sm">{artist.plays} plays</p>
-                            </div>
-                </div>
+            {activeTab === 'overview' && !userStats && (
+              <div className="text-center py-12">
+                <div className="text-gray-400">Loading your dashboard...</div>
               </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-center py-8 text-gray-400">
-                      <Music className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                      <p>No listening data yet</p>
-                      <p className="text-sm">Sync your Spotify data to see your top artists</p>
-                    </div>
-                  )}
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="card"
-            >
-                  <h3 className="text-xl font-semibold text-white mb-4">Top Tracks</h3>
-                  {userStats.topTracks.length > 0 ? (
-                    <div className="space-y-3">
-                      {userStats.topTracks.slice(0, 3).map((track, index) => (
-                        <div key={`${track.name}-${track.artist}`} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
-                          <div className="flex items-center space-x-3">
-                            <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-blue-500 rounded-full flex items-center justify-center">
-                              <span className="text-white font-bold text-sm">#{index + 1}</span>
-                </div>
-                <div>
-                              <p className="font-semibold text-white">{track.name}</p>
-                              <p className="text-gray-400 text-sm">{track.artist} • {track.plays} plays</p>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-center py-8 text-gray-400">
-                      <Music className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                      <p>No listening data yet</p>
-                      <p className="text-sm">Sync your Spotify data to see your top tracks</p>
-                    </div>
-                  )}
-                </motion.div>
-                </div>
-          </div>
-        )}
+            )}
 
         {activeTab === 'achievements' && (
           <motion.div
@@ -676,5 +634,13 @@ export default function Dashboard() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function Dashboard() {
+  return (
+    <ProtectedRoute>
+      <DashboardContent />
+    </ProtectedRoute>
   )
 }

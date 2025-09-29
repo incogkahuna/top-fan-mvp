@@ -78,9 +78,7 @@ export async function GET(request: NextRequest) {
 
     // Get unique artists count
     const uniqueArtists = new Set(listeningData?.map(track => track.artist_name)).size
-
-    // Get unique tracks count
-    const uniqueTracks = new Set(listeningData?.map(track => `${track.track_name} - ${track.artist_name}`)).size
+    const uniqueTracks = new Set(listeningData?.map(track => track.track_name)).size
 
     return NextResponse.json({
       success: true,
@@ -90,11 +88,10 @@ export async function GET(request: NextRequest) {
       uniqueTracks,
       topArtists,
       topTracks,
-      recentActivity,
-      timestamp: new Date().toISOString()
+      recentActivity
     })
   } catch (error) {
-    console.error('Listening data API error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    console.error('Listening data error:', error)
+    return NextResponse.json({ error: 'Failed to fetch listening data' }, { status: 500 })
   }
 }
