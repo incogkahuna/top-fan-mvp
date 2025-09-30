@@ -117,10 +117,19 @@ export default function CardLayout({ userStats }: CardLayoutProps) {
         title="Recently Played"
         icon={<Music className="h-6 w-6 text-spotify-green" />}
         preview={
-          <div className="text-center py-4">
-            <p className="text-2xl font-bold text-white">{userStats.recentActivity.length}</p>
-            <p className="text-gray-400 text-sm">recent tracks</p>
-            <p className="text-gray-500 text-xs mt-2">Click to see full history</p>
+          <div className="space-y-2 mt-4">
+            <div className="text-center">
+              <p className="text-3xl font-bold text-white">{userStats.recentActivity.length}</p>
+              <p className="text-gray-300 text-sm">recent tracks</p>
+            </div>
+            {userStats.recentActivity.slice(0, 3).map((activity, index) => (
+              <div key={index} className="flex items-center justify-between py-2 px-3 bg-white/5 rounded-lg">
+                <div className="flex-1">
+                  <p className="text-white font-medium text-sm truncate">{activity.track_name}</p>
+                  <p className="text-gray-400 text-xs">{activity.artist_name}</p>
+                </div>
+              </div>
+            ))}
           </div>
         }
         expandedContent={
@@ -171,10 +180,20 @@ export default function CardLayout({ userStats }: CardLayoutProps) {
         title="Top Artists"
         icon={<Users className="h-6 w-6 text-purple-400" />}
         preview={
-          <div className="text-center py-4">
-            <p className="text-2xl font-bold text-white">{userStats.topArtists.length}</p>
-            <p className="text-gray-400 text-sm">top artists</p>
-            <p className="text-gray-500 text-xs mt-2">Click to see rankings</p>
+          <div className="space-y-2 mt-4">
+            <div className="text-center">
+              <p className="text-3xl font-bold text-white">{userStats.topArtists.length}</p>
+              <p className="text-gray-300 text-sm">top artists</p>
+            </div>
+            {userStats.topArtists.slice(0, 3).map((artist, index) => (
+              <div key={index} className="flex items-center justify-between py-2 px-3 bg-white/5 rounded-lg">
+                <div className="flex items-center space-x-2">
+                  <span className="text-spotify-green font-bold">#{index + 1}</span>
+                  <p className="text-white font-medium text-sm">{artist.name}</p>
+                </div>
+                <span className="text-gray-400 text-xs">{artist.plays} plays</span>
+              </div>
+            ))}
           </div>
         }
         expandedContent={
@@ -211,10 +230,23 @@ export default function CardLayout({ userStats }: CardLayoutProps) {
         title="Top Tracks"
         icon={<Music className="h-6 w-6 text-green-400" />}
         preview={
-          <div className="text-center py-4">
-            <p className="text-2xl font-bold text-white">{userStats.topTracks.length}</p>
-            <p className="text-gray-400 text-sm">top tracks</p>
-            <p className="text-gray-500 text-xs mt-2">Click to see rankings</p>
+          <div className="space-y-2 mt-4">
+            <div className="text-center">
+              <p className="text-3xl font-bold text-white">{userStats.topTracks.length}</p>
+              <p className="text-gray-300 text-sm">top tracks</p>
+            </div>
+            {userStats.topTracks.slice(0, 3).map((track, index) => (
+              <div key={index} className="flex items-center justify-between py-2 px-3 bg-white/5 rounded-lg">
+                <div className="flex items-center space-x-2 flex-1">
+                  <span className="text-spotify-green font-bold">#{index + 1}</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white font-medium text-sm truncate">{track.name}</p>
+                    <p className="text-gray-400 text-xs">{track.artist}</p>
+                  </div>
+                </div>
+                <span className="text-gray-400 text-xs ml-2">{track.plays}</span>
+              </div>
+            ))}
           </div>
         }
         expandedContent={
@@ -251,10 +283,23 @@ export default function CardLayout({ userStats }: CardLayoutProps) {
         title="Most Played"
         icon={<Trophy className="h-6 w-6 text-yellow-400" />}
         preview={
-          <div className="text-center py-4">
-            <p className="text-2xl font-bold text-white">{userStats.topTracks.filter(t => t.plays > 1).length}</p>
-            <p className="text-gray-400 text-sm">repeated songs</p>
-            <p className="text-gray-500 text-xs mt-2">Click to see play counts</p>
+          <div className="space-y-2 mt-4">
+            <div className="text-center">
+              <p className="text-3xl font-bold text-white">{userStats.topTracks.filter(t => t.plays > 1).length}</p>
+              <p className="text-gray-300 text-sm">repeated songs</p>
+            </div>
+            {userStats.topTracks.slice(0, 3).map((track, index) => (
+              <div key={index} className="flex items-center justify-between py-2 px-3 bg-white/5 rounded-lg">
+                <div className="flex-1 min-w-0">
+                  <p className="text-white font-medium text-sm truncate">{track.name}</p>
+                  <p className="text-gray-400 text-xs">{track.artist}</p>
+                </div>
+                <div className="text-right ml-2">
+                  <p className="text-spotify-green font-bold text-sm">{track.plays}</p>
+                  <p className="text-gray-400 text-xs">plays</p>
+                </div>
+              </div>
+            ))}
           </div>
         }
         expandedContent={
@@ -296,10 +341,26 @@ export default function CardLayout({ userStats }: CardLayoutProps) {
         title="Listening Patterns"
         icon={<TrendingUp className="h-6 w-6 text-blue-400" />}
         preview={
-          <div className="text-center py-4">
-            <p className="text-2xl font-bold text-white">{userStats.uniqueArtists}</p>
-            <p className="text-gray-400 text-sm">unique artists</p>
-            <p className="text-gray-500 text-xs mt-2">Click to see analytics</p>
+          <div className="space-y-3 mt-4">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-white/5 rounded-lg p-3 text-center">
+                <p className="text-2xl font-bold text-white">{userStats.uniqueArtists}</p>
+                <p className="text-gray-300 text-xs">artists</p>
+              </div>
+              <div className="bg-white/5 rounded-lg p-3 text-center">
+                <p className="text-2xl font-bold text-white">{userStats.uniqueTracks}</p>
+                <p className="text-gray-300 text-xs">tracks</p>
+              </div>
+            </div>
+            <div className="bg-white/5 rounded-lg p-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Clock className="h-4 w-4 text-spotify-green" />
+                  <span className="text-gray-300 text-sm">Total Listening</span>
+                </div>
+                <span className="text-white font-bold">{userStats.totalListeningHours.toFixed(1)}h</span>
+              </div>
+            </div>
           </div>
         }
         expandedContent={
