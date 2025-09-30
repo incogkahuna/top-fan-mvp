@@ -187,9 +187,14 @@ export default function CardLayout({ userStats }: CardLayoutProps) {
             </div>
             {userStats.topArtists.slice(0, 3).map((artist, index) => (
               <div key={index} className="flex items-center justify-between py-2 px-3 bg-white/5 rounded-lg">
-                <div className="flex items-center space-x-2">
-                  <span className="text-spotify-green font-bold">#{index + 1}</span>
-                  <p className="text-white font-medium text-sm">{artist.name}</p>
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span className="text-white font-bold text-lg">{artist.name.charAt(0).toUpperCase()}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-spotify-green font-bold text-xs">#{index + 1}</span>
+                    <p className="text-white font-medium text-sm">{artist.name}</p>
+                  </div>
                 </div>
                 <span className="text-gray-400 text-xs">{artist.plays} plays</span>
               </div>
@@ -200,13 +205,16 @@ export default function CardLayout({ userStats }: CardLayoutProps) {
           userStats.topArtists.length > 0 ? (
             <div className="space-y-3">
               {userStats.topArtists.map((artist, index) => (
-                <div key={artist.name} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                <div key={artist.name} className="flex items-center justify-between p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
                   <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                      <span className="text-white font-bold text-sm">#{index + 1}</span>
+                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center flex-shrink-0">
+                      <span className="text-white font-bold text-xl">{artist.name.charAt(0).toUpperCase()}</span>
                     </div>
                     <div>
-                      <p className="font-semibold text-white">{artist.name}</p>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-spotify-green font-bold text-sm">#{index + 1}</span>
+                        <p className="font-semibold text-white">{artist.name}</p>
+                      </div>
                       <p className="text-gray-400 text-sm">{artist.plays} plays</p>
                     </div>
                   </div>
@@ -237,11 +245,16 @@ export default function CardLayout({ userStats }: CardLayoutProps) {
             </div>
             {userStats.topTracks.slice(0, 3).map((track, index) => (
               <div key={index} className="flex items-center justify-between py-2 px-3 bg-white/5 rounded-lg">
-                <div className="flex items-center space-x-2 flex-1">
-                  <span className="text-spotify-green font-bold">#{index + 1}</span>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-white font-medium text-sm truncate">{track.name}</p>
-                    <p className="text-gray-400 text-xs">{track.artist}</p>
+                <div className="flex items-center space-x-3 flex-1">
+                  <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-blue-500 rounded flex items-center justify-center flex-shrink-0">
+                    <Music className="h-5 w-5 text-white" />
+                  </div>
+                  <div className="flex items-center space-x-2 flex-1 min-w-0">
+                    <span className="text-spotify-green font-bold text-xs">#{index + 1}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-white font-medium text-sm truncate">{track.name}</p>
+                      <p className="text-gray-400 text-xs">{track.artist}</p>
+                    </div>
                   </div>
                 </div>
                 <span className="text-gray-400 text-xs ml-2">{track.plays}</span>
