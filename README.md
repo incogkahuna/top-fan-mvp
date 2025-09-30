@@ -9,6 +9,7 @@ A web app that gamifies Spotify listening data for fans and provides data insigh
 - 🎁 **Rewards System**: Earn points and unlock exclusive prizes
 - 📊 **Artist Dashboard**: Comprehensive analytics for artists about their fanbase
 - 🔔 **Notifications**: Stay updated with achievements and milestones
+- 📸 **Photo Gallery**: Dynamic photo gallery that automatically loads images from a folder
 - 📱 **Responsive Design**: Beautiful UI that works on all devices
 
 ## Tech Stack
@@ -83,6 +84,19 @@ npm run dev
 ```
 
 Open [http://localhost:3001](http://localhost:3001) to see the application.
+
+## Photo Gallery Setup
+
+The photo gallery automatically loads images from the `public/photos` folder:
+
+1. **Create the photos folder**: Create a `public/photos` directory in your project root
+2. **Add images**: Drop any image files (.jpg, .png, .gif, .webp, .svg) into the folder
+3. **Automatic display**: The gallery will automatically detect and display all images
+4. **Features**:
+   - Click any photo to open in lightbox
+   - Responsive grid layout
+   - Error handling for missing images
+   - Loading states and instructions
 
 ## Project Structure
 
@@ -164,6 +178,13 @@ The app uses the following main tables:
 - Ranking updates
 - New prize availability
 - Social interactions
+
+### Photo Gallery
+- **Automatic Loading**: Drop image files into `public/photos` folder
+- **Supported Formats**: JPG, PNG, GIF, WebP, SVG
+- **Lightbox View**: Click any photo to view full-size
+- **Responsive Grid**: Automatically adjusts to screen size
+- **Error Handling**: Graceful fallbacks for missing images
 
 ## Development Roadmap
 
