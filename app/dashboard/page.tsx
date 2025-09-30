@@ -341,7 +341,7 @@ function DashboardContent() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F1E8] p-6">
+    <div className="min-h-screen p-6">
       {/* Auto-sync component */}
       {userId && <AutoSync onDataUpdate={handleDataUpdate} userId={userId} />}
       

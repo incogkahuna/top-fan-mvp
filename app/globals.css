@@ -8,7 +8,9 @@
   }
   
   body {
-    @apply bg-[#F5F1E8] text-gray-900;
+    @apply text-gray-900;
+    background: linear-gradient(135deg, #FF6B35 0%, #FF8C42 25%, #FFA352 50%, #FF6B35 100%);
+    background-attachment: fixed;
   }
 }
 

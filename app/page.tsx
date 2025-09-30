@@ -33,7 +33,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F1E8]">
+    <div className="min-h-screen">
       {/* Hero Section - Minimal & Centered */}
       <div className="container mx-auto px-6 py-32">
         <motion.div
