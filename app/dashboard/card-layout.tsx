@@ -115,7 +115,7 @@ export default function CardLayout({ userStats }: CardLayoutProps) {
       <ExpandableCard
         id="recently-played"
         title="Recently Played"
-        icon={<Music className="h-6 w-6 text-spotify-green" />}
+        icon={<Music className="h-6 w-6 text-orange-400" />}
         preview={
           <div className="space-y-2 mt-4">
             <div className="text-center">
@@ -144,7 +144,7 @@ export default function CardLayout({ userStats }: CardLayoutProps) {
                   return (
                     <div key={index} className="flex items-center justify-between py-3 px-4 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
                       <div className="flex items-center space-x-4">
-                        <div className="w-10 h-10 bg-gradient-to-br from-spotify-green to-blue-500 rounded-full flex items-center justify-center">
+                        <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center">
                           <Music className="h-5 w-5 text-white" />
                         </div>
                         <div className="flex-1">
@@ -154,7 +154,7 @@ export default function CardLayout({ userStats }: CardLayoutProps) {
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-spotify-green font-semibold">{duration}m</p>
+                        <p className="text-orange-400 font-semibold">{duration}m</p>
                         <p className="text-gray-400 text-xs">duration</p>
                       </div>
                     </div>
@@ -192,7 +192,7 @@ export default function CardLayout({ userStats }: CardLayoutProps) {
                     <span className="text-white font-bold text-lg">{artist.name.charAt(0).toUpperCase()}</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <span className="text-spotify-green font-bold text-xs">#{index + 1}</span>
+                    <span className="text-orange-400 font-bold text-xs">#{index + 1}</span>
                     <p className="text-white font-medium text-sm">{artist.name}</p>
                   </div>
                 </div>
@@ -212,7 +212,7 @@ export default function CardLayout({ userStats }: CardLayoutProps) {
                     </div>
                     <div>
                       <div className="flex items-center space-x-2">
-                        <span className="text-spotify-green font-bold text-sm">#{index + 1}</span>
+                        <span className="text-orange-400 font-bold text-sm">#{index + 1}</span>
                         <p className="font-semibold text-white">{artist.name}</p>
                       </div>
                       <p className="text-gray-400 text-sm">{artist.plays} plays</p>
@@ -250,7 +250,7 @@ export default function CardLayout({ userStats }: CardLayoutProps) {
                     <Music className="h-5 w-5 text-white" />
                   </div>
                   <div className="flex items-center space-x-2 flex-1 min-w-0">
-                    <span className="text-spotify-green font-bold text-xs">#{index + 1}</span>
+                    <span className="text-orange-400 font-bold text-xs">#{index + 1}</span>
                     <div className="flex-1 min-w-0">
                       <p className="text-white font-medium text-sm truncate">{track.name}</p>
                       <p className="text-gray-400 text-xs">{track.artist}</p>
@@ -308,7 +308,7 @@ export default function CardLayout({ userStats }: CardLayoutProps) {
                   <p className="text-gray-400 text-xs">{track.artist}</p>
                 </div>
                 <div className="text-right ml-2">
-                  <p className="text-spotify-green font-bold text-sm">{track.plays}</p>
+                  <p className="text-orange-400 font-bold text-sm">{track.plays}</p>
                   <p className="text-gray-400 text-xs">plays</p>
                 </div>
               </div>
@@ -330,7 +330,7 @@ export default function CardLayout({ userStats }: CardLayoutProps) {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-spotify-green font-bold text-lg">{track.plays}</p>
+                    <p className="text-orange-400 font-bold text-lg">{track.plays}</p>
                     <p className="text-gray-400 text-xs">plays</p>
                   </div>
                 </div>
@@ -368,7 +368,7 @@ export default function CardLayout({ userStats }: CardLayoutProps) {
             <div className="bg-white/5 rounded-lg p-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <Clock className="h-4 w-4 text-spotify-green" />
+                  <Clock className="h-4 w-4 text-orange-400" />
                   <span className="text-gray-300 text-sm">Total Listening</span>
                 </div>
                 <span className="text-white font-bold">{userStats.totalListeningHours.toFixed(1)}h</span>
@@ -419,7 +419,7 @@ export default function CardLayout({ userStats }: CardLayoutProps) {
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-spotify-green font-bold text-lg">{Math.round(userStats.totalListeningHours * 60)}m</p>
+                  <p className="text-orange-400 font-bold text-lg">{Math.round(userStats.totalListeningHours * 60)}m</p>
                   <p className="text-gray-400 text-xs">total minutes</p>
                 </div>
               </div>

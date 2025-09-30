@@ -570,7 +570,7 @@ function DashboardContent() {
                       return (
                 <div key={index} className="flex items-center justify-between py-3 border-b border-white/10 last:border-b-0">
                           <div className="flex items-center space-x-4">
-                            <div className="w-10 h-10 bg-gradient-to-br from-spotify-green to-blue-500 rounded-full flex items-center justify-center">
+                            <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center">
                               <Music className="h-5 w-5 text-white" />
                             </div>
                   <div>
@@ -580,7 +580,7 @@ function DashboardContent() {
                             </div>
                           </div>
                           <div className="text-right">
-                            <p className="text-spotify-green font-semibold">{duration}m</p>
+                            <p className="text-orange-400 font-semibold">{duration}m</p>
                             <p className="text-gray-400 text-xs">duration</p>
                           </div>
                         </div>
