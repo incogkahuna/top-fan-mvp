@@ -8,8 +8,8 @@
   }
   
   body {
-    @apply text-gray-900;
-    background: linear-gradient(135deg, #FF6B35 0%, #FF8C42 25%, #FFA352 50%, #FF6B35 100%);
+    @apply text-white;
+    background: linear-gradient(135deg, #1a0f0a 0%, #2d1810 20%, #E8653C 60%, #F07845 100%);
     background-attachment: fixed;
   }
 }
@@ -24,7 +24,7 @@
   }
   
   .card {
-    @apply bg-white rounded-2xl p-8 border border-[#E5DCC8] shadow-sm hover:shadow-md transition-shadow duration-300;
+    @apply bg-black/40 backdrop-blur-md rounded-2xl p-8 border border-white/10 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-black/50;
   }
   
   .gradient-text {

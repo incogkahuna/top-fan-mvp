@@ -27,11 +27,11 @@ export default function Navigation() {
   }
 
   return (
-    <nav className="border-b border-white/20 bg-white/10 backdrop-blur-md">
+    <nav className="border-b border-white/10 bg-black/20 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <div className="flex justify-between items-center h-20">
           {/* Logo - Script font like Sadie Jean */}
-          <Link href="/" className="text-3xl text-black tracking-tight hover:opacity-70 transition-opacity logo-font">
+          <Link href="/" className="text-3xl text-white tracking-tight hover:opacity-70 transition-opacity logo-font">
             Top Fan
           </Link>
 
