@@ -3,8 +3,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
-import { Music, Trophy, Gift, Bell, BarChart3, Menu, X, LogOut, User } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Menu, X, LogOut, User } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 
 export default function Navigation() {
@@ -15,11 +15,10 @@ export default function Navigation() {
   const { user, logout } = useAuth()
 
   const navItems = [
-    { href: '/dashboard', label: 'Dashboard', icon: BarChart3 },
-    { href: '/leaderboard', label: 'Leaderboard', icon: Trophy },
-    { href: '/prizes', label: 'Prizes', icon: Gift },
-    { href: '/notifications', label: 'Notifications', icon: Bell },
-    { href: '/artist-dashboard', label: 'Artist Dashboard', icon: BarChart3 },
+    { href: '/dashboard', label: 'Dashboard' },
+    { href: '/leaderboard', label: 'Leaderboard' },
+    { href: '/prizes', label: 'Prizes' },
+    { href: '/artist-dashboard', label: 'Artists' },
   ]
 
   const handleLogout = () => {
@@ -28,86 +27,86 @@ export default function Navigation() {
   }
 
   return (
-    <nav className="bg-black/20 backdrop-blur-sm border-b border-white/10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <Music className="h-8 w-8 text-spotify-green" />
-            <span className="text-2xl font-bold text-white">Top Fan</span>
+    <nav className="border-b border-gray-100 bg-white">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+        <div className="flex justify-between items-center h-20">
+          {/* Logo - Minimal text only */}
+          <Link href="/" className="text-2xl font-bold text-black tracking-tight hover:opacity-70 transition-opacity">
+            Top Fan
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          {/* Desktop Navigation - Clean minimal links */}
+          <div className="hidden md:flex items-center space-x-12">
             {navItems.map((item) => {
-              const Icon = item.icon
               const isActive = pathname === item.href
               
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors ${
+                  className={`text-sm font-medium transition-colors ${
                     isActive
-                      ? 'bg-spotify-green text-white'
-                      : 'text-gray-300 hover:text-white hover:bg-white/10'
+                      ? 'text-black border-b-2 border-black pb-1'
+                      : 'text-gray-500 hover:text-black'
                   }`}
                 >
-                  <Icon className="h-4 w-4" />
-                  <span>{item.label}</span>
+                  {item.label}
                 </Link>
               )
             })}
-          </div>
 
-          {/* User Menu */}
-          {user && (
-            <div className="hidden md:flex items-center space-x-4">
+            {/* User Menu */}
+            {user && (
               <div className="relative">
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
+                  className="flex items-center space-x-2 text-sm font-medium text-gray-700 hover:text-black transition-colors"
                 >
                   {user.profile_image_url ? (
                     <img 
                       src={user.profile_image_url} 
                       alt={user.display_name}
-                      className="w-6 h-6 rounded-full"
+                      className="w-8 h-8 rounded-full"
                     />
                   ) : (
-                    <User className="h-5 w-5" />
+                    <div className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center">
+                      <span className="text-xs font-bold">{user.display_name.charAt(0).toUpperCase()}</span>
+                    </div>
                   )}
                   <span>{user.display_name}</span>
                 </button>
 
-                {showUserMenu && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="absolute right-0 mt-2 w-48 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 py-2 z-50"
-                  >
-                    <div className="px-4 py-2 border-b border-white/10">
-                      <p className="text-white font-medium">{user.display_name}</p>
-                      <p className="text-gray-400 text-sm">{user.email}</p>
-                    </div>
-                    <button
-                      onClick={handleLogout}
-                      className="w-full flex items-center space-x-2 px-4 py-2 text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
+                <AnimatePresence>
+                  {showUserMenu && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="absolute right-0 mt-2 w-48 bg-white rounded-lg border border-gray-200 shadow-lg py-2 z-50"
                     >
-                      <LogOut className="h-4 w-4" />
-                      <span>Logout</span>
-                    </button>
-                  </motion.div>
-                )}
+                      <div className="px-4 py-3 border-b border-gray-100">
+                        <p className="text-sm font-medium text-black">{user.display_name}</p>
+                        <p className="text-xs text-gray-500">{user.email}</p>
+                      </div>
+                      <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        <span>Logout</span>
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
           {/* Mobile menu button */}
           <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-300 hover:text-white focus:outline-none"
+              className="text-black hover:text-gray-600 focus:outline-none"
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -115,37 +114,46 @@ export default function Navigation() {
         </div>
 
         {/* Mobile Navigation */}
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden"
-          >
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              {navItems.map((item) => {
-                const Icon = item.icon
-                const isActive = pathname === item.href
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden border-t border-gray-100"
+            >
+              <div className="py-4 space-y-1">
+                {navItems.map((item) => {
+                  const isActive = pathname === item.href
+                  
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={`block px-4 py-3 text-sm font-medium transition-colors ${
+                        isActive
+                          ? 'text-black bg-gray-50'
+                          : 'text-gray-600 hover:text-black hover:bg-gray-50'
+                      }`}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  )
+                })}
                 
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors ${
-                      isActive
-                        ? 'bg-spotify-green text-white'
-                        : 'text-gray-300 hover:text-white hover:bg-white/10'
-                    }`}
-                    onClick={() => setIsOpen(false)}
+                {user && (
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-3 text-sm font-medium text-gray-600 hover:text-black hover:bg-gray-50"
                   >
-                    <Icon className="h-4 w-4" />
-                    <span>{item.label}</span>
-                  </Link>
-                )
-              })}
-            </div>
-          </motion.div>
-        )}
+                    Logout
+                  </button>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </nav>
   )

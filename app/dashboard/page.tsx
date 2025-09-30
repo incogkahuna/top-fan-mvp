@@ -341,36 +341,36 @@ function DashboardContent() {
   }
 
   return (
-    <div className="min-h-screen p-6">
+    <div className="min-h-screen bg-gray-50 p-6">
       {/* Auto-sync component */}
       {userId && <AutoSync onDataUpdate={handleDataUpdate} userId={userId} />}
       
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-12">
           <div className="flex items-center justify-between">
             <div>
-          <h1 className="text-4xl font-bold text-white mb-2">Your Dashboard</h1>
-          <p className="text-gray-300">Track your progress and compete with other fans</p>
-        </div>
+              <h1 className="text-5xl font-bold text-black mb-2 tracking-tight">Your Dashboard</h1>
+              <p className="text-gray-600 text-lg">Track your progress and compete with other fans</p>
+            </div>
 
             {/* Sync Button */}
             <div className="flex flex-col items-end space-y-2">
               <div className="flex items-center space-x-3">
                 {/* Auto-sync indicator */}
-                <div className="flex items-center space-x-2 text-sm text-gray-400">
-                  <div className={`w-2 h-2 rounded-full animate-pulse ${isUpdating ? 'bg-spotify-green' : 'bg-green-500'}`}></div>
-                  <span>{isUpdating ? 'Updating...' : 'Auto-sync enabled'}</span>
+                <div className="flex items-center space-x-2 text-sm text-gray-500">
+                  <div className={`w-2 h-2 rounded-full ${isUpdating ? 'bg-black animate-pulse' : 'bg-green-500'}`}></div>
+                  <span className="font-medium">{isUpdating ? 'Updating...' : 'Live sync'}</span>
                 </div>
                 
                 <div className="flex space-x-2">
                   <button
                     onClick={handleSyncData}
                     disabled={syncing}
-                    className={`flex items-center space-x-2 px-3 py-2 rounded-lg font-semibold transition-colors ${
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-full font-medium transition-all ${
                       syncing 
-                        ? 'bg-gray-600 cursor-not-allowed text-gray-400' 
-                        : 'bg-spotify-green hover:bg-green-600 text-white'
+                        ? 'bg-gray-200 cursor-not-allowed text-gray-400' 
+                        : 'bg-black hover:bg-gray-800 text-white hover:scale-105'
                     }`}
                   >
                     {syncing ? (
@@ -381,22 +381,9 @@ function DashboardContent() {
                     ) : (
                       <>
                         <RefreshCw className="h-4 w-4" />
-                        <span>Sync Now</span>
+                        <span>Sync</span>
                       </>
                     )}
-                  </button>
-                  
-                  <button
-                    onClick={handleForceSync}
-                    disabled={syncing}
-                    className={`flex items-center space-x-2 px-3 py-2 rounded-lg font-semibold transition-colors ${
-                      syncing 
-                        ? 'bg-gray-600 cursor-not-allowed text-gray-400' 
-                        : 'bg-blue-600 hover:bg-blue-700 text-white'
-                    }`}
-                  >
-                    <RefreshCw className="h-4 w-4" />
-                    <span>Force</span>
                   </button>
                 </div>
               </div>
@@ -416,7 +403,7 @@ function DashboardContent() {
 
         {loading && (
           <div className="flex items-center justify-center py-12">
-            <div className="text-gray-400">Loading your dashboard...</div>
+            <div className="text-gray-600">Loading your dashboard...</div>
           </div>
         )}
 
@@ -445,19 +432,13 @@ function DashboardContent() {
                   repeat: isUpdating ? Infinity : 0,
                   repeatType: "reverse"
                 }}
-                className={`card transition-all duration-300 ${isUpdating ? 'ring-2 ring-spotify-green/50 bg-spotify-green/5' : ''}`}
+                className={`card transition-all duration-300 ${isUpdating ? 'ring-2 ring-black/20' : ''}`}
           >
-            <div className="flex items-center justify-between">
-              <div>
-                    <div className="flex items-center space-x-2">
-                <p className="text-gray-400 text-sm">Total Plays</p>
-                      {isUpdating && <div className="w-2 h-2 bg-spotify-green rounded-full animate-pulse"></div>}
-                    </div>
-                    <p className="text-3xl font-bold text-white">
+            <div className="text-center">
+                    <p className="text-sm font-medium text-gray-500 mb-2 uppercase tracking-wider">Total Plays</p>
+                    <p className="text-5xl font-bold text-black">
                       <AnimatedNumber value={userStats.totalPlays} />
                     </p>
-              </div>
-              <Music className="h-8 w-8 text-spotify-green" />
             </div>
           </motion.div>
 
@@ -474,20 +455,14 @@ function DashboardContent() {
                   repeat: isUpdating ? Infinity : 0,
                   repeatType: "reverse"
                 }}
-                className={`card transition-all duration-300 ${isUpdating ? 'ring-2 ring-spotify-green/50 bg-spotify-green/5' : ''}`}
+                className={`card transition-all duration-300 ${isUpdating ? 'ring-2 ring-black/20' : ''}`}
           >
-            <div className="flex items-center justify-between">
-              <div>
-                    <div className="flex items-center space-x-2">
-                      <p className="text-gray-400 text-sm">Listening Time</p>
-                      {isUpdating && <div className="w-2 h-2 bg-spotify-green rounded-full animate-pulse"></div>}
-                    </div>
-                    <p className="text-3xl font-bold text-white">
+            <div className="text-center">
+                    <p className="text-sm font-medium text-gray-500 mb-2 uppercase tracking-wider">Listening Time</p>
+                    <p className="text-5xl font-bold text-black">
                       <AnimatedNumber value={Math.round(userStats.totalListeningHours * 10) / 10} />
-                      <span className="text-lg text-gray-400">h</span>
+                      <span className="text-2xl text-gray-400">h</span>
                     </p>
-              </div>
-                  <Clock className="h-8 w-8 text-blue-400" />
             </div>
           </motion.div>
 
@@ -504,19 +479,13 @@ function DashboardContent() {
                   repeat: isUpdating ? Infinity : 0,
                   repeatType: "reverse"
                 }}
-                className={`card transition-all duration-300 ${isUpdating ? 'ring-2 ring-spotify-green/50 bg-spotify-green/5' : ''}`}
+                className={`card transition-all duration-300 ${isUpdating ? 'ring-2 ring-black/20' : ''}`}
           >
-            <div className="flex items-center justify-between">
-              <div>
-                    <div className="flex items-center space-x-2">
-                      <p className="text-gray-400 text-sm">Unique Artists</p>
-                      {isUpdating && <div className="w-2 h-2 bg-spotify-green rounded-full animate-pulse"></div>}
-                    </div>
-                    <p className="text-3xl font-bold text-white">
+            <div className="text-center">
+                    <p className="text-sm font-medium text-gray-500 mb-2 uppercase tracking-wider">Unique Artists</p>
+                    <p className="text-5xl font-bold text-black">
                       <AnimatedNumber value={userStats.uniqueArtists} />
                     </p>
-              </div>
-                  <Users className="h-8 w-8 text-purple-400" />
             </div>
           </motion.div>
 
@@ -526,12 +495,9 @@ function DashboardContent() {
             transition={{ delay: 0.3 }}
             className="card"
           >
-            <div className="flex items-center justify-between">
-              <div>
-                    <p className="text-gray-400 text-sm">Current Rank</p>
-                    <p className="text-3xl font-bold text-white">#{userStats.rank}</p>
-              </div>
-                  <Trophy className="h-8 w-8 text-yellow-400" />
+            <div className="text-center">
+                    <p className="text-sm font-medium text-gray-500 mb-2 uppercase tracking-wider">Current Rank</p>
+                    <p className="text-5xl font-bold text-black">#{userStats.rank}</p>
             </div>
           </motion.div>
         </div>
@@ -541,7 +507,7 @@ function DashboardContent() {
         {!loading && !error && userStats && (
           <>
         {/* Tabs */}
-        <div className="flex space-x-1 mb-8 bg-white/10 rounded-lg p-1">
+        <div className="flex space-x-8 mb-12 border-b border-gray-200">
           {[
             { id: 'overview', label: 'Overview' },
             { id: 'achievements', label: 'Achievements' },
@@ -550,10 +516,10 @@ function DashboardContent() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-2 rounded-md transition-colors ${
+              className={`pb-4 text-sm font-medium transition-colors ${
                 activeTab === tab.id
-                  ? 'bg-spotify-green text-white'
-                  : 'text-gray-300 hover:text-white'
+                  ? 'text-black border-b-2 border-black'
+                  : 'text-gray-500 hover:text-black'
               }`}
             >
               {tab.label}
