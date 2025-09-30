@@ -33,7 +33,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#F5F1E8]">
       {/* Hero Section - Minimal & Centered */}
       <div className="container mx-auto px-6 py-32">
         <motion.div
@@ -46,7 +46,7 @@ export default function Home() {
           <h1 className="text-7xl md:text-8xl font-bold text-black mb-8 tracking-tight leading-none">
             Be the
             <br />
-            <span className="italic">Top Fan</span>
+            <span className="logo-font">Top Fan</span>
           </h1>
           
           <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed">
@@ -97,7 +97,7 @@ export default function Home() {
       </div>
 
       {/* Footer - Minimal */}
-      <footer className="border-t border-gray-100 py-12 mt-32">
+      <footer className="border-t border-[#E5DCC8] py-12 mt-32">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <p className="text-gray-500 text-sm">
             © 2025 Top Fan. All rights reserved.

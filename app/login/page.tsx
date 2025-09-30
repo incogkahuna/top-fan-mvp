@@ -67,7 +67,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#F5F1E8] flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         {/* Logo and Title */}
         <motion.div
@@ -89,31 +89,31 @@ export default function LoginPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20"
+          className="bg-white rounded-2xl p-8 border border-[#E5DCC8] shadow-lg"
         >
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-semibold text-white mb-2">Welcome Back</h2>
-            <p className="text-gray-300">Connect your Spotify account to get started</p>
+            <h2 className="text-3xl font-bold text-black mb-2">Welcome Back</h2>
+            <p className="text-gray-600">Connect your Spotify account to get started</p>
           </div>
 
           {error && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-6 p-4 bg-red-900/50 border border-red-500/50 rounded-lg flex items-center space-x-3"
+              className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center space-x-3"
             >
-              <AlertCircle className="h-5 w-5 text-red-400" />
-              <p className="text-red-300">{error}</p>
+              <AlertCircle className="h-5 w-5 text-red-600" />
+              <p className="text-red-700">{error}</p>
             </motion.div>
           )}
 
           <button
             onClick={handleSpotifyLogin}
             disabled={loading}
-            className={`w-full flex items-center justify-center space-x-3 py-4 px-6 rounded-lg font-semibold transition-all duration-200 ${
+            className={`w-full flex items-center justify-center space-x-3 py-4 px-6 rounded-full font-medium transition-all duration-200 ${
               loading
-                ? 'bg-gray-600 cursor-not-allowed text-gray-400'
-                : 'bg-spotify-green hover:bg-green-600 text-white hover:scale-105'
+                ? 'bg-gray-300 cursor-not-allowed text-gray-500'
+                : 'bg-[#D4756C] hover:bg-[#C06559] text-white hover:scale-105'
             }`}
           >
             {loading ? (

@@ -8,13 +8,13 @@
   }
   
   body {
-    @apply bg-white text-gray-900;
+    @apply bg-[#F5F1E8] text-gray-900;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-black hover:bg-gray-800 text-white font-medium py-3 px-8 rounded-full transition-all duration-300 hover:scale-105;
+    @apply bg-[#D4756C] hover:bg-[#C06559] text-white font-medium py-3 px-8 rounded-full transition-all duration-300 hover:scale-105;
   }
   
   .btn-secondary {
@@ -22,11 +22,15 @@
   }
   
   .card {
-    @apply bg-white rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300;
+    @apply bg-white rounded-2xl p-8 border border-[#E5DCC8] shadow-sm hover:shadow-md transition-shadow duration-300;
   }
   
   .gradient-text {
     @apply text-black;
+  }
+  
+  .logo-font {
+    font-family: 'Brush Script MT', cursive;
   }
   
   /* Custom scrollbar styles */
