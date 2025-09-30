@@ -9,7 +9,7 @@
   
   body {
     @apply text-white;
-    background: linear-gradient(135deg, #1a0f0a 0%, #2d1810 20%, #E8653C 60%, #F07845 100%);
+    background: linear-gradient(135deg, #F07845 0%, #E8653C 40%, #2d1810 80%, #1a0f0a 100%);
     background-attachment: fixed;
   }
 }
