@@ -95,7 +95,7 @@ export async function GET() {
 
     const recentActivityFormatted = recentActivity?.map(activity => ({
       id: activity.id,
-      user: activity.users?.display_name || 'Unknown',
+      user: activity.users?.[0]?.display_name || 'Unknown',
       action: `Played "${activity.track_name}"`,
       timestamp: new Date(activity.played_at).toLocaleDateString()
     })) || []
