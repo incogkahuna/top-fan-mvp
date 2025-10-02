@@ -180,7 +180,7 @@ function LeaderboardContent() {
                   {userProfileImage ? (
                     <img 
                       src={userProfileImage} 
-                      alt={user?.display_name || 'User'}
+                      alt={'User'}
                       className="w-10 h-10 rounded-full border-2 border-pink-300"
                     />
                   ) : (
@@ -189,14 +189,14 @@ function LeaderboardContent() {
                     </div>
                   )}
                   <div>
-                    <h3 className="text-lg font-semibold text-[#f5f1e8]">Welcome back, {user?.display_name || 'User'}!</h3>
+                    <h3 className="text-lg font-semibold text-[#f5f1e8]">Welcome back, User!</h3>
                     <p className="text-[#f5f1e8]/60 text-sm">Your Sadie Jean listening is being tracked</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-4">
                   <div className="text-right">
                     <p className="text-[#f5f1e8] font-bold text-lg">
-                      #{leaderboard.find(entry => entry.userId === user?.id)?.rank || 'N/A'}
+                      #N/A
                     </p>
                     <p className="text-[#f5f1e8]/60 text-sm">Current Rank</p>
                   </div>
@@ -224,7 +224,7 @@ function LeaderboardContent() {
                 <ProfilePhotoUpload
                   currentImageUrl={userProfileImage}
                   onImageChange={setUserProfileImage}
-                  userId={user?.id || ''}
+                  userId={''}
                 />
                 <div className="flex-1">
                   <h4 className="text-lg font-semibold text-[#f5f1e8] mb-2">Customize Your Profile</h4>
@@ -319,7 +319,7 @@ function LeaderboardContent() {
                 </div>
                 <div className="mt-4 p-4 bg-transparent backdrop-blur-sm rounded-lg border border-[#f5f1e8]/5">
                   <p className="text-[#f5f1e8]/80 text-sm">
-                    <strong>Your current rank:</strong> #{leaderboard.find(entry => entry.userId === user?.id)?.rank || 'N/A'} with {leaderboard.find(entry => entry.userId === user?.id)?.totalPlays || 0} total plays
+                    <strong>Your current rank:</strong> #N/A with 0 total plays
                   </p>
                 </div>
               </div>
