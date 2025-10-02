@@ -1,7 +1,7 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
 import Navigation from '@/components/Navigation'
-import { AuthProvider } from '@/lib/auth'
+// import { AuthProvider } from '@/lib/auth' // DISABLED FOR DEBUGGING
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,12 +23,10 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Anton:wght@400&display=swap" rel="stylesheet" />
       </head>
       <body className={inter.className}>
-        <AuthProvider>
-          <div className="min-h-screen">
-            <Navigation />
-            {children}
-          </div>
-        </AuthProvider>
+        <div className="min-h-screen">
+          <Navigation />
+          {children}
+        </div>
       </body>
     </html>
   )
