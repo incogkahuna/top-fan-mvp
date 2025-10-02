@@ -112,7 +112,7 @@ function LeaderboardContent() {
               initial={{ opacity: 0, y: 30, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
-              className="bg-transparent backdrop-blur-sm rounded-2xl p-8 mb-8 text-center border border-[#E98B8B]/20"
+              className="bg-transparent backdrop-blur-sm rounded-xl p-6 mb-8 text-center"
             >
                   <motion.div
                     initial={{ scale: 0 }}
@@ -174,7 +174,7 @@ function LeaderboardContent() {
 
           {/* User Status Section */}
           {user && (
-            <div className="bg-transparent backdrop-blur-sm rounded-2xl p-6 mb-6 border border-[#f5f1e8]/10">
+            <div className="bg-transparent backdrop-blur-sm rounded-xl p-6 mb-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   {userProfileImage ? (
@@ -217,7 +217,7 @@ function LeaderboardContent() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="bg-transparent backdrop-blur-sm rounded-2xl p-6 mb-6 border border-[#f5f1e8]/10"
+              className="bg-transparent backdrop-blur-sm rounded-xl p-6 mb-6"
             >
               <h3 className="text-xl font-bold text-[#f5f1e8] mb-4">Profile Settings</h3>
               <div className="flex items-center space-x-6">
@@ -328,16 +328,16 @@ function LeaderboardContent() {
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap gap-4 mb-8">
-          <div className="flex bg-transparent backdrop-blur-sm border border-[#f5f1e8]/10 rounded-lg p-1">
+        <div className="flex flex-wrap gap-6 mb-8">
+          <div className="flex gap-1">
             {['week', 'month', 'all'].map((filter) => (
               <button
                 key={filter}
                 onClick={() => setTimeFilter(filter)}
-                className={`px-4 py-2 rounded-md transition-colors capitalize ${
+                className={`px-4 py-2 rounded-full transition-colors capitalize text-sm ${
                   timeFilter === filter
                     ? 'bg-[#E98B8B] text-white'
-                    : 'text-[#f5f1e8]/60 hover:text-[#f5f1e8]'
+                    : 'text-[#f5f1e8]/60 hover:text-[#f5f1e8] hover:bg-[#f5f1e8]/5'
                 }`}
               >
                 {filter}
@@ -345,96 +345,46 @@ function LeaderboardContent() {
             ))}
           </div>
 
-          <div className="flex bg-transparent backdrop-blur-sm border border-[#f5f1e8]/10 rounded-lg p-1">
-            <button className="px-4 py-2 rounded-md transition-colors bg-transparent text-[#f5f1e8] hover:bg-[#E98B8B]/20 border border-[#E98B8B]/30">
-              Sadie Jean Only
-            </button>
-          </div>
+          <button className="px-4 py-2 rounded-full transition-colors bg-transparent text-[#f5f1e8]/60 hover:text-[#f5f1e8] hover:bg-[#f5f1e8]/5 text-sm">
+            Sadie Jean Only
+          </button>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          <motion.div
-            initial={{ opacity: 0, y: 30, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            whileHover={{ y: -5, scale: 1.02 }}
-            className="bg-transparent backdrop-blur-sm rounded-2xl p-6 transition-all duration-300"
-          >
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <div className="bg-transparent backdrop-blur-sm rounded-xl p-6 transition-all duration-300 hover:bg-[#f5f1e8]/5">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-[#f5f1e8]/70 text-sm font-medium uppercase tracking-wider">Total Fans</p>
-                <motion.p
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-                  className="text-4xl font-bold text-[#f5f1e8]"
-                >
+                <p className="text-4xl font-bold text-[#f5f1e8]">
                   {loading ? '...' : leaderboard.length}
-                </motion.p>
+                </p>
               </div>
-            <motion.div
-              animate={{ rotate: [0, 10, -10, 0] }}
-              transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-            >
               <span className="text-2xl text-[#E98B8B] font-bold">#</span>
-            </motion.div>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ delay: 0.1, duration: 0.6, ease: "easeOut" }}
-            whileHover={{ y: -5, scale: 1.02 }}
-            className="bg-transparent backdrop-blur-sm rounded-2xl p-6 transition-all duration-300"
-          >
+          <div className="bg-transparent backdrop-blur-sm rounded-xl p-6 transition-all duration-300 hover:bg-[#f5f1e8]/5">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-[#f5f1e8]/70 text-sm font-medium uppercase tracking-wider">Top Player</p>
-                <motion.p
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
-                  className="text-4xl font-bold text-[#f5f1e8]"
-                >
+                <p className="text-4xl font-bold text-[#f5f1e8]">
                   {loading ? '...' : leaderboard[0]?.totalPlays || 0}
-                </motion.p>
+                </p>
               </div>
-            <motion.div
-              animate={{ y: [0, -5, 0] }}
-              transition={{ duration: 2, repeat: Infinity, repeatDelay: 2 }}
-            >
               <span className="text-2xl text-[#E98B8B] font-bold">1</span>
-            </motion.div>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
-            whileHover={{ y: -5, scale: 1.02 }}
-            className="bg-transparent backdrop-blur-sm rounded-2xl p-6 transition-all duration-300"
-          >
+          <div className="bg-transparent backdrop-blur-sm rounded-xl p-6 transition-all duration-300 hover:bg-[#f5f1e8]/5">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-[#f5f1e8]/70 text-sm font-medium uppercase tracking-wider">Total Points</p>
-                <motion.p
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
-                  className="text-4xl font-bold text-[#f5f1e8]"
-                >
+                <p className="text-4xl font-bold text-[#f5f1e8]">
                   {loading ? '...' : leaderboard.reduce((sum, entry) => sum + entry.points, 0).toLocaleString()}
-                </motion.p>
+                </p>
               </div>
-            <motion.div
-              animate={{ rotate: [0, 360] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-            >
               <span className="text-2xl text-[#E98B8B] font-bold">*</span>
-            </motion.div>
             </div>
           </motion.div>
         </div>
@@ -499,31 +449,22 @@ function LeaderboardContent() {
                       stiffness: 100
                     }}
                     whileHover={{ 
-                      y: -8, 
-                      scale: 1.02,
+                      y: -2,
                       transition: { duration: 0.2 }
                     }}
                     onClick={() => handleProfileClick(user)}
-                    className={`group flex items-center justify-between p-6 rounded-xl bg-transparent backdrop-blur-sm ${
+                    className={`group flex items-center justify-between p-4 rounded-xl bg-transparent backdrop-blur-sm ${
                       user.rank <= 3 
-                        ? 'border border-[#E98B8B]/40' 
-                        : 'border border-[#f5f1e8]/10'
-                    } transition-all duration-300 cursor-pointer hover:border-[#E98B8B]/60`}
+                        ? 'border-l-4 border-l-[#E98B8B]' 
+                        : ''
+                    } transition-all duration-300 cursor-pointer hover:bg-[#f5f1e8]/5`}
                   >
-                    <div className="flex items-center space-x-6">
-                      <motion.div 
-                        className="flex items-center justify-center w-16 h-16"
-                        animate={{ rotate: [0, 5, -5, 0] }}
-                        transition={{ duration: 3, repeat: Infinity, repeatDelay: 2 }}
-                      >
+                    <div className="flex items-center space-x-4">
+                      <div className="flex items-center justify-center w-16 h-16">
                         {getRankIcon(user.rank)}
-                      </motion.div>
+                      </div>
                       
-                      <motion.div 
-                        className="relative"
-                        whileHover={{ scale: 1.1 }}
-                        transition={{ duration: 0.2 }}
-                      >
+                      <div className="relative">
                         {user.profileImageUrl ? (
                           <img 
                             src={user.profileImageUrl} 
@@ -544,16 +485,12 @@ function LeaderboardContent() {
                             <span className="text-xs font-bold text-white">{user.rank}</span>
                           </motion.div>
                         )}
-                      </motion.div>
+                      </div>
                       
                       <div className="flex-1">
-                        <motion.h3 
-                          className="text-xl font-bold text-[#f5f1e8] mb-1"
-                          whileHover={{ x: 5 }}
-                          transition={{ duration: 0.2 }}
-                        >
+                        <h3 className="text-xl font-bold text-[#f5f1e8] mb-1">
                           {user.displayName}
-                        </motion.h3>
+                        </h3>
                         <div className="flex items-center space-x-4 mb-2">
                           <p className="text-sm text-[#f5f1e8]/80 font-medium">
                             {user.totalPlays.toLocaleString()} Sadie Jean plays
@@ -662,7 +599,7 @@ function LeaderboardContent() {
             initial={{ opacity: 0, y: 40, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ delay: 0.8, duration: 0.8, ease: "easeOut" }}
-            className="bg-transparent backdrop-blur-sm rounded-2xl p-8 mt-12 text-center border border-[#E98B8B]/20"
+            className="bg-transparent backdrop-blur-sm rounded-xl p-6 mt-12 text-center"
           >
             <motion.div
               initial={{ scale: 0 }}
