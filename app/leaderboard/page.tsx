@@ -1,5 +1,6 @@
 'use client'
 
+// Force deployment
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Trophy, Medal, Crown, Star, TrendingUp, Users, Music, Play, Info, LogIn, X, Clock, Calendar, Headphones, Award, Settings } from 'lucide-react'
