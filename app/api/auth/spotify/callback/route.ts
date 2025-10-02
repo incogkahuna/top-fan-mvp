@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getAccessToken, getSpotifyUser } from '@/lib/spotify'
 import { supabaseAdmin } from '@/lib/supabase'
 
 export async function GET(request: NextRequest) {
@@ -17,25 +16,52 @@ export async function GET(request: NextRequest) {
     }
 
     // Exchange code for access token
-    const { accessToken, refreshToken, expiresIn } = await getAccessToken(code)
-    
+    const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Basic ' + Buffer.from(
+          process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET
+        ).toString('base64')
+      },
+      body: new URLSearchParams({
+        grant_type: 'authorization_code',
+        code: code,
+        redirect_uri: 'https://earlytwentiesstorture.vercel.app/api/auth/spotify/callback'
+      })
+    })
+
+    if (!tokenResponse.ok) {
+      throw new Error('Token exchange failed')
+    }
+
+    const tokenData = await tokenResponse.json()
+    const { access_token, refresh_token, expires_in } = tokenData
+
     // Get user info from Spotify
-    const spotifyUser = await getSpotifyUser(accessToken)
+    const userResponse = await fetch('https://api.spotify.com/v1/me', {
+      headers: {
+        'Authorization': 'Bearer ' + access_token
+    })
+
+    if (!userResponse.ok) {
+      throw new Error('Failed to get user info')
+    }
+
+    const spotifyUser = await userResponse.json()
 
     if (!supabaseAdmin) {
-      console.error('Supabase admin client not available')
       return NextResponse.redirect('https://earlytwentiesstorture.vercel.app/?error=supabase_not_configured')
     }
 
-    // Store or update user in Supabase using admin client (bypasses RLS)
+    // Store user in Supabase
     const { data: user, error: userError } = await supabaseAdmin
       .from('users')
       .upsert({
         spotify_id: spotifyUser.id,
-        display_name: spotifyUser.display_name,
+        display_name: spotifyUser.display_name || spotifyUser.id,
         email: spotifyUser.email,
-        profile_image_url: spotifyUser.images[0]?.url,
-        updated_at: new Date().toISOString()
+        profile_image_url: spotifyUser.images?.[0]?.url || null
       }, {
         onConflict: 'spotify_id'
       })
@@ -47,15 +73,14 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect('https://earlytwentiesstorture.vercel.app/?error=database_error')
     }
 
-    // Store tokens securely using admin client (bypasses RLS)
+    // Store tokens
     const { error: tokenError } = await supabaseAdmin
       .from('user_tokens')
       .upsert({
         user_id: user.id,
-        access_token: accessToken,
-        refresh_token: refreshToken,
-        expires_at: new Date(Date.now() + expiresIn * 1000).toISOString(),
-        updated_at: new Date().toISOString()
+        access_token: access_token,
+        refresh_token: refresh_token,
+        expires_at: new Date(Date.now() + expires_in * 1000).toISOString()
       }, {
         onConflict: 'user_id'
       })
@@ -67,12 +92,13 @@ export async function GET(request: NextRequest) {
 
     // Set session cookie and redirect to leaderboard
     const response = NextResponse.redirect('https://earlytwentiesstorture.vercel.app/leaderboard')
-    response.cookies.set('spotify_access_token', accessToken, {
+    response.cookies.set('spotify_access_token', access_token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: true,
       sameSite: 'lax',
       maxAge: 60 * 60 * 24 * 7 // 7 days
     })
+    
     return response
   } catch (error) {
     console.error('Spotify callback error:', error)

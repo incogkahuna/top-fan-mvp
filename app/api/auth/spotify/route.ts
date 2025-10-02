@@ -1,15 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSpotifyAuthUrl } from '@/lib/spotify'
 
 export async function GET(request: NextRequest) {
   try {
-    // Debug environment variables
-    console.log('SPOTIFY_CLIENT_ID:', process.env.SPOTIFY_CLIENT_ID ? 'SET' : 'NOT SET')
-    console.log('SPOTIFY_CLIENT_SECRET:', process.env.SPOTIFY_CLIENT_SECRET ? 'SET' : 'NOT SET')
-    console.log('SPOTIFY_REDIRECT_URI:', process.env.SPOTIFY_REDIRECT_URI)
+    const clientId = process.env.SPOTIFY_CLIENT_ID
+    const redirectUri = 'https://earlytwentiesstorture.vercel.app/api/auth/spotify/callback'
     
-    const authUrl = getSpotifyAuthUrl()
-    console.log('Generated Spotify auth URL:', authUrl)
+    if (!clientId) {
+      return NextResponse.json({ error: 'Spotify client ID not configured' }, { status: 500 })
+    }
+
+    const scopes = [
+      'user-read-email',
+      'user-read-private',
+      'user-top-read',
+      'user-read-recently-played',
+      'user-read-playback-state',
+      'user-read-currently-playing'
+    ].join(' ')
+
+    const authUrl = `https://accounts.spotify.com/authorize?` +
+      `client_id=${clientId}&` +
+      `response_type=code&` +
+      `redirect_uri=${encodeURIComponent(redirectUri)}&` +
+      `scope=${encodeURIComponent(scopes)}&` +
+      `state=state`
+
     return NextResponse.redirect(authUrl)
   } catch (error) {
     console.error('Spotify auth error:', error)
