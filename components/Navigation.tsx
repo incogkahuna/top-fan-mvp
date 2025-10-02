@@ -4,7 +4,6 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { Menu, X, LogOut, User } from 'lucide-react'
-// import { useAuth } from '@/lib/auth' // DISABLED FOR DEBUGGING
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)

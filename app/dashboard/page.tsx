@@ -6,7 +6,6 @@ import { Music, Trophy, TrendingUp, Clock, Award, Users, AlertCircle, RefreshCw 
 import AutoSync from '@/components/AutoSync'
 import CardLayout from './card-layout'
 import ProtectedRoute from '@/components/ProtectedRoute'
-// import { useAuth } from '@/lib/auth' // DISABLED FOR DEBUGGING
 
 interface UserStats {
   totalPlays: number
