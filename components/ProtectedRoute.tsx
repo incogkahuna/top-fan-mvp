@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useAuth } from '@/lib/auth'
+// import { useAuth } from '@/lib/auth' // DISABLED FOR DEBUGGING
 import { motion } from 'framer-motion'
 
 interface ProtectedRouteProps {
@@ -10,7 +10,9 @@ interface ProtectedRouteProps {
 }
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { user, loading } = useAuth()
+  // const { user, loading } = useAuth() // DISABLED FOR DEBUGGING
+  const user = null
+  const loading = false
   const router = useRouter()
 
   useEffect(() => {

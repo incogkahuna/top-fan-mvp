@@ -3,13 +3,15 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Music } from 'lucide-react'
-import { useAuth } from '@/lib/auth'
+// import { useAuth } from '@/lib/auth' // DISABLED FOR DEBUGGING
 import { useRouter } from 'next/navigation'
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const { user, login } = useAuth()
+  // const { user, login } = useAuth() // DISABLED FOR DEBUGGING
+  const user = null
+  const login = () => {}
   const router = useRouter()
 
   // Redirect if already logged in

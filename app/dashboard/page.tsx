@@ -6,7 +6,7 @@ import { Music, Trophy, TrendingUp, Clock, Award, Users, AlertCircle, RefreshCw 
 import AutoSync from '@/components/AutoSync'
 import CardLayout from './card-layout'
 import ProtectedRoute from '@/components/ProtectedRoute'
-import { useAuth } from '@/lib/auth'
+// import { useAuth } from '@/lib/auth' // DISABLED FOR DEBUGGING
 
 interface UserStats {
   totalPlays: number
@@ -121,7 +121,8 @@ function DashboardContent() {
   const [userId, setUserId] = useState<string | null>(null)
   const [isUpdating, setIsUpdating] = useState(false)
   const [expandedCard, setExpandedCard] = useState<string | null>(null)
-  const { user } = useAuth()
+  // const { user } = useAuth() // DISABLED FOR DEBUGGING
+  const user = null
 
   // Fetch real user data
   useEffect(() => {
@@ -527,7 +528,7 @@ function DashboardContent() {
           ))}
         </div>
 
-            {/* Tab Content */}
+        {/* Tab Content */}
             {activeTab === 'overview' && userStats && (
               <CardLayout userStats={userStats} />
             )}
@@ -535,8 +536,8 @@ function DashboardContent() {
             {activeTab === 'overview' && !userStats && (
               <div className="text-center py-12">
                 <div className="text-[#f5f1e8]/60">Loading your music stats...</div>
-              </div>
-            )}
+          </div>
+        )}
 
         {activeTab === 'achievements' && (
           <motion.div

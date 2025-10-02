@@ -4,14 +4,16 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { Menu, X, LogOut, User } from 'lucide-react'
-import { useAuth } from '@/lib/auth'
+// import { useAuth } from '@/lib/auth' // DISABLED FOR DEBUGGING
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
   const [showUserMenu, setShowUserMenu] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
-  const { user, logout } = useAuth()
+  // const { user, logout } = useAuth() // DISABLED FOR DEBUGGING
+  const user = null
+  const logout = () => {}
 
   const navItems = [
     { href: '/', label: 'Home' },
