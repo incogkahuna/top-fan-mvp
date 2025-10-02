@@ -112,20 +112,14 @@ function LeaderboardContent() {
               initial={{ opacity: 0, y: 30, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
-              className="card mb-8 text-center border-2 border-[#E98B8B]/40 bg-gradient-to-br from-[#E98B8B]/15 to-[#E98B8B]/5 backdrop-blur-sm shadow-2xl"
+              className="bg-transparent backdrop-blur-sm rounded-2xl p-8 mb-8 text-center border border-[#E98B8B]/20"
             >
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ delay: 0.3, duration: 0.5, type: "spring", stiffness: 200 }}
-                    className="flex items-center justify-center space-x-3 mb-6"
+                    className="flex items-center justify-center mb-6"
                   >
-                    <div className="relative">
-                      <div className="w-10 h-10 bg-[#E98B8B] rounded-full flex items-center justify-center animate-pulse">
-                        <span className="text-white font-bold">♪</span>
-                      </div>
-                      <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#E98B8B] rounded-full animate-ping"></div>
-                    </div>
                     <h3 className="text-3xl font-bold text-[#f5f1e8] tracking-wide">Join the Competition</h3>
                   </motion.div>
               
@@ -180,7 +174,7 @@ function LeaderboardContent() {
 
           {/* User Status Section */}
           {user && (
-            <div className="card mb-6">
+            <div className="bg-transparent backdrop-blur-sm rounded-2xl p-6 mb-6 border border-[#f5f1e8]/10">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   {userProfileImage ? (
@@ -223,7 +217,7 @@ function LeaderboardContent() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="card mb-6"
+              className="bg-transparent backdrop-blur-sm rounded-2xl p-6 mb-6 border border-[#f5f1e8]/10"
             >
               <h3 className="text-xl font-bold text-[#f5f1e8] mb-4">Profile Settings</h3>
               <div className="flex items-center space-x-6">
@@ -253,7 +247,7 @@ function LeaderboardContent() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="card mb-6"
+              className="bg-transparent backdrop-blur-sm rounded-2xl p-6 mb-6 border border-[#f5f1e8]/10"
             >
               <div className="space-y-4">
                 <h3 className="text-xl font-bold text-[#f5f1e8] mb-4">How the Sadie Jean Leaderboard Works</h3>
@@ -288,7 +282,7 @@ function LeaderboardContent() {
                 </div>
                 
                 {/* Points System Explanation */}
-                <div className="bg-[#f5f1e8]/5 rounded-lg p-4">
+                <div className="bg-transparent backdrop-blur-sm rounded-lg p-4 border border-[#f5f1e8]/5">
                   <h4 className="font-semibold text-[#f5f1e8] mb-3">
                     Point System
                   </h4>
@@ -323,7 +317,7 @@ function LeaderboardContent() {
                     </div>
                   </div>
                 </div>
-                <div className="mt-4 p-4 bg-[#f5f1e8]/5 rounded-lg">
+                <div className="mt-4 p-4 bg-transparent backdrop-blur-sm rounded-lg border border-[#f5f1e8]/5">
                   <p className="text-[#f5f1e8]/80 text-sm">
                     <strong>Your current rank:</strong> #{leaderboard.find(entry => entry.userId === user?.id)?.rank || 'N/A'} with {leaderboard.find(entry => entry.userId === user?.id)?.totalPlays || 0} total plays
                   </p>
@@ -335,7 +329,7 @@ function LeaderboardContent() {
 
         {/* Filters */}
         <div className="flex flex-wrap gap-4 mb-8">
-          <div className="flex bg-[#f5f1e8]/10 rounded-lg p-1">
+          <div className="flex bg-transparent backdrop-blur-sm border border-[#f5f1e8]/10 rounded-lg p-1">
             {['week', 'month', 'all'].map((filter) => (
               <button
                 key={filter}
@@ -351,8 +345,8 @@ function LeaderboardContent() {
             ))}
           </div>
 
-          <div className="flex bg-[#f5f1e8]/10 rounded-lg p-1">
-            <button className="px-4 py-2 rounded-md transition-colors bg-white text-black hover:bg-pink-200">
+          <div className="flex bg-transparent backdrop-blur-sm border border-[#f5f1e8]/10 rounded-lg p-1">
+            <button className="px-4 py-2 rounded-md transition-colors bg-transparent text-[#f5f1e8] hover:bg-[#E98B8B]/20 border border-[#E98B8B]/30">
               Sadie Jean Only
             </button>
           </div>
@@ -365,7 +359,7 @@ function LeaderboardContent() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             whileHover={{ y: -5, scale: 1.02 }}
-            className="card border border-[#E98B8B]/20 bg-gradient-to-br from-[#E98B8B]/10 to-transparent backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300"
+            className="bg-transparent backdrop-blur-sm rounded-2xl p-6 transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -393,7 +387,7 @@ function LeaderboardContent() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ delay: 0.1, duration: 0.6, ease: "easeOut" }}
             whileHover={{ y: -5, scale: 1.02 }}
-            className="card border border-[#E98B8B]/20 bg-gradient-to-br from-[#E98B8B]/10 to-transparent backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300"
+            className="bg-transparent backdrop-blur-sm rounded-2xl p-6 transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -421,7 +415,7 @@ function LeaderboardContent() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
             whileHover={{ y: -5, scale: 1.02 }}
-            className="card border border-[#E98B8B]/20 bg-gradient-to-br from-[#E98B8B]/10 to-transparent backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300"
+            className="bg-transparent backdrop-blur-sm rounded-2xl p-6 transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -450,7 +444,7 @@ function LeaderboardContent() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="card"
+          className="bg-transparent backdrop-blur-sm rounded-2xl p-6"
         >
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-[#f5f1e8]">Top Sadie Jean Fans</h2>
@@ -510,11 +504,11 @@ function LeaderboardContent() {
                       transition: { duration: 0.2 }
                     }}
                     onClick={() => handleProfileClick(user)}
-                    className={`group flex items-center justify-between p-8 rounded-2xl bg-gradient-to-r ${getRankColor(user.rank)} ${
+                    className={`group flex items-center justify-between p-6 rounded-xl bg-transparent backdrop-blur-sm ${
                       user.rank <= 3 
-                        ? 'border-2 border-[#E98B8B]/60 shadow-2xl backdrop-blur-sm' 
-                        : 'border border-[#f5f1e8]/20 shadow-lg backdrop-blur-sm'
-                    } transition-all duration-300 hover:shadow-2xl cursor-pointer hover:border-[#E98B8B]/80`}
+                        ? 'border border-[#E98B8B]/40' 
+                        : 'border border-[#f5f1e8]/10'
+                    } transition-all duration-300 cursor-pointer hover:border-[#E98B8B]/60`}
                   >
                     <div className="flex items-center space-x-6">
                       <motion.div 
@@ -631,10 +625,10 @@ function LeaderboardContent() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="card mt-8"
+            className="bg-transparent backdrop-blur-sm rounded-2xl p-6 mt-8"
           >
             <h3 className="text-xl font-semibold text-white mb-4">Your Position</h3>
-            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-spotify-green/20 to-blue-500/20 rounded-lg border border-spotify-green/30">
+            <div className="flex items-center justify-between p-4 bg-transparent backdrop-blur-sm rounded-lg border border-spotify-green/30">
               <div className="flex items-center space-x-4">
                 <div className="flex items-center justify-center w-12 h-12">
                   <span className="text-lg font-bold text-spotify-green">#{yourStats.rank}</span>
@@ -668,7 +662,7 @@ function LeaderboardContent() {
             initial={{ opacity: 0, y: 40, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ delay: 0.8, duration: 0.8, ease: "easeOut" }}
-            className="card mt-12 text-center border-2 border-[#E98B8B]/40 bg-gradient-to-br from-[#E98B8B]/15 to-[#E98B8B]/5 backdrop-blur-sm shadow-2xl"
+            className="bg-transparent backdrop-blur-sm rounded-2xl p-8 mt-12 text-center border border-[#E98B8B]/20"
           >
             <motion.div
               initial={{ scale: 0 }}
@@ -753,7 +747,7 @@ function LeaderboardContent() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4"
             onClick={closeProfileModal}
           >
             <motion.div
@@ -761,7 +755,7 @@ function LeaderboardContent() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.8, y: 50 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="bg-[#1a1a1a] rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-[#E98B8B]/20 shadow-2xl"
+              className="bg-transparent backdrop-blur-md rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-[#E98B8B]/20 shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Modal Header */}
@@ -796,7 +790,7 @@ function LeaderboardContent() {
 
               {/* Stats Grid */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <div className="bg-[#f5f1e8]/5 rounded-lg p-4 text-center">
+                <div className="bg-transparent backdrop-blur-sm border border-[#f5f1e8]/10 rounded-lg p-4 text-center">
                   <div className="flex items-center justify-center mb-2">
                     <span className="text-[#E98B8B] font-bold text-lg">♪</span>
                   </div>
@@ -804,7 +798,7 @@ function LeaderboardContent() {
                   <p className="text-xs text-[#f5f1e8]/60">Sadie Jean Plays</p>
                 </div>
                 
-                <div className="bg-[#f5f1e8]/5 rounded-lg p-4 text-center">
+                <div className="bg-transparent backdrop-blur-sm border border-[#f5f1e8]/10 rounded-lg p-4 text-center">
                   <div className="flex items-center justify-center mb-2">
                     <span className="text-[#E98B8B] font-bold text-lg">*</span>
                   </div>
@@ -812,7 +806,7 @@ function LeaderboardContent() {
                   <p className="text-xs text-[#f5f1e8]/60">Total Points</p>
                 </div>
                 
-                <div className="bg-[#f5f1e8]/5 rounded-lg p-4 text-center">
+                <div className="bg-transparent backdrop-blur-sm border border-[#f5f1e8]/10 rounded-lg p-4 text-center">
                   <div className="flex items-center justify-center mb-2">
                     <span className="text-[#E98B8B] font-bold text-lg">⏱</span>
                   </div>
@@ -820,7 +814,7 @@ function LeaderboardContent() {
                   <p className="text-xs text-[#f5f1e8]/60">Listening Time</p>
                 </div>
                 
-                <div className="bg-[#f5f1e8]/5 rounded-lg p-4 text-center">
+                <div className="bg-transparent backdrop-blur-sm border border-[#f5f1e8]/10 rounded-lg p-4 text-center">
                   <div className="flex items-center justify-center mb-2">
                     <span className="text-[#E98B8B] font-bold text-lg">♪</span>
                   </div>
@@ -837,7 +831,7 @@ function LeaderboardContent() {
                   </h3>
                   <div className="space-y-2">
                     {selectedUser.topSongs.map((song, index) => (
-                      <div key={index} className="flex items-center justify-between bg-[#f5f1e8]/5 rounded-lg p-3">
+                      <div key={index} className="flex items-center justify-between bg-transparent backdrop-blur-sm border border-[#f5f1e8]/10 rounded-lg p-3">
                         <div className="flex items-center space-x-3">
                           <div className="w-8 h-8 bg-[#E98B8B]/20 rounded-full flex items-center justify-center">
                             <span className="text-sm font-bold text-[#E98B8B]">#{index + 1}</span>
@@ -854,7 +848,7 @@ function LeaderboardContent() {
               )}
 
               {/* Session Stats */}
-              <div className="bg-[#f5f1e8]/5 rounded-lg p-4">
+              <div className="bg-transparent backdrop-blur-sm border border-[#f5f1e8]/10 rounded-lg p-4">
                 <h3 className="text-lg font-semibold text-[#f5f1e8] mb-3">
                   Listening Habits
                 </h3>

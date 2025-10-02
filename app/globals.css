@@ -25,7 +25,7 @@
   }
   
   .card {
-    @apply bg-[#333333] backdrop-blur-md rounded-2xl p-8 border border-white/10 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-[#404040];
+    @apply bg-transparent backdrop-blur-md rounded-2xl p-8 border border-white/10 shadow-lg hover:shadow-xl transition-all duration-300;
   }
   
   .gradient-text {
