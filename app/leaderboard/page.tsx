@@ -95,7 +95,7 @@ function LeaderboardContent() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-4xl font-bold text-[#f5f1e8] mb-2">Sadie Jean Leaderboard</h1>
+              <h1 className="text-4xl font-bold text-[#f5f1e8] mb-2">Sadie Jean Leaderboard ✨</h1>
               <p className="text-[#f5f1e8]/60">See how you stack up against other Sadie Jean fans</p>
             </div>
                 <button
