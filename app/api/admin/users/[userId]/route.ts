@@ -33,14 +33,14 @@ export async function GET(request: Request, { params }: { params: { userId: stri
 
     // Calculate detailed stats
     const totalPlays = listeningData.length
-    const totalPoints = listeningData.reduce((sum, track) => {
+    const totalPoints = listeningData.reduce((sum: number, track: any) => {
       let points = 1
       if (track.duration_ms > 0) points += 1
       return sum + points
     }, 0)
 
     const uniqueSongs = new Set(listeningData.map(track => track.track_name)).size
-    const totalListeningTime = listeningData.reduce((sum, track) => sum + (track.duration_ms || 0), 0)
+    const totalListeningTime = listeningData.reduce((sum: number, track: any) => sum + (track.duration_ms || 0), 0)
 
     // Get top songs
     const trackCounts: { [key: string]: number } = {}
