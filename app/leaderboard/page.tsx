@@ -386,7 +386,7 @@ function LeaderboardContent() {
               </div>
               <span className="text-2xl text-[#E98B8B] font-bold">*</span>
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* Leaderboard */}
