@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Spotify Test - No Dependencies</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #282828;
+            color: white;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        button {
+            background: #1db954;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            background: #1ed760;
+        }
+        .result {
+            background: #333;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            text-align: left;
+        }
+        .success { color: #1db954; }
+        .error { color: #ff6b6b; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔥 EXTREME SPOTIFY TEST</h1>
+        <p>This bypasses ALL server code, environment variables, and Next.js.</p>
+        <p>Pure HTML + JavaScript only.</p>
+        
+        <button onclick="testSpotify()">Test Spotify Authorization</button>
+        
+        <div id="result" class="result" style="display: none;">
+            <h3>Result:</h3>
+            <div id="result-content"></div>
+        </div>
+        
+        <div class="result">
+            <h3>What this does:</h3>
+            <ul>
+                <li>✅ No environment variables needed</li>
+                <li>✅ No server-side code</li>
+                <li>✅ No Next.js dependencies</li>
+                <li>✅ Direct Spotify OAuth only</li>
+                <li>✅ Shows authorization code if successful</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function testSpotify() {
+            const clientId = '3d8d032ed282470cac128ad3e41ccf6a';
+            const redirectUri = window.location.origin + '/spotify-callback.html';
+            
+            // Check if we're coming back from Spotify
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            const error = urlParams.get('error');
+            
+            if (code) {
+                document.getElementById('result').style.display = 'block';
+                document.getElementById('result-content').innerHTML = 
+                    '<div class="success">✅ SUCCESS! Authorization Code: ' + 
+                    '<br><strong>' + code.substring(0, 50) + '...</strong>' +
+                    '<br><br>Spotify OAuth is working perfectly!</div>';
+            } else if (error) {
+                document.getElementById('result').style.display = 'block';
+                document.getElementById('result-content').innerHTML = 
+                    '<div class="error">❌ ERROR: ' + error + '</div>';
+            } else {
+                // Redirect to Spotify
+                const scopes = 'user-read-email user-read-private';
+                const authUrl = `https://accounts.spotify.com/authorize?` +
+                    `client_id=${clientId}&` +
+                    `response_type=code&` +
+                    `redirect_uri=${encodeURIComponent(redirectUri)}&` +
+                    `scope=${encodeURIComponent(scopes)}&` +
+                    `state=test`;
+                
+                window.location.href = authUrl;
+            }
+        }
+        
+        // Auto-run test if we have URL parameters
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('code') || urlParams.get('error')) {
+                testSpotify();
+            }
+        }
+    </script>
+</body>
+</html>
