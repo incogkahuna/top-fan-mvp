@@ -1,0 +1,10 @@
+[33m5c55755[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m Fix syntax error in leaderboard page
+[33m02f080b[m[33m ([m[1;31morigin/master[m[33m)[m Further simplify leaderboard aesthetics for cleaner design
+[33m67b489d[m Fix remaining TypeScript and Client Component errors
+[33mb5e2afe[m Fix TypeScript errors in leaderboard page
+[33m22803e7[m Simplify leaderboard layout with transparent backgrounds
+[33mb474303[m Add EXTREME Spotify test - pure HTML with no dependencies
+[33mfa7a26c[m Remove environment variable dependencies from test page
+[33m907cc0c[m Fix TypeScript errors in leaderboard page for null user
+[33m5fc34af[m Remove all commented auth imports to fix build errors
+[33mb805aee[m Fix AuthProvider import in layout.tsx
