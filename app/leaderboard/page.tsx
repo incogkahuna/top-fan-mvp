@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Trophy, Medal, Crown, Star, TrendingUp, Users, Music, Play, Info, LogIn, X, Clock, Calendar, Headphones, Award, Settings } from 'lucide-react'
-import { useAuth } from '@/lib/auth'
+// import { useAuth } from '@/lib/auth' // DISABLED FOR DEBUGGING
 import ProfilePhotoUpload from '@/components/ProfilePhotoUpload'
 
 interface LeaderboardEntry {
@@ -31,7 +31,8 @@ function LeaderboardContent() {
   const [showProfileModal, setShowProfileModal] = useState(false)
   const [showProfileSettings, setShowProfileSettings] = useState(false)
   const [userProfileImage, setUserProfileImage] = useState<string | null>(null)
-  const { user } = useAuth()
+  // const { user } = useAuth() // DISABLED FOR DEBUGGING
+  const user = null // FORCE NO USER FOR DEBUGGING
 
   // Fetch real leaderboard data
   useEffect(() => {
