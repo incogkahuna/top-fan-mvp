@@ -47,7 +47,7 @@ export async function GET(request: Request) {
 }
 
 async function exportUsers() {
-  const { data: users, error } = await supabaseAdmin
+  const { data: users, error } = await supabaseAdmin!
     .from('users')
     .select(`
       id,
@@ -63,7 +63,7 @@ async function exportUsers() {
 }
 
 async function exportListeningData() {
-  const { data: listeningData, error } = await supabaseAdmin
+  const { data: listeningData, error } = await supabaseAdmin!
     .from('listening_data')
     .select(`
       *,
@@ -76,13 +76,13 @@ async function exportListeningData() {
 }
 
 async function exportAnalytics() {
-  const { data: users, error: usersError } = await supabaseAdmin
+  const { data: users, error: usersError } = await supabaseAdmin!
     .from('users')
     .select('id, display_name, created_at')
 
   if (usersError) throw usersError
 
-  const { data: listeningData, error: listeningError } = await supabaseAdmin
+  const { data: listeningData, error: listeningError } = await supabaseAdmin!
     .from('listening_data')
     .select('*')
     .eq('artist_name', 'Sadie Jean')

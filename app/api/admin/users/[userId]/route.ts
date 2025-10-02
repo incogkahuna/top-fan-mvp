@@ -10,7 +10,7 @@ export async function GET(request: Request, { params }: { params: { userId: stri
     const { userId } = params
 
     // Get detailed user information
-    const { data: user, error: userError } = await supabaseAdmin
+    const { data: user, error: userError } = await supabaseAdmin!
       .from('users')
       .select(`
         *,
@@ -91,7 +91,7 @@ export async function DELETE(request: Request, { params }: { params: { userId: s
     const { userId } = params
 
     // Delete user and all associated data
-    const { error: deleteError } = await supabaseAdmin
+    const { error: deleteError } = await supabaseAdmin!
       .from('users')
       .delete()
       .eq('id', userId)
@@ -119,7 +119,7 @@ export async function PUT(request: Request, { params }: { params: { userId: stri
     const { displayName, email, profileImageUrl } = body
 
     // Update user information
-    const { error: updateError } = await supabaseAdmin
+    const { error: updateError } = await supabaseAdmin!
       .from('users')
       .update({
         display_name: displayName,

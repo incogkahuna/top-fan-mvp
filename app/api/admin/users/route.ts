@@ -8,7 +8,7 @@ export async function GET() {
     }
 
     // Get all users with their Sadie Jean listening data
-    const { data: users, error: usersError } = await supabaseAdmin
+    const { data: users, error: usersError } = await supabaseAdmin!
       .from('users')
       .select(`
         id,

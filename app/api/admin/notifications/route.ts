@@ -8,7 +8,7 @@ export async function GET() {
     }
 
     // Get recent notifications
-    const { data: notifications, error } = await supabaseAdmin
+    const { data: notifications, error } = await supabaseAdmin!
       .from('notifications')
       .select('*')
       .order('created_at', { ascending: false })
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     const { title, message, type, targetUsers } = body
 
     // Create notification
-    const { data: notification, error } = await supabaseAdmin
+    const { data: notification, error } = await supabaseAdmin!
       .from('notifications')
       .insert({
         title,

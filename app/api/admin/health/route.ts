@@ -31,7 +31,7 @@ async function checkDatabase() {
       return { status: 'unhealthy', message: 'Supabase not configured' }
     }
 
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await supabaseAdmin!
       .from('users')
       .select('count', { count: 'exact', head: true })
 
@@ -77,16 +77,16 @@ async function getSystemMetrics() {
     }
 
     // Get basic system metrics
-    const { count: totalUsers } = await supabaseAdmin
+    const { count: totalUsers } = await supabaseAdmin!
       .from('users')
       .select('*', { count: 'exact', head: true })
 
-    const { count: totalPlays } = await supabaseAdmin
+    const { count: totalPlays } = await supabaseAdmin!
       .from('listening_data')
       .select('*', { count: 'exact', head: true })
       .eq('artist_name', 'Sadie Jean')
 
-    const { count: activeUsers } = await supabaseAdmin
+    const { count: activeUsers } = await supabaseAdmin!
       .from('listening_data')
       .select('user_id', { count: 'exact', head: true })
       .eq('artist_name', 'Sadie Jean')

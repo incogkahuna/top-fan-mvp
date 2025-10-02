@@ -8,7 +8,7 @@ export async function GET() {
     }
 
     // Get total users
-    const { count: totalUsers, error: usersError } = await supabaseAdmin
+    const { count: totalUsers, error: usersError } = await supabaseAdmin!
       .from('users')
       .select('*', { count: 'exact', head: true })
 
@@ -21,7 +21,7 @@ export async function GET() {
     const thirtyDaysAgo = new Date()
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
 
-    const { count: activeUsers, error: activeUsersError } = await supabaseAdmin
+    const { count: activeUsers, error: activeUsersError } = await supabaseAdmin!
       .from('listening_data')
       .select('user_id', { count: 'exact', head: true })
       .gte('played_at', thirtyDaysAgo.toISOString())
@@ -31,7 +31,7 @@ export async function GET() {
     }
 
     // Get total plays and points for Sadie Jean only
-    const { data: sadieJeanData, error: sadieJeanError } = await supabaseAdmin
+    const { data: sadieJeanData, error: sadieJeanError } = await supabaseAdmin!
       .from('listening_data')
       .select('*')
       .eq('artist_name', 'Sadie Jean')
@@ -50,7 +50,7 @@ export async function GET() {
     }, 0) || 0
 
     // Get top fan
-    const { data: topFanData, error: topFanError } = await supabaseAdmin
+    const { data: topFanData, error: topFanError } = await supabaseAdmin!
       .from('users')
       .select(`
         id,
@@ -80,7 +80,7 @@ export async function GET() {
     }
 
     // Get recent activity (simplified)
-    const { data: recentActivity, error: activityError } = await supabaseAdmin
+    const { data: recentActivity, error: activityError } = await supabaseAdmin!
       .from('listening_data')
       .select(`
         id,

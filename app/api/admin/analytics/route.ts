@@ -29,7 +29,7 @@ export async function GET(request: Request) {
     }
 
     // Get Sadie Jean listening data for the time range
-    const { data: listeningData, error: dataError } = await supabaseAdmin
+    const { data: listeningData, error: dataError } = await supabaseAdmin!
       .from('listening_data')
       .select('*')
       .eq('artist_name', 'Sadie Jean')
@@ -86,6 +86,10 @@ export async function GET(request: Request) {
 }
 
 async function getUserGrowth(startDate: Date) {
+  if (!supabaseAdmin) {
+    throw new Error('Supabase admin client not configured')
+  }
+  
   const { data: users, error } = await supabaseAdmin
     .from('users')
     .select('created_at')
