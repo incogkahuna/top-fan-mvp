@@ -62,11 +62,11 @@ export async function GET(request: NextRequest) {
 
     if (tokenError) {
       console.error('Token storage error:', tokenError)
-      return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/?error=token_error`)
+      return NextResponse.redirect('https://earlytwentiesstorture.vercel.app/?error=token_error')
     }
 
     // Set session cookie and redirect to leaderboard
-    const response = NextResponse.redirect(`${process.env.NEXTAUTH_URL}/leaderboard`)
+    const response = NextResponse.redirect('https://earlytwentiesstorture.vercel.app/leaderboard')
     response.cookies.set('spotify_access_token', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -76,6 +76,6 @@ export async function GET(request: NextRequest) {
     return response
   } catch (error) {
     console.error('Spotify callback error:', error)
-    return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/?error=callback_error`)
+    return NextResponse.redirect('https://earlytwentiesstorture.vercel.app/?error=callback_error')
   }
 }
