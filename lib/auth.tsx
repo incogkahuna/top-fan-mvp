@@ -48,6 +48,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } else {
           setUser(null)
         }
+      } else if (response.status === 401) {
+        // 401 is expected when user is not authenticated - don't treat as error
+        setUser(null)
       } else {
         setUser(null)
       }
