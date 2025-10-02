@@ -42,6 +42,7 @@ export async function GET(request: NextRequest) {
     const userResponse = await fetch('https://api.spotify.com/v1/me', {
       headers: {
         'Authorization': 'Bearer ' + access_token
+      }
     })
 
     if (!userResponse.ok) {
