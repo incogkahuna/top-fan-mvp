@@ -9,7 +9,7 @@ export default function Test() {
         <button 
           onClick={() => {
             const clientId = '3d8d032ed282470cac128ad3e41ccf6a'
-            const redirectUri = 'https://earlytwentiesstorture.vercel.app/test/callback'
+            const redirectUri = 'https://earlytwentiesstorture.vercel.app/api/spotify-callback'
             const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=user-read-email&state=test`
             window.location.href = authUrl
           }}
