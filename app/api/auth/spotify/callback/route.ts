@@ -9,11 +9,11 @@ export async function GET(request: NextRequest) {
     const error = searchParams.get('error')
 
     if (error) {
-      return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/?error=access_denied`)
+      return NextResponse.redirect('https://earlytwentiesstorture.vercel.app/?error=access_denied')
     }
 
     if (!code) {
-      return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/?error=no_code`)
+      return NextResponse.redirect('https://earlytwentiesstorture.vercel.app/?error=no_code')
     }
 
     // Exchange code for access token
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
 
     if (!supabaseAdmin) {
       console.error('Supabase admin client not available')
-      return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/?error=supabase_not_configured`)
+      return NextResponse.redirect('https://earlytwentiesstorture.vercel.app/?error=supabase_not_configured')
     }
 
     // Store or update user in Supabase using admin client (bypasses RLS)
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
 
     if (userError) {
       console.error('User upsert error:', userError)
-      return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/?error=database_error`)
+      return NextResponse.redirect('https://earlytwentiesstorture.vercel.app/?error=database_error')
     }
 
     // Store tokens securely using admin client (bypasses RLS)
