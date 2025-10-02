@@ -66,25 +66,17 @@ export default function Navigation() {
                       onClick={() => setShowUserMenu(!showUserMenu)}
                       className="flex items-center space-x-2 text-sm font-medium text-[#f5f1e8]/80 hover:text-[#f5f1e8]"
                     >
-                  {user.profile_image_url ? (
-                    <img 
-                      src={user.profile_image_url} 
-                      alt={user.display_name}
-                      className="w-8 h-8 rounded-full"
-                    />
-                  ) : (
-                        <div className="w-8 h-8 bg-[#f5f1e8]/20 text-[#f5f1e8] rounded-full flex items-center justify-center">
-                          <span className="text-xs font-bold">{user.display_name.charAt(0).toUpperCase()}</span>
-                        </div>
-                  )}
-                  <span>{user.display_name}</span>
+                  <div className="w-8 h-8 bg-[#f5f1e8]/20 text-[#f5f1e8] rounded-full flex items-center justify-center">
+                    <span className="text-xs font-bold">U</span>
+                  </div>
+                  <span>User</span>
                 </button>
 
                 {showUserMenu && (
                     <div className="absolute right-0 mt-2 w-48 bg-[#1f1a16]/90 rounded-lg border border-[#f5f1e8]/10 shadow-lg py-2 z-50">
                       <div className="px-4 py-3 border-b border-[#f5f1e8]/10">
-                        <p className="text-sm font-medium text-[#f5f1e8]">{user.display_name}</p>
-                        <p className="text-xs text-[#f5f1e8]/60">{user.email}</p>
+                        <p className="text-sm font-medium text-[#f5f1e8]">User</p>
+                        <p className="text-xs text-[#f5f1e8]/60">user@example.com</p>
                       </div>
                       <button
                         onClick={handleLogout}
