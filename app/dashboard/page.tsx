@@ -268,7 +268,7 @@ function DashboardContent() {
         throw new Error(syncResult.error)
       }
 
-      setSyncMessage(`✅ Sync complete! Added ${syncResult.synced} new tracks. Total plays: ${syncResult.totalPlays}`)
+      setSyncMessage(`Sync complete! Added ${syncResult.synced} new tracks. Total plays: ${syncResult.totalPlays}`)
       
       // Smooth background update instead of page refresh
       setTimeout(() => {
@@ -324,7 +324,7 @@ function DashboardContent() {
         throw new Error(syncResult.error)
       }
 
-      setSyncMessage(`✅ Force sync complete! Processed ${syncResult.synced} tracks.`)
+      setSyncMessage(`Force sync complete! Processed ${syncResult.synced} tracks.`)
       
       // Smooth background update instead of page refresh
       setTimeout(() => {
@@ -350,16 +350,16 @@ function DashboardContent() {
         <div className="mb-12">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-5xl font-bold text-black mb-2 tracking-tight">Your Dashboard</h1>
-              <p className="text-gray-600 text-lg">Track your progress and compete with other fans</p>
+              <h1 className="text-5xl font-bold text-[#f5f1e8] mb-2 tracking-tight logo-font">Your Music Stats</h1>
+              <p className="text-[#f5f1e8]/60 text-lg">Track your listening habits and compete with other fans</p>
             </div>
 
             {/* Sync Button */}
             <div className="flex flex-col items-end space-y-2">
               <div className="flex items-center space-x-3">
                 {/* Auto-sync indicator */}
-                <div className="flex items-center space-x-2 text-sm text-gray-500">
-                  <div className={`w-2 h-2 rounded-full ${isUpdating ? 'bg-black animate-pulse' : 'bg-green-500'}`}></div>
+                <div className="flex items-center space-x-2 text-sm text-[#f5f1e8]/60">
+                  <div className={`w-2 h-2 rounded-full ${isUpdating ? 'bg-orange-400 animate-pulse' : 'bg-green-400'}`}></div>
                   <span className="font-medium">{isUpdating ? 'Updating...' : 'Live sync'}</span>
                 </div>
                 
@@ -369,8 +369,8 @@ function DashboardContent() {
                     disabled={syncing}
                     className={`flex items-center space-x-2 px-4 py-2 rounded-full font-medium transition-all ${
                       syncing 
-                        ? 'bg-gray-200 cursor-not-allowed text-gray-400' 
-                        : 'bg-black hover:bg-gray-800 text-white hover:scale-105'
+                        ? 'bg-[#f5f1e8]/20 cursor-not-allowed text-[#f5f1e8]/40' 
+                        : 'btn-primary hover:scale-105'
                     }`}
                   >
                     {syncing ? (
@@ -390,7 +390,7 @@ function DashboardContent() {
               
               {syncMessage && (
                 <div className={`text-sm px-3 py-1 rounded-md ${
-                  syncMessage.includes('✅') 
+                  syncMessage.includes('complete') 
                     ? 'bg-green-900/50 text-green-300' 
                     : 'bg-red-900/50 text-red-300'
                 }`}>
@@ -403,7 +403,7 @@ function DashboardContent() {
 
         {loading && (
           <div className="flex items-center justify-center py-12">
-            <div className="text-gray-600">Loading your dashboard...</div>
+            <div className="text-[#f5f1e8]/60">Loading your music stats...</div>
           </div>
         )}
 
@@ -435,8 +435,8 @@ function DashboardContent() {
                 className={`card transition-all duration-300 ${isUpdating ? 'ring-2 ring-black/20' : ''}`}
           >
             <div className="text-center">
-                    <p className="text-sm font-medium text-gray-500 mb-2 uppercase tracking-wider">Total Plays</p>
-                    <p className="text-5xl font-bold text-black">
+                    <p className="text-sm font-medium text-[#f5f1e8]/60 mb-2 uppercase tracking-wider">Total Plays</p>
+                    <p className="text-5xl font-bold text-[#f5f1e8]">
                       <AnimatedNumber value={userStats.totalPlays} />
                     </p>
             </div>
@@ -458,10 +458,10 @@ function DashboardContent() {
                 className={`card transition-all duration-300 ${isUpdating ? 'ring-2 ring-black/20' : ''}`}
           >
             <div className="text-center">
-                    <p className="text-sm font-medium text-gray-500 mb-2 uppercase tracking-wider">Listening Time</p>
-                    <p className="text-5xl font-bold text-black">
+                    <p className="text-sm font-medium text-[#f5f1e8]/60 mb-2 uppercase tracking-wider">Listening Time</p>
+                    <p className="text-5xl font-bold text-[#f5f1e8]">
                       <AnimatedNumber value={Math.round(userStats.totalListeningHours * 10) / 10} />
-                      <span className="text-2xl text-gray-400">h</span>
+                      <span className="text-2xl text-[#f5f1e8]/60">h</span>
                     </p>
             </div>
           </motion.div>
@@ -482,8 +482,8 @@ function DashboardContent() {
                 className={`card transition-all duration-300 ${isUpdating ? 'ring-2 ring-black/20' : ''}`}
           >
             <div className="text-center">
-                    <p className="text-sm font-medium text-gray-500 mb-2 uppercase tracking-wider">Unique Artists</p>
-                    <p className="text-5xl font-bold text-black">
+                    <p className="text-sm font-medium text-[#f5f1e8]/60 mb-2 uppercase tracking-wider">Unique Artists</p>
+                    <p className="text-5xl font-bold text-[#f5f1e8]">
                       <AnimatedNumber value={userStats.uniqueArtists} />
                     </p>
             </div>
@@ -496,8 +496,8 @@ function DashboardContent() {
             className="card"
           >
             <div className="text-center">
-                    <p className="text-sm font-medium text-gray-500 mb-2 uppercase tracking-wider">Current Rank</p>
-                    <p className="text-5xl font-bold text-black">#{userStats.rank}</p>
+                    <p className="text-sm font-medium text-[#f5f1e8]/60 mb-2 uppercase tracking-wider">Current Rank</p>
+                    <p className="text-5xl font-bold text-[#f5f1e8]">#{userStats.rank}</p>
             </div>
           </motion.div>
         </div>
@@ -518,8 +518,8 @@ function DashboardContent() {
               onClick={() => setActiveTab(tab.id)}
               className={`pb-4 text-sm font-medium transition-colors ${
                 activeTab === tab.id
-                  ? 'text-black border-b-2 border-black'
-                  : 'text-gray-500 hover:text-black'
+                  ? 'bg-white text-black px-4 py-2 rounded-full'
+                  : 'text-[#f5f1e8]/60 hover:text-[#f5f1e8] hover:bg-white hover:text-black hover:px-4 hover:py-2 hover:rounded-full'
               }`}
             >
               {tab.label}
@@ -534,7 +534,7 @@ function DashboardContent() {
 
             {activeTab === 'overview' && !userStats && (
               <div className="text-center py-12">
-                <div className="text-gray-400">Loading your dashboard...</div>
+                <div className="text-[#f5f1e8]/60">Loading your music stats...</div>
               </div>
             )}
 
@@ -544,8 +544,8 @@ function DashboardContent() {
             animate={{ opacity: 1, y: 0 }}
                 className="card"
               >
-                <h3 className="text-xl font-semibold text-white mb-4">Achievements</h3>
-                <div className="text-center py-12 text-gray-400">
+                <h3 className="text-xl font-semibold text-[#f5f1e8] mb-4">Achievements</h3>
+                <div className="text-center py-12 text-[#f5f1e8]/60">
                   <Award className="h-16 w-16 mx-auto mb-4 opacity-50" />
                   <p>No achievements yet</p>
                   <p className="text-sm">Start listening to unlock achievements!</p>
@@ -559,7 +559,7 @@ function DashboardContent() {
             animate={{ opacity: 1, y: 0 }}
             className="card"
           >
-            <h3 className="text-xl font-semibold text-white mb-4">Recent Activity</h3>
+            <h3 className="text-xl font-semibold text-[#f5f1e8] mb-4">Recent Activity</h3>
                 {userStats.recentActivity.length > 0 ? (
             <div className="space-y-4">
                     {userStats.recentActivity.map((activity, index) => {
@@ -568,27 +568,27 @@ function DashboardContent() {
                       const duration = Math.round(activity.duration_ms / 1000 / 60 * 10) / 10
                       
                       return (
-                <div key={index} className="flex items-center justify-between py-3 border-b border-white/10 last:border-b-0">
+                <div key={index} className="flex items-center justify-between py-3 border-b border-[#f5f1e8]/10 last:border-b-0">
                           <div className="flex items-center space-x-4">
                             <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center">
                               <Music className="h-5 w-5 text-white" />
                             </div>
                   <div>
-                              <p className="text-white font-medium">{activity.track_name}</p>
-                              <p className="text-gray-400 text-sm">{activity.artist_name}</p>
-                              <p className="text-gray-500 text-xs">{timeAgo}</p>
+                              <p className="text-[#f5f1e8] font-medium">{activity.track_name}</p>
+                              <p className="text-[#f5f1e8]/60 text-sm">{activity.artist_name}</p>
+                              <p className="text-[#f5f1e8]/40 text-xs">{timeAgo}</p>
                             </div>
                           </div>
                           <div className="text-right">
                             <p className="text-orange-400 font-semibold">{duration}m</p>
-                            <p className="text-gray-400 text-xs">duration</p>
+                            <p className="text-[#f5f1e8]/60 text-xs">duration</p>
                           </div>
                         </div>
                       )
                     })}
                   </div>
                 ) : (
-                  <div className="text-center py-12 text-gray-400">
+                  <div className="text-center py-12 text-[#f5f1e8]/60">
                     <Clock className="h-16 w-16 mx-auto mb-4 opacity-50" />
                     <p>No recent activity</p>
                     <p className="text-sm">Sync your Spotify data to see your listening history</p>

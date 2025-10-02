@@ -15,8 +15,8 @@ interface User {
 interface AuthContextType {
   user: User | null
   loading: boolean
-  login: (spotifyId: string) => Promise<void>
-  logout: () => void
+  login: () => Promise<void>
+  logout: () => Promise<void>
   refreshUser: () => Promise<void>
 }
 
@@ -34,16 +34,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const checkAuthStatus = async () => {
     try {
       setLoading(true)
-      // For now, let's just set a mock user to test the flow
-      setUser({
-        id: '1',
-        spotify_id: 'test_user',
-        display_name: 'Test User',
-        email: 'test@example.com',
-        profile_image_url: '',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+      
+      // Check if user is authenticated by calling the /api/auth/me endpoint
+      const response = await fetch('/api/auth/me', {
+        method: 'GET',
+        credentials: 'include'
       })
+      
+      if (response.ok) {
+        const userData = await response.json()
+        if (userData.user) {
+          setUser(userData.user)
+        } else {
+          setUser(null)
+        }
+      } else {
+        setUser(null)
+      }
     } catch (error) {
       console.error('Auth check failed:', error)
       setUser(null)
@@ -52,33 +59,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  const login = async (spotifyId: string) => {
+  const login = async () => {
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ spotifyId }),
-      })
-
-      if (response.ok) {
-        const userData = await response.json()
-        setUser(userData.user)
-      } else {
-        throw new Error('Login failed')
-      }
+      // Redirect to Spotify OAuth
+      window.location.href = '/api/auth/spotify'
     } catch (error) {
       console.error('Login error:', error)
       throw error
     }
   }
 
-  const logout = () => {
-    setUser(null)
-    // Clear any stored tokens or session data
-    localStorage.removeItem('spotify_token')
-    localStorage.removeItem('user_session')
+  const logout = async () => {
+    try {
+      // Clear the session cookie
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
+      })
+    } catch (error) {
+      console.error('Logout error:', error)
+    } finally {
+      setUser(null)
+      // Clear any stored tokens or session data
+      localStorage.removeItem('spotify_token')
+      localStorage.removeItem('user_session')
+    }
   }
 
   const refreshUser = async () => {

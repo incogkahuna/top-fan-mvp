@@ -65,8 +65,15 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/?error=token_error`)
     }
 
-    // Redirect to dashboard with success
-    return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/dashboard?success=connected`)
+    // Set session cookie and redirect to leaderboard
+    const response = NextResponse.redirect(`${process.env.NEXTAUTH_URL}/leaderboard`)
+    response.cookies.set('spotify_access_token', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 7 // 7 days
+    })
+    return response
   } catch (error) {
     console.error('Spotify callback error:', error)
     return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/?error=callback_error`)

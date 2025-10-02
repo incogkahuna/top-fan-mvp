@@ -112,7 +112,18 @@ export function getSpotifyAuthUrl(): string {
     'user-read-currently-playing'
   ]
 
-  return spotifyApi.createAuthorizeURL(scopes, 'state')
+  console.log('Creating Spotify auth URL with scopes:', scopes)
+  console.log('Spotify API client ID:', process.env.SPOTIFY_CLIENT_ID)
+  console.log('Spotify API redirect URI:', process.env.SPOTIFY_REDIRECT_URI)
+  
+  try {
+    const authUrl = spotifyApi.createAuthorizeURL(scopes, 'state')
+    console.log('Successfully created auth URL:', authUrl)
+    return authUrl
+  } catch (error) {
+    console.error('Error creating Spotify auth URL:', error)
+    throw error
+  }
 }
 
 // Exchange authorization code for access token

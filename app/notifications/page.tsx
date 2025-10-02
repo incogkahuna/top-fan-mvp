@@ -170,8 +170,8 @@ export default function Notifications() {
               onClick={() => setFilter(filterOption.id)}
               className={`px-4 py-2 rounded-lg transition-colors ${
                 filter === filterOption.id
-                  ? 'bg-spotify-green text-white'
-                  : 'bg-white/10 text-gray-300 hover:text-white hover:bg-white/20'
+                  ? 'bg-white text-black'
+                  : 'bg-white/10 text-gray-300 hover:text-white hover:bg-white hover:text-black'
               }`}
             >
               {filterOption.label}

@@ -1,49 +1,58 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Calendar, MapPin, ExternalLink, Clock, Ticket, Music } from 'lucide-react'
+import { Calendar, MapPin, ExternalLink, Clock, Ticket, Music, Zap } from 'lucide-react'
+import { useState, useEffect } from 'react'
 
-// Placeholder tour dates - replace with real data
-const tourDates = [
-  {
-    id: 1,
-    date: 'March 15, 2025',
-    time: '8:00 PM',
-    venue: 'The Roxy Theatre',
-    city: 'Los Angeles, CA',
-    ticketLink: 'https://example.com/tickets',
-    status: 'On Sale'
-  },
-  {
-    id: 2,
-    date: 'March 22, 2025',
-    time: '9:00 PM',
-    venue: 'The Fillmore',
-    city: 'San Francisco, CA',
-    ticketLink: 'https://example.com/tickets',
-    status: 'Sold Out'
-  },
-  {
-    id: 3,
-    date: 'March 29, 2025',
-    time: '8:30 PM',
-    venue: 'Brooklyn Steel',
-    city: 'Brooklyn, NY',
-    ticketLink: 'https://example.com/tickets',
-    status: 'On Sale'
-  },
-  {
-    id: 4,
-    date: 'April 5, 2025',
-    time: '8:00 PM',
-    venue: 'House of Blues',
-    city: 'Chicago, IL',
-    ticketLink: 'https://example.com/tickets',
-    status: 'On Sale'
-  },
-]
+interface TourDate {
+  id: string
+  date: string
+  time: string
+  venue: string
+  city: string
+  ticketLink: string
+  status: string
+  layloId?: string
+}
 
 export default function Tour() {
+  const [tourDates, setTourDates] = useState<TourDate[]>([])
+  const [loading, setLoading] = useState(true)
+  const [layloConnected, setLayloConnected] = useState(false)
+
+  // Load tour dates from Laylo API
+  useEffect(() => {
+    const loadTourDates = async () => {
+      try {
+        const response = await fetch('/api/test/simple?type=laylo-tours')
+        if (response.ok) {
+          const data = await response.json()
+          setTourDates(data.tours || [])
+          setLayloConnected(!data.message && !data.error)
+        } else {
+          // Fallback to sample data
+          setTourDates([
+            {
+              id: '1',
+              date: 'March 15, 2025',
+              time: '8:00 PM',
+              venue: 'The Roxy Theatre',
+              city: 'Los Angeles, CA',
+              ticketLink: 'https://example.com/tickets',
+              status: 'On Sale'
+            }
+          ])
+        }
+        setLoading(false)
+      } catch (error) {
+        console.error('Error loading tour dates:', error)
+        setLoading(false)
+      }
+    }
+
+    loadTourDates()
+  }, [])
+
   return (
     <div className="min-h-screen py-16">
       <div className="max-w-7xl mx-auto px-6">
@@ -54,17 +63,45 @@ export default function Tour() {
           className="text-center mb-16"
         >
           <h1 className="text-6xl font-bold text-white mb-4 logo-font">Tour Dates</h1>
-          <p className="text-white/60 text-lg">Come see Early 20s Torture live</p>
+          <p className="text-white/60 text-lg">Come see Early 20's Torture live</p>
+          
+          {/* Laylo Connection Status */}
+          {layloConnected && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="inline-flex items-center space-x-2 bg-green-500/20 text-green-400 px-4 py-2 rounded-full text-sm mt-4"
+            >
+              <Zap className="h-4 w-4" />
+              <span>Powered by Laylo</span>
+            </motion.div>
+          )}
         </motion.div>
 
         {/* Tour Dates Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16"
-        >
-          {tourDates.map((show, index) => (
+        {loading ? (
+          <div className="text-center py-16">
+            <div className="w-8 h-8 border-2 border-orange-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-white/60">Loading tour dates...</p>
+          </div>
+        ) : tourDates.length === 0 ? (
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="card text-center py-16"
+          >
+            <Calendar className="h-16 w-16 text-white/20 mx-auto mb-4" />
+            <h3 className="text-2xl font-bold text-white mb-2">No Tour Dates Yet</h3>
+            <p className="text-white/60 text-lg">Check back soon for upcoming shows!</p>
+          </motion.div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16"
+          >
+            {tourDates.map((show, index) => (
             <motion.div
               key={show.id}
               initial={{ opacity: 0, y: 20 }}
@@ -121,7 +158,8 @@ export default function Tour() {
               </div>
             </motion.div>
           ))}
-        </motion.div>
+          </motion.div>
+        )}
 
         {/* Tour Info Section */}
         <motion.div
@@ -159,6 +197,36 @@ export default function Tour() {
             <Calendar className="h-16 w-16 text-white/20 mx-auto mb-4" />
             <h3 className="text-2xl font-bold text-white mb-2">No Tour Dates Yet</h3>
             <p className="text-white/60 text-lg">Check back soon for upcoming shows!</p>
+          </motion.div>
+        )}
+
+        {/* Laylo Fan Signup */}
+        {layloConnected && (
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="text-center mb-16"
+          >
+            <div className="card max-w-2xl mx-auto">
+              <div className="flex items-center justify-center space-x-2 mb-4">
+                <Zap className="h-6 w-6 text-orange-400" />
+                <h2 className="text-3xl font-bold text-white">Join the Fan List</h2>
+              </div>
+              <p className="text-white/60 mb-6">
+                Get exclusive access to presales, VIP experiences, and behind-the-scenes content.
+                Powered by Laylo for the best fan experience.
+              </p>
+              <a
+                href="https://laylo.com/early20storture"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary inline-flex items-center space-x-2"
+              >
+                <span>Join Fan List</span>
+                <ExternalLink className="h-4 w-4" />
+              </a>
+            </div>
           </motion.div>
         )}
 

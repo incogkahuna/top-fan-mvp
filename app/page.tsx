@@ -3,12 +3,16 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Play, Music } from 'lucide-react'
+import LeaderboardPreview from '@/components/LeaderboardPreview'
 
 export default function Home() {
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <div className="container mx-auto px-6 py-32">
+          {/* Hero Section */}
+          <div className="relative min-h-screen flex items-center justify-center bg-[#282828]">
+        
+        {/* Content */}
+        <div className="relative z-10 container mx-auto px-6 py-32">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -16,13 +20,13 @@ export default function Home() {
           className="text-center max-w-4xl mx-auto"
         >
           {/* Main Headline - Bold Logo Style */}
-          <h1 className="text-8xl md:text-9xl font-bold text-white mb-8 tracking-tight leading-none logo-font">
-            Early 20s<br/>Torture
-          </h1>
-          
-          <p className="text-2xl text-white/80 mb-12 max-w-2xl mx-auto leading-relaxed">
-            New music out now
-          </p>
+              <h1 className="text-8xl md:text-9xl font-bold text-[#f5f1e8] mb-8 tracking-tight leading-none logo-font">
+                    Early 20's<br/>Torture
+              </h1>
+              
+              <p className="text-2xl text-[#f5f1e8]/80 mb-12 max-w-2xl mx-auto leading-relaxed">
+                New music out now
+              </p>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
@@ -35,22 +39,23 @@ export default function Home() {
               <span>Listen Now</span>
             </Link>
             
-            <Link 
-              href="/leaderboard" 
-              className="px-8 py-3 border-2 border-white/20 text-white hover:bg-white/10 rounded-full transition-all duration-300 inline-flex items-center space-x-2"
-            >
-              <Music className="h-5 w-5" />
-              <span>Join Leaderboard</span>
-            </Link>
           </div>
-        </motion.div>
+            </motion.div>
+        </div>
+      </div>
 
-        {/* Featured Content Grid */}
+      {/* Leaderboard Preview */}
+      <div className="container mx-auto px-6 py-16">
+        <LeaderboardPreview />
+      </div>
+
+      {/* Featured Content Grid */}
+      <div className="container mx-auto px-6 py-16">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="mt-32 max-w-6xl mx-auto"
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="max-w-6xl mx-auto"
         >
           <div className="grid md:grid-cols-3 gap-8">
             {/* Photos Card */}
@@ -58,26 +63,26 @@ export default function Home() {
               <div className="aspect-square bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-lg mb-4 flex items-center justify-center">
                 <div className="text-6xl">📸</div>
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">Photos</h3>
-              <p className="text-white/60">View our latest gallery</p>
+                  <h3 className="text-2xl font-bold text-[#f5f1e8] mb-2">Photos</h3>
+                  <p className="text-[#f5f1e8]/60">View our latest gallery</p>
             </Link>
 
             {/* Tour Card */}
             <Link href="/tour" className="card group hover:scale-105 transition-transform duration-300">
               <div className="aspect-square bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-lg mb-4 flex items-center justify-center">
-                <div className="text-6xl">🎸</div>
+                <div className="text-6xl">♪</div>
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">Tour Dates</h3>
-              <p className="text-white/60">Find us on the road</p>
+                  <h3 className="text-2xl font-bold text-[#f5f1e8] mb-2">Tour Dates</h3>
+                  <p className="text-[#f5f1e8]/60">Find us on the road</p>
             </Link>
 
             {/* JeanMail Card */}
             <Link href="/jeanmail" className="card group hover:scale-105 transition-transform duration-300">
               <div className="aspect-square bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-lg mb-4 flex items-center justify-center">
-                <div className="text-6xl">✉️</div>
+                <div className="text-6xl">@</div>
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">JeanMail</h3>
-              <p className="text-white/60">Stay updated</p>
+                  <h3 className="text-2xl font-bold text-[#f5f1e8] mb-2">JeanMail</h3>
+                  <p className="text-[#f5f1e8]/60">Stay updated</p>
             </Link>
           </div>
         </motion.div>
@@ -86,11 +91,11 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t border-white/10 py-12 mt-32">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <p className="text-white/60 text-sm">
-            © 2025 Early 20s Torture. All rights reserved.
-          </p>
-        </div>
+            <div className="max-w-7xl mx-auto px-6 text-center">
+                  <p className="text-[#f5f1e8]/60 text-sm">
+                    © 2025 Early 20's Torture. All rights reserved.
+                  </p>
+            </div>
       </footer>
     </div>
   )

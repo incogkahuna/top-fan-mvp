@@ -8,31 +8,35 @@
   }
   
   body {
-    @apply text-white;
-    background: linear-gradient(135deg, #F07845 0%, #E8653C 25%, #1a0f0a 60%, #000000 100%);
-    background-attachment: fixed;
+    color: #f5f1e8;
+    background: #282828;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 500;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-[#D4756C] hover:bg-[#C06559] text-white font-medium py-3 px-8 rounded-full transition-all duration-300 hover:scale-105;
+    @apply bg-white hover:bg-pink-200 active:bg-pink-300 text-black font-medium py-3 px-8 rounded-full transition-all duration-300 hover:scale-105;
   }
   
   .btn-secondary {
-    @apply border-2 border-black hover:bg-black hover:text-white text-black font-medium py-3 px-8 rounded-full transition-all duration-300;
+    @apply bg-white hover:bg-pink-200 active:bg-pink-300 text-black font-medium py-3 px-8 rounded-full transition-all duration-300;
   }
   
   .card {
-    @apply bg-black/40 backdrop-blur-md rounded-2xl p-8 border border-white/10 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-black/50;
+    @apply bg-[#333333] backdrop-blur-md rounded-2xl p-8 border border-white/10 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-[#404040];
   }
   
   .gradient-text {
-    @apply text-black;
+    color: #f5f1e8;
   }
   
   .logo-font {
-    font-family: 'Brush Script MT', cursive;
+    font-family: 'Anton', 'Arial Black', sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
   }
   
   /* Custom scrollbar styles */

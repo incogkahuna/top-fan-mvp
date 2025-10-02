@@ -38,7 +38,7 @@ export default function TestSync() {
   }
 
   return (
-    <div className="min-h-screen p-6 bg-gray-900">
+    <div className="min-h-screen p-6">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold text-white mb-8">Auto-Sync Test</h1>
         
@@ -52,7 +52,7 @@ export default function TestSync() {
           <button
             onClick={testAutoSync}
             disabled={isRunning}
-            className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white px-6 py-2 rounded-lg mb-4 flex items-center space-x-2"
+            className="bg-white hover:bg-pink-200 disabled:bg-gray-300 text-black px-6 py-2 rounded-lg mb-4 flex items-center space-x-2"
           >
             {isRunning ? (
               <>

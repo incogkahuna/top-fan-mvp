@@ -10,6 +10,7 @@ A web app that gamifies Spotify listening data for fans and provides data insigh
 - 📊 **Artist Dashboard**: Comprehensive analytics for artists about their fanbase
 - 🔔 **Notifications**: Stay updated with achievements and milestones
 - 📸 **Photo Gallery**: Dynamic photo gallery that automatically loads images from a folder
+- 🎫 **Laylo Integration**: Tour management and fan list building with Laylo API
 - 📱 **Responsive Design**: Beautiful UI that works on all devices
 
 ## Tech Stack
@@ -18,6 +19,7 @@ A web app that gamifies Spotify listening data for fans and provides data insigh
 - **Backend**: Next.js API Routes, Supabase
 - **Database**: PostgreSQL (via Supabase)
 - **Authentication**: Spotify OAuth
+- **Tour Management**: Laylo API integration
 - **Charts**: Recharts
 - **Icons**: Lucide React
 
@@ -29,6 +31,7 @@ A web app that gamifies Spotify listening data for fans and provides data insigh
 - npm or yarn
 - Spotify Developer Account
 - Supabase Account
+- Laylo Account (for tour management)
 
 ### 1. Clone the Repository
 
@@ -57,7 +60,14 @@ npm install
 3. Go to Settings > Database to get your service role key
 4. Run the SQL schema from `supabase-schema.sql` in your Supabase SQL editor
 
-### 5. Environment Variables
+### 5. Set up Laylo (Optional)
+
+1. Go to [Laylo](https://laylo.com) and create an account
+2. Get your API key from the Laylo dashboard
+3. Add your API key to the environment variables
+4. Tour dates will automatically sync from Laylo when configured
+
+### 6. Environment Variables
 
 Create a `.env.local` file in the root directory:
 
@@ -77,7 +87,7 @@ NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=your_nextauth_secret
 ```
 
-### 6. Run the Development Server
+### 7. Run the Development Server
 
 ```bash
 npm run dev
@@ -185,6 +195,13 @@ The app uses the following main tables:
 - **Lightbox View**: Click any photo to view full-size
 - **Responsive Grid**: Automatically adjusts to screen size
 - **Error Handling**: Graceful fallbacks for missing images
+
+### Laylo Integration
+- **Tour Management**: Sync tour dates from Laylo platform
+- **Fan List Building**: Direct integration with Laylo fan signup
+- **Ticket Sales**: Link to Laylo-powered ticket pages
+- **Fan Engagement**: SMS and email messaging through Laylo
+- **Analytics**: Track fan engagement and ticket sales
 
 ## Development Roadmap
 

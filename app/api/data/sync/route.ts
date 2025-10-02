@@ -65,8 +65,22 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // Process ALL tracks (let upsert handle duplicates)
-    const listeningData = recentlyPlayed.items.map((item: any) => ({
+    // Filter for only Sadie Jean tracks
+    const sadieJeanTracks = recentlyPlayed.items.filter((item: any) => {
+      const artistName = item.track.artists[0]?.name?.toLowerCase() || ''
+      return artistName.includes('sadie jean')
+    })
+
+    if (sadieJeanTracks.length === 0) {
+      return NextResponse.json({ 
+        success: true, 
+        synced: 0,
+        message: 'No Sadie Jean tracks found in recent listening history'
+      })
+    }
+
+    // Process only Sadie Jean tracks
+    const listeningData = sadieJeanTracks.map((item: any) => ({
       user_id: userId,
       track_id: item.track.id,
       track_name: item.track.name,

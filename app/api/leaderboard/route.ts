@@ -1,6 +1,110 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 
+// Point calculation system for Sadie Jean listening only
+function calculateUserPoints(listeningData: any[]): number {
+  let points = 0
+  const trackPlays: { [key: string]: number } = {}
+  const sessionData: { [key: string]: any[] } = {}
+  
+  // Filter to ensure only Sadie Jean tracks
+  const sadieJeanTracks = listeningData.filter(track => 
+    track.artist_name && track.artist_name.toLowerCase().includes('sadie jean')
+  )
+  
+  sadieJeanTracks.forEach(track => {
+    const trackKey = track.track_name
+    const sessionKey = new Date(track.played_at).toDateString()
+    
+    // Count plays per track
+    trackPlays[trackKey] = (trackPlays[trackKey] || 0) + 1
+    
+    // Group by session
+    if (!sessionData[sessionKey]) sessionData[sessionKey] = []
+    sessionData[sessionKey].push(track)
+    
+    // Base points for Sadie Jean tracks
+    points += 1
+    
+    // Full song bonus (assuming >80% duration)
+    if (track.duration_ms > 0) {
+      points += 1 // Full song bonus
+    }
+    
+    // Repeat play bonus for Sadie Jean tracks
+    if (trackPlays[trackKey] > 1) {
+      points += 2
+    }
+  })
+  
+  // Session bonuses
+  Object.values(sessionData).forEach(session => {
+    const sessionDuration = session.reduce((sum, track) => sum + (track.duration_ms || 0), 0)
+    const sessionMinutes = sessionDuration / 1000 / 60
+    
+    // 30+ minute session bonus
+    if (sessionMinutes >= 30) {
+      points += 5
+    }
+    
+    // Weekend bonus
+    const sessionDate = new Date(session[0].played_at)
+    if (sessionDate.getDay() === 0 || sessionDate.getDay() === 6) {
+      points += Math.floor(sessionMinutes / 10) // 1 point per 10 minutes on weekends
+    }
+    
+    // Peak hours bonus (7-9 PM)
+    const sessionHour = sessionDate.getHours()
+    if (sessionHour >= 19 && sessionHour <= 21) {
+      points += Math.floor(sessionMinutes / 5) // 1 point per 5 minutes during peak
+    }
+  })
+  
+  // Discovery bonus (first play of each unique song)
+  const uniqueSongs = new Set(listeningData.map(track => track.track_name)).size
+  points += uniqueSongs * 2 // 2 points per unique song discovered
+  
+  return Math.round(points)
+}
+
+// Get top 3 Sadie Jean songs for a user
+function getTopSongs(listeningData: any[]): Array<{name: string, plays: number}> {
+  const trackCounts: { [key: string]: number } = {}
+  
+  // Filter to only Sadie Jean tracks
+  const sadieJeanTracks = listeningData.filter(track => 
+    track.artist_name && track.artist_name.toLowerCase().includes('sadie jean')
+  )
+  
+  sadieJeanTracks.forEach(track => {
+    trackCounts[track.track_name] = (trackCounts[track.track_name] || 0) + 1
+  })
+  
+  return Object.entries(trackCounts)
+    .map(([name, plays]) => ({ name, plays }))
+    .sort((a, b) => b.plays - a.plays)
+    .slice(0, 3)
+}
+
+// Calculate average session length
+function calculateAvgSessionLength(listeningData: any[]): number {
+  if (listeningData.length === 0) return 0
+  
+  const sessionData: { [key: string]: any[] } = {}
+  
+  listeningData.forEach(track => {
+    const sessionKey = new Date(track.played_at).toDateString()
+    if (!sessionData[sessionKey]) sessionData[sessionKey] = []
+    sessionData[sessionKey].push(track)
+  })
+  
+  const sessionLengths = Object.values(sessionData).map(session => {
+    return session.reduce((sum, track) => sum + (track.duration_ms || 0), 0)
+  })
+  
+  return sessionLengths.reduce((sum, length) => sum + length, 0) / sessionLengths.length
+}
+
 export async function GET(request: NextRequest) {
   try {
     if (!supabaseAdmin) {
@@ -30,10 +134,15 @@ export async function GET(request: NextRequest) {
         startDate = new Date(0) // All time
     }
 
-    // Simplified approach - just get users and their total plays
+    // Get all users first
     const { data: users, error: usersError } = await supabaseAdmin
       .from('users')
-      .select('id, display_name, profile_image_url, total_plays')
+      .select(`
+        id, 
+        display_name, 
+        profile_image_url, 
+        total_plays
+      `)
       .order('total_plays', { ascending: false })
       .limit(limit)
 
@@ -42,13 +151,55 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 })
     }
 
-    const leaderboard = users?.map((user, index) => ({
-      rank: index + 1,
-      userId: user.id,
-      displayName: user.display_name,
-      profileImageUrl: user.profile_image_url,
-      totalPlays: user.total_plays || 0
-    })) || []
+    // Get Sadie Jean listening data for each user
+    const usersWithSadieData = await Promise.all(
+      users.map(async (user) => {
+        const { data: sadieData, error: sadieError } = await supabaseAdmin
+          .from('listening_data')
+          .select('track_name, artist_name, played_at, duration_ms')
+          .eq('user_id', user.id)
+          .eq('artist_name', 'Sadie Jean')
+        
+        if (sadieError) {
+          console.error('Sadie Jean data error for user', user.id, ':', sadieError)
+          return { ...user, listening_data: [] }
+        }
+        
+        return { ...user, listening_data: sadieData || [] }
+      })
+    )
+
+    // Calculate detailed stats for each user using only Sadie Jean data
+    const leaderboard = usersWithSadieData?.map((user, index) => {
+      const sadieJeanData = user.listening_data || []
+      
+      // Calculate points using our point system (only Sadie Jean tracks)
+      const points = calculateUserPoints(sadieJeanData)
+      
+      // Get top Sadie Jean songs only
+      const topSongs = getTopSongs(sadieJeanData)
+      
+      // Calculate additional stats (only Sadie Jean data)
+      const totalListeningTime = sadieJeanData.reduce((sum, track) => sum + (track.duration_ms || 0), 0)
+      const uniqueSongs = new Set(sadieJeanData.map(track => track.track_name)).size
+      const avgSessionLength = calculateAvgSessionLength(sadieJeanData)
+      
+      // Calculate Sadie Jean specific plays
+      const sadieJeanPlays = sadieJeanData.length
+      
+      return {
+        rank: index + 1,
+        userId: user.id,
+        displayName: user.display_name,
+        profileImageUrl: user.profile_image_url,
+        totalPlays: sadieJeanPlays, // Only Sadie Jean plays
+        points: points,
+        topSongs: topSongs,
+        totalListeningTime: Math.round(totalListeningTime / 1000 / 60), // minutes
+        uniqueSongs: uniqueSongs,
+        avgSessionLength: Math.round(avgSessionLength / 1000 / 60) // minutes
+      }
+    }).filter(user => user.totalPlays > 0) || [] // Only show users with Sadie Jean plays
 
     return NextResponse.json({ leaderboard })
   } catch (error) {

@@ -151,7 +151,7 @@ export default function SyncPage() {
 
             <div className="mt-4 p-4 bg-green-500/10 rounded-lg border border-green-500/20">
               <p className="text-green-400 text-sm">
-                🎉 Your Spotify data has been successfully imported! You can now view your stats on the dashboard and leaderboard.
+                Your Spotify data has been successfully imported! You can now view your stats on the dashboard and leaderboard.
               </p>
             </div>
           </motion.div>
