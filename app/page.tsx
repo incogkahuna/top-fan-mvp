@@ -21,8 +21,9 @@ export default function Home() {
         >
           {/* Main Headline - Bold Logo Style */}
               <h1 className="text-8xl md:text-9xl font-bold text-[#f5f1e8] mb-8 tracking-tight leading-none logo-font">
-                    Early 20's<br/>Torture
+                Early 20's<br/>Torture
               </h1>
+              {/* Force deployment */}
               
               <p className="text-2xl text-[#f5f1e8]/80 mb-12 max-w-2xl mx-auto leading-relaxed">
                 New music out now
