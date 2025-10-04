@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Play, Music, Clock, Upload, Image } from 'lucide-react'
 import { useState } from 'react'
 import LeaderboardPreview from '@/components/LeaderboardPreview'
+import CountdownTimer from '@/components/CountdownTimer'
 
 export default function Home() {
   const [albumCover, setAlbumCover] = useState<string | null>(null)
@@ -115,31 +116,7 @@ export default function Home() {
             className="w-full max-w-lg"
           >
             {/* Countdown Timer */}
-            <div className="bg-transparent backdrop-blur-sm rounded-2xl p-8 mb-8 border border-[#f5f1e8]/10 text-center">
-              <div className="flex items-center justify-center mb-4">
-                <Clock className="h-6 w-6 text-[#E98B8B] mr-2" />
-                <h3 className="text-2xl font-bold text-[#f5f1e8]">Next Release</h3>
-              </div>
-              <div className="grid grid-cols-4 gap-4 mb-6">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-[#E98B8B]">00</div>
-                  <div className="text-sm text-[#f5f1e8]/60">Days</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-[#E98B8B]">00</div>
-                  <div className="text-sm text-[#f5f1e8]/60">Hours</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-[#E98B8B]">00</div>
-                  <div className="text-sm text-[#f5f1e8]/60">Minutes</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-[#E98B8B]">00</div>
-                  <div className="text-sm text-[#f5f1e8]/60">Seconds</div>
-                </div>
-              </div>
-              <p className="text-[#f5f1e8]/60 text-sm">Stay tuned for updates!</p>
-            </div>
+            <CountdownTimer />
 
             {/* Compact Leaderboard */}
             <div className="bg-transparent backdrop-blur-sm rounded-2xl p-6 border border-[#f5f1e8]/10">
