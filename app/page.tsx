@@ -8,7 +8,7 @@ import LeaderboardPreview from '@/components/LeaderboardPreview'
 import CountdownTimer from '@/components/CountdownTimer'
 
 export default function Home() {
-  const [albumCover, setAlbumCover] = useState<string | null>(null)
+  const [albumCover, setAlbumCover] = useState<string | null>('/album-cover.jpg') // Default album cover
   const [isUploading, setIsUploading] = useState(false)
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
