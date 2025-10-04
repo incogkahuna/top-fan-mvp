@@ -23,9 +23,17 @@ export default function CountdownTimer() {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 })
   const [isLoading, setIsLoading] = useState(true)
   const [hasExpired, setHasExpired] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
+
+  // Component mount effect
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   // Fetch countdown data from API
   useEffect(() => {
+    if (!isMounted) return
+    
     let mounted = true
     
     const fetchCountdownData = async () => {
@@ -34,6 +42,7 @@ export default function CountdownTimer() {
         const data = await response.json()
         if (mounted) {
           setCountdownData(data)
+          setIsLoading(false)
         }
       } catch (error) {
         console.error('Failed to fetch countdown data:', error)
@@ -45,9 +54,6 @@ export default function CountdownTimer() {
             description: "Stay tuned for updates!",
             isActive: true
           })
-        }
-      } finally {
-        if (mounted) {
           setIsLoading(false)
         }
       }
@@ -58,7 +64,7 @@ export default function CountdownTimer() {
     return () => {
       mounted = false
     }
-  }, [])
+  }, [isMounted])
 
   // Calculate time left
   useEffect(() => {
@@ -94,7 +100,8 @@ export default function CountdownTimer() {
     return () => clearInterval(timer)
   }, [countdownData])
 
-  if (isLoading) {
+  // Don't render until component is mounted
+  if (!isMounted || isLoading) {
     return (
       <div className="bg-transparent backdrop-blur-sm rounded-2xl p-8 mb-8 border border-[#f5f1e8]/10 text-center">
         <div className="flex items-center justify-center mb-4">
