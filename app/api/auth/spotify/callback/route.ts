@@ -6,14 +6,35 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const code = searchParams.get('code')
     const error = searchParams.get('error')
+    const state = searchParams.get('state')
+
+    // Better error logging
+    console.log('Spotify callback received:', { 
+      code: code?.substring(0, 20) + '...', 
+      error, 
+      state,
+      url: request.url 
+    })
+
+    const baseUrl = process.env.NEXTAUTH_URL || 'https://earlytwentiesstorture.vercel.app'
 
     if (error) {
-      return NextResponse.redirect('https://earlytwentiesstorture.vercel.app/?error=access_denied')
+      console.error('Spotify OAuth error:', error)
+      return NextResponse.redirect(`${baseUrl}/?error=spotify_${error}`)
     }
 
     if (!code) {
-      return NextResponse.redirect('https://earlytwentiesstorture.vercel.app/?error=no_code')
+      console.error('No authorization code received from Spotify')
+      return NextResponse.redirect(`${baseUrl}/?error=no_code`)
     }
+
+    // Validate required environment variables
+    if (!process.env.SPOTIFY_CLIENT_ID || !process.env.SPOTIFY_CLIENT_SECRET) {
+      console.error('Missing Spotify credentials')
+      return NextResponse.redirect(`${baseUrl}/?error=missing_credentials`)
+    }
+
+    const redirectUri = process.env.SPOTIFY_REDIRECT_URI || 'http://localhost:3002/api/auth/spotify/callback'
 
     // Exchange code for access token
     const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
@@ -27,12 +48,18 @@ export async function GET(request: NextRequest) {
       body: new URLSearchParams({
         grant_type: 'authorization_code',
         code: code,
-        redirect_uri: 'https://earlytwentiesstorture.vercel.app/api/auth/spotify/callback'
+        redirect_uri: redirectUri
       })
     })
 
     if (!tokenResponse.ok) {
-      throw new Error('Token exchange failed')
+      const errorText = await tokenResponse.text()
+      console.error('Token exchange failed:', {
+        status: tokenResponse.status,
+        statusText: tokenResponse.statusText,
+        error: errorText
+      })
+      return NextResponse.redirect(`${baseUrl}/?error=token_exchange_failed&details=${encodeURIComponent(errorText)}`)
     }
 
     const tokenData = await tokenResponse.json()
@@ -52,7 +79,8 @@ export async function GET(request: NextRequest) {
     const spotifyUser = await userResponse.json()
 
     if (!supabaseAdmin) {
-      return NextResponse.redirect('https://earlytwentiesstorture.vercel.app/?error=supabase_not_configured')
+      console.error('Supabase admin not configured')
+      return NextResponse.redirect(`${baseUrl}/?error=supabase_not_configured`)
     }
 
     // Store user in Supabase
@@ -71,7 +99,7 @@ export async function GET(request: NextRequest) {
 
     if (userError) {
       console.error('User upsert error:', userError)
-      return NextResponse.redirect('https://earlytwentiesstorture.vercel.app/?error=database_error')
+      return NextResponse.redirect(`${baseUrl}/?error=database_error&details=${encodeURIComponent(userError.message)}`)
     }
 
     // Store tokens
@@ -88,11 +116,13 @@ export async function GET(request: NextRequest) {
 
     if (tokenError) {
       console.error('Token storage error:', tokenError)
-      return NextResponse.redirect('https://earlytwentiesstorture.vercel.app/?error=token_error')
+      return NextResponse.redirect(`${baseUrl}/?error=token_storage_error&details=${encodeURIComponent(tokenError.message)}`)
     }
 
+    console.log('Successfully authenticated user:', spotifyUser.display_name || spotifyUser.id)
+
     // Set session cookie and redirect to leaderboard
-    const response = NextResponse.redirect('https://earlytwentiesstorture.vercel.app/leaderboard')
+    const response = NextResponse.redirect(`${baseUrl}/leaderboard`)
     response.cookies.set('spotify_access_token', access_token, {
       httpOnly: true,
       secure: true,
@@ -103,6 +133,7 @@ export async function GET(request: NextRequest) {
     return response
   } catch (error) {
     console.error('Spotify callback error:', error)
-    return NextResponse.redirect('https://earlytwentiesstorture.vercel.app/?error=callback_error')
+    const baseUrl = process.env.NEXTAUTH_URL || 'https://earlytwentiesstorture.vercel.app'
+    return NextResponse.redirect(`${baseUrl}/?error=callback_error&details=${encodeURIComponent(error instanceof Error ? error.message : 'Unknown error')}`)
   }
 }

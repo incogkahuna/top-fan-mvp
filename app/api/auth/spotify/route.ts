@@ -3,10 +3,14 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function GET(request: NextRequest) {
   try {
     const clientId = process.env.SPOTIFY_CLIENT_ID
-    const redirectUri = 'https://earlytwentiesstorture.vercel.app/api/auth/spotify/callback'
+    const redirectUri = process.env.SPOTIFY_REDIRECT_URI || 'http://localhost:3002/api/auth/spotify/callback'
     
     if (!clientId) {
       return NextResponse.json({ error: 'Spotify client ID not configured' }, { status: 500 })
+    }
+    
+    if (!process.env.SPOTIFY_REDIRECT_URI) {
+      console.warn('SPOTIFY_REDIRECT_URI not set, using localhost fallback')
     }
 
     const scopes = [
