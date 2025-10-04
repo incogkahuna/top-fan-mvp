@@ -1,52 +1,82 @@
 'use client'
 
-import { useState } from 'react'
-
 export default function TestSpotify() {
-  const [result, setResult] = useState<string>('')
-
-  const testSpotifyAuth = () => {
-    const clientId = '3d8d032ed282470cac128ad3e41ccf6a'
-    const redirectUri = 'https://earlytwentiesstorture.vercel.app/test-spotify/callback'
-    
-    const scopes = [
-      'user-read-email',
-      'user-read-private',
-      'user-top-read',
-      'user-read-recently-played'
-    ].join(' ')
-
-    const authUrl = `https://accounts.spotify.com/authorize?` +
-      `client_id=${clientId}&` +
-      `response_type=code&` +
-      `redirect_uri=${encodeURIComponent(redirectUri)}&` +
-      `scope=${encodeURIComponent(scopes)}&` +
-      `state=test`
-
-    setResult('Redirecting to Spotify...')
-    window.location.href = authUrl
+  const testSpotify = () => {
+    console.log('Testing Spotify OAuth...')
+    window.location.href = '/api/auth/spotify'
   }
 
   return (
-    <div className="min-h-screen bg-[#282828] flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-lg p-8">
-        <h1 className="text-2xl font-bold text-black mb-6">Spotify Auth Test</h1>
+    <div style={{ 
+      minHeight: '100vh', 
+      backgroundColor: '#282828', 
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center',
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <div style={{ 
+        backgroundColor: 'rgba(255,255,255,0.1)', 
+        padding: '40px', 
+        borderRadius: '16px',
+        textAlign: 'center',
+        maxWidth: '500px',
+        border: '1px solid rgba(255,255,255,0.1)'
+      }}>
+        <h1 style={{ 
+          fontSize: '32px', 
+          fontWeight: 'bold', 
+          color: '#f5f1e8', 
+          marginBottom: '24px' 
+        }}>
+          🎵 Spotify OAuth Test
+        </h1>
+        
+        <p style={{ 
+          color: '#f5f1e8', 
+          opacity: 0.8, 
+          marginBottom: '32px',
+          fontSize: '16px'
+        }}>
+          Click the button below to test the Spotify OAuth flow.
+        </p>
         
         <button
-          onClick={testSpotifyAuth}
-          className="w-full bg-green-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-green-600 transition-colors"
+          onClick={testSpotify}
+          style={{
+            backgroundColor: '#1db954',
+            color: 'white',
+            fontWeight: 'bold',
+            padding: '16px 32px',
+            borderRadius: '8px',
+            fontSize: '18px',
+            border: 'none',
+            cursor: 'pointer',
+            transition: 'background-color 0.3s'
+          }}
+          onMouseOver={(e) => e.target.style.backgroundColor = '#1ed760'}
+          onMouseOut={(e) => e.target.style.backgroundColor = '#1db954'}
         >
-          Test Spotify Connection
+          🎵 Test Spotify OAuth
         </button>
         
-        {result && (
-          <div className="mt-4 p-4 bg-gray-100 rounded-lg">
-            <p className="text-gray-800">{result}</p>
-          </div>
-        )}
+        <div style={{ 
+          marginTop: '32px', 
+          fontSize: '14px', 
+          color: '#f5f1e8',
+          opacity: 0.6 
+        }}>
+          <p><strong>Expected:</strong></p>
+          <p>1. Click button → Go to Spotify</p>
+          <p>2. Authorize → Come back here</p>
+          <p>3. See result page</p>
+        </div>
         
-        <div className="mt-6 text-sm text-gray-600">
-          <p>This bypasses all complex auth systems and tests direct Spotify connection.</p>
+        <div style={{ marginTop: '24px' }}>
+          <a href="/" style={{ color: '#1db954', textDecoration: 'none' }}>
+            ← Back to Home
+          </a>
         </div>
       </div>
     </div>
