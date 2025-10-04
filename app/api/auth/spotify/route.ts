@@ -1,25 +1,19 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const clientId = process.env.SPOTIFY_CLIENT_ID
-    const redirectUri = process.env.SPOTIFY_REDIRECT_URI || 'http://localhost:3002/api/auth/spotify/callback'
+    const redirectUri = 'https://earlytwentiesstorture.vercel.app/api/spotify-callback'
     
     if (!clientId) {
       return NextResponse.json({ error: 'Spotify client ID not configured' }, { status: 500 })
-    }
-    
-    if (!process.env.SPOTIFY_REDIRECT_URI) {
-      console.warn('SPOTIFY_REDIRECT_URI not set, using localhost fallback')
     }
 
     const scopes = [
       'user-read-email',
       'user-read-private',
       'user-top-read',
-      'user-read-recently-played',
-      'user-read-playback-state',
-      'user-read-currently-playing'
+      'user-read-recently-played'
     ].join(' ')
 
     const authUrl = `https://accounts.spotify.com/authorize?` +
@@ -27,7 +21,7 @@ export async function GET(request: NextRequest) {
       `response_type=code&` +
       `redirect_uri=${encodeURIComponent(redirectUri)}&` +
       `scope=${encodeURIComponent(scopes)}&` +
-      `state=state`
+      `state=spotify_auth`
 
     return NextResponse.redirect(authUrl)
   } catch (error) {
