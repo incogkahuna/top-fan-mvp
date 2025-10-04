@@ -22,7 +22,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-7xl lg:text-9xl font-bold text-[#f5f1e8] mb-20 logo-font">
+            <h1 className="text-7xl lg:text-9xl font-bold text-[#f5f1e8] mb-20 album-font">
               Early Twenties Torture
             </h1>
             
@@ -64,7 +64,7 @@ export default function Home() {
             </div>
             
             {/* Album Info */}
-            <h2 className="text-6xl lg:text-8xl font-bold text-[#f5f1e8] mb-16 logo-font">
+            <h2 className="text-6xl lg:text-8xl font-bold text-[#f5f1e8] mb-16 album-font">
               Early Twenties Torture
             </h2>
             

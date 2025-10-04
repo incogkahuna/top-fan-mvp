@@ -16,6 +16,13 @@
 }
 
 @layer components {
+  .album-font {
+    font-family: 'Brush Script MT', 'Lucida Handwriting', cursive;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  
   .btn-primary {
     @apply text-white font-medium py-3 px-8 rounded-full transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl;
     background: #8B3A3A;

@@ -636,7 +636,7 @@ export default function AdminDashboard() {
                   <input
                     type="text"
                     id="countdown-title"
-                    defaultValue="Next Release"
+                    defaultValue=""
                     className="w-full px-3 py-2 bg-[#1a1a1a] border border-white/10 rounded-lg text-[#f5f1e8] focus:outline-none focus:border-pink-300"
                   />
                 </div>
