@@ -22,10 +22,9 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-7xl lg:text-9xl font-bold text-[#f5f1e8] mb-12 logo-font">
+            <h1 className="text-7xl lg:text-9xl font-bold text-[#f5f1e8] mb-20 logo-font">
               Early Twenties Torture
             </h1>
-            <p className="text-3xl lg:text-4xl text-[#f5f1e8]/80 mb-20">New music coming soon</p>
             
             {/* Countdown Timer */}
             <div className="mb-16 scale-125 lg:scale-150">
@@ -65,10 +64,9 @@ export default function Home() {
             </div>
             
             {/* Album Info */}
-            <h2 className="text-6xl lg:text-8xl font-bold text-[#f5f1e8] mb-8 logo-font">
+            <h2 className="text-6xl lg:text-8xl font-bold text-[#f5f1e8] mb-16 logo-font">
               Early Twenties Torture
             </h2>
-            <p className="text-3xl lg:text-4xl text-[#f5f1e8]/80 mb-16">New music out now</p>
             
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
