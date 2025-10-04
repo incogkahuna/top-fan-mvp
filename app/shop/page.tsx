@@ -7,7 +7,7 @@ import { ExternalLink, ShoppingBag, Truck, Shield, Heart } from 'lucide-react'
 const featuredItems = [
   {
     id: 1,
-    name: "Early 20's Torture Tee",
+    name: "Early Twenties Torture Tee",
     price: "$35",
     image: "👕",
     description: "Official band t-shirt"
@@ -46,7 +46,7 @@ export default function Shop() {
           className="text-center mb-16"
         >
           <h1 className="text-6xl font-bold text-white mb-4 logo-font">Shop</h1>
-          <p className="text-white/60 text-lg">Official Early 20's Torture merchandise</p>
+          <p className="text-white/60 text-lg">Official Early Twenties Torture merchandise</p>
         </motion.div>
 
         {/* Main Shop Link */}
@@ -61,7 +61,7 @@ export default function Shop() {
               <ShoppingBag className="h-16 w-16 text-orange-400 mx-auto mb-6" />
               <h2 className="text-3xl font-bold text-white mb-4">Visit Our Official Store</h2>
               <p className="text-white/60 mb-8 text-lg">
-                Shop the complete collection of Early 20's Torture merchandise, 
+                Shop the complete collection of Early Twenties Torture merchandise, 
                 including exclusive items and limited edition releases.
               </p>
               <a
@@ -150,7 +150,7 @@ export default function Shop() {
           <div className="card max-w-2xl mx-auto">
             <h2 className="text-3xl font-bold text-white mb-4">Ready to Shop?</h2>
             <p className="text-white/60 mb-6">
-              Browse our complete collection of official Early 20's Torture merchandise. 
+              Browse our complete collection of official Early Twenties Torture merchandise. 
               From clothing to accessories, find everything you need to show your support.
             </p>
             <a

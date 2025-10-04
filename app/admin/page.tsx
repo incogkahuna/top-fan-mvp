@@ -549,7 +549,7 @@ export default function AdminDashboard() {
                     <label className="block text-sm font-medium text-[#f5f1e8] mb-2">Site Title</label>
                     <input
                       type="text"
-                      defaultValue="Early 20's Torture"
+                      defaultValue="Early Twenties Torture"
                       className="w-full px-3 py-2 bg-[#1a1a1a] border border-white/10 rounded-lg text-[#f5f1e8] focus:outline-none focus:border-pink-300"
                     />
                   </div>

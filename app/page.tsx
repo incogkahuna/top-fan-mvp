@@ -94,7 +94,7 @@ export default function Home() {
       <footer className="border-t border-white/10 py-12 mt-32">
             <div className="max-w-7xl mx-auto px-6 text-center">
                   <p className="text-[#f5f1e8]/60 text-sm">
-                    © 2025 Early 20's Torture. All rights reserved.
+                    © 2025 Early Twenties Torture. All rights reserved.
                   </p>
             </div>
       </footer>

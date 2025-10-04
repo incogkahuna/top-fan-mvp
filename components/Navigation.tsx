@@ -36,7 +36,7 @@ export default function Navigation() {
         <div className="flex justify-between items-center h-20">
           {/* Logo - Script font like Sadie Jean */}
           <Link href="/" className="text-3xl text-[#f5f1e8] tracking-tight logo-font">
-            Early 20's Torture
+            Early Twenties Torture
           </Link>
 
           {/* Desktop Navigation - Clean minimal links */}

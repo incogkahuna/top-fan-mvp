@@ -59,7 +59,7 @@ export default function LoginPage() {
               <span className="text-white font-bold text-2xl">♪</span>
             </div>
           </div>
-          <h1 className="text-4xl font-bold text-[#f5f1e8] mb-2">Early 20's Torture</h1>
+          <h1 className="text-4xl font-bold text-[#f5f1e8] mb-2">Early Twenties Torture</h1>
           <p className="text-[#f5f1e8]/60">Connect to track your Sadie Jean listening</p>
         </motion.div>
 

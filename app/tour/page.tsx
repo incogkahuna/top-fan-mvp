@@ -63,7 +63,7 @@ export default function Tour() {
           className="text-center mb-16"
         >
           <h1 className="text-6xl font-bold text-white mb-4 logo-font">Tour Dates</h1>
-          <p className="text-white/60 text-lg">Come see Early 20's Torture live</p>
+          <p className="text-white/60 text-lg">Come see Early Twenties Torture live</p>
           
           {/* Laylo Connection Status */}
           {layloConnected && (
