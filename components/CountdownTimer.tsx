@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Clock, Calendar } from 'lucide-react'
+import { Calendar } from 'lucide-react'
 
 interface CountdownData {
   targetDate: string
@@ -36,7 +36,7 @@ export default function CountdownTimer() {
         // Set default countdown data if API fails
         setCountdownData({
           targetDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days from now
-          title: "Next Release",
+          title: "",
           description: "Stay tuned for updates!",
           isActive: true
         })
@@ -87,7 +87,6 @@ export default function CountdownTimer() {
     return (
       <div className="bg-transparent backdrop-blur-sm rounded-2xl p-8 mb-8 border border-[#f5f1e8]/10 text-center">
         <div className="flex items-center justify-center mb-4">
-          <Clock className="h-6 w-6 text-[#E98B8B] mr-2" />
           <h3 className="text-2xl font-bold text-[#f5f1e8]">Loading...</h3>
         </div>
         <div className="animate-pulse">
@@ -118,10 +117,11 @@ export default function CountdownTimer() {
       transition={{ duration: 0.6 }}
       className="bg-transparent backdrop-blur-sm rounded-2xl p-8 mb-8 border border-[#f5f1e8]/10 text-center"
     >
-      <div className="flex items-center justify-center mb-4">
-        <Clock className="h-6 w-6 text-[#E98B8B] mr-2" />
-        <h3 className="text-2xl font-bold text-[#f5f1e8]">{countdownData.title}</h3>
-      </div>
+      {countdownData.title && (
+        <div className="flex items-center justify-center mb-4">
+          <h3 className="text-2xl font-bold text-[#f5f1e8]">{countdownData.title}</h3>
+        </div>
+      )}
 
       {hasExpired ? (
         <div className="mb-6">
