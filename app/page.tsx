@@ -8,21 +8,9 @@ import LeaderboardPreview from '@/components/LeaderboardPreview'
 import CountdownTimer from '@/components/CountdownTimer'
 
 export default function Home() {
-  const [albumCover, setAlbumCover] = useState<string | null>('/album-cover.jpg') // Default album cover
-  const [isUploading, setIsUploading] = useState(false)
+  const albumCover = '/album-cover.jpg' // Permanent album cover
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) {
-      setIsUploading(true)
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        setAlbumCover(e.target?.result as string)
-        setIsUploading(false)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
+  // Album cover is now permanent - no upload functionality needed
 
   return (
     <div className="min-h-screen">
@@ -38,7 +26,7 @@ export default function Home() {
             className="text-center p-12"
           >
             {/* Album Cover */}
-            <div className="w-64 h-64 lg:w-80 lg:h-80 bg-gradient-to-br from-[#E98B8B] to-[#f5f1e8] rounded-2xl shadow-2xl mb-8 flex items-center justify-center relative overflow-hidden group">
+            <div className="w-96 h-96 lg:w-[500px] lg:h-[500px] bg-gradient-to-br from-[#E98B8B] to-[#f5f1e8] rounded-2xl shadow-2xl mb-8 flex items-center justify-center relative overflow-hidden group">
               {albumCover ? (
                 <img 
                   src={albumCover} 
@@ -56,25 +44,7 @@ export default function Home() {
                 </>
               )}
               
-              {/* Upload Overlay */}
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-2xl">
-                <label className="cursor-pointer flex flex-col items-center space-y-2">
-                  {isUploading ? (
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-                  ) : (
-                    <Upload className="h-8 w-8 text-white" />
-                  )}
-                  <span className="text-white text-sm font-medium">
-                    {isUploading ? 'Uploading...' : 'Upload Cover'}
-                  </span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                  />
-                </label>
-              </div>
+              {/* Album cover is now permanent - no upload needed */}
             </div>
             
             {/* Album Info */}
@@ -94,15 +64,7 @@ export default function Home() {
                 <span>Listen Now</span>
               </Link>
               
-              {albumCover && (
-                <button
-                  onClick={() => setAlbumCover(null)}
-                  className="inline-flex items-center space-x-2 text-lg px-6 py-4 bg-transparent border border-[#f5f1e8]/20 text-[#f5f1e8] rounded-lg hover:bg-[#f5f1e8]/10 transition-colors"
-                >
-                  <Image className="h-5 w-5" />
-                  <span>Remove Cover</span>
-                </button>
-              )}
+              {/* Album cover is permanent - no remove button needed */}
             </div>
           </motion.div>
         </div>
