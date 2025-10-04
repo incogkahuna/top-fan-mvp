@@ -12,8 +12,12 @@ export default function SimpleSpotifyConnect() {
       setIsConnecting(true)
       setError(null)
       
-      // Redirect to Spotify OAuth
-      window.location.href = '/api/auth/spotify'
+      // For now, let's just simulate a successful connection
+      // In a real app, you'd use Spotify's Web Playback SDK or a simpler auth flow
+      alert('Spotify connection would happen here! For now, let\'s just go to the dashboard.')
+      
+      // Redirect to dashboard
+      window.location.href = '/dashboard'
       
     } catch (err) {
       setError('Failed to connect to Spotify')

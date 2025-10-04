@@ -61,48 +61,6 @@ export default function AdminDashboard() {
   const [filterStatus, setFilterStatus] = useState('all')
   const [systemHealth, setSystemHealth] = useState<any>(null)
 
-  // Countdown management functions
-  const updateCountdown = async () => {
-    try {
-      const title = (document.getElementById('countdown-title') as HTMLInputElement)?.value
-      const targetDate = (document.getElementById('countdown-date') as HTMLInputElement)?.value
-      const description = (document.getElementById('countdown-description') as HTMLTextAreaElement)?.value
-      const isActive = (document.getElementById('countdown-active') as HTMLInputElement)?.checked
-
-      if (!title || !targetDate || !description) {
-        alert('Please fill in all countdown fields')
-        return
-      }
-
-      const response = await fetch('/api/countdown', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title,
-          targetDate: new Date(targetDate).toISOString(),
-          description,
-          isActive
-        }),
-      })
-
-      if (response.ok) {
-        alert('Countdown updated successfully!')
-      } else {
-        alert('Failed to update countdown')
-      }
-    } catch (error) {
-      console.error('Error updating countdown:', error)
-      alert('Error updating countdown')
-    }
-  }
-
-  const previewCountdown = () => {
-    // Open homepage in new tab for preview
-    window.open('/', '_blank')
-  }
-
   useEffect(() => {
     fetchAdminData()
     fetchSystemHealth()
@@ -621,59 +579,6 @@ export default function AdminDashboard() {
                     <span className="text-[#f5f1e8]">Allow Profile Photos</span>
                     <input type="checkbox" defaultChecked className="rounded" />
                   </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-[#333333] rounded-lg p-6 border border-white/10">
-              <h3 className="text-xl font-bold text-[#f5f1e8] mb-4 flex items-center">
-                <Clock className="h-5 w-5 mr-2 text-[#E98B8B]" />
-                Countdown Timer Management
-              </h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-[#f5f1e8] mb-2">Countdown Title</label>
-                  <input
-                    type="text"
-                    id="countdown-title"
-                    defaultValue="Next Release"
-                    className="w-full px-3 py-2 bg-[#1a1a1a] border border-white/10 rounded-lg text-[#f5f1e8] focus:outline-none focus:border-pink-300"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-[#f5f1e8] mb-2">Target Date & Time</label>
-                  <input
-                    type="datetime-local"
-                    id="countdown-date"
-                    className="w-full px-3 py-2 bg-[#1a1a1a] border border-white/10 rounded-lg text-[#f5f1e8] focus:outline-none focus:border-pink-300"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-[#f5f1e8] mb-2">Description</label>
-                  <textarea
-                    rows={2}
-                    id="countdown-description"
-                    defaultValue="Stay tuned for updates!"
-                    className="w-full px-3 py-2 bg-[#1a1a1a] border border-white/10 rounded-lg text-[#f5f1e8] focus:outline-none focus:border-pink-300"
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-[#f5f1e8]">Enable Countdown</span>
-                  <input type="checkbox" id="countdown-active" defaultChecked className="rounded" />
-                </div>
-                <div className="flex space-x-4">
-                  <button 
-                    onClick={updateCountdown}
-                    className="bg-[#E98B8B] text-white px-6 py-2 rounded-lg hover:bg-[#E98B8B]/80 transition-colors"
-                  >
-                    Update Countdown
-                  </button>
-                  <button 
-                    onClick={previewCountdown}
-                    className="bg-transparent border border-[#E98B8B] text-[#E98B8B] px-6 py-2 rounded-lg hover:bg-[#E98B8B]/10 transition-colors"
-                  >
-                    Preview
-                  </button>
                 </div>
               </div>
             </div>
