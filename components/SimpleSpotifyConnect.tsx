@@ -28,7 +28,7 @@ export default function SimpleSpotifyConnect() {
       <button
         onClick={handleConnect}
         disabled={isConnecting}
-        className="bg-[#8B3A3A] hover:bg-[#A04747] text-white font-bold py-3 px-6 rounded-lg flex items-center space-x-2 mx-auto transition-colors disabled:opacity-50 shadow-lg hover:shadow-xl"
+        className="text-white font-bold py-3 px-6 rounded-lg flex items-center space-x-2 mx-auto transition-all duration-300 disabled:opacity-50 crayon-button"
       >
         <Music className="h-5 w-5" />
         <span>{isConnecting ? 'Connecting...' : 'Connect with Spotify'}</span>
