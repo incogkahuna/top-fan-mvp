@@ -50,8 +50,8 @@ export default function Navigation() {
                   href={item.href}
                       className={`text-sm font-medium ${
                         isActive
-                          ? 'bg-pink-200 text-black px-4 py-2 rounded-full'
-                          : 'text-[#f5f1e8]/60 hover:text-[#f5f1e8] hover:bg-pink-200 hover:text-black hover:px-4 hover:py-2 hover:rounded-full'
+                          ? 'bg-[#8B3A3A] text-white px-4 py-2 rounded-full'
+                          : 'text-[#f5f1e8]/60 hover:text-[#f5f1e8] hover:bg-[#8B3A3A] hover:text-white hover:px-4 hover:py-2 hover:rounded-full'
                       }`}
                 >
                   {item.label}
@@ -115,8 +115,8 @@ export default function Navigation() {
                       href={item.href}
                           className={`block px-4 py-3 text-sm font-medium ${
                             isActive
-                              ? 'bg-pink-200 text-black rounded-full mx-2'
-                              : 'text-[#f5f1e8]/60 hover:text-[#f5f1e8] hover:bg-pink-200 hover:text-black hover:rounded-full hover:mx-2'
+                              ? 'bg-[#8B3A3A] text-white rounded-full mx-2'
+                              : 'text-[#f5f1e8]/60 hover:text-[#f5f1e8] hover:bg-[#8B3A3A] hover:text-white hover:rounded-full hover:mx-2'
                           }`}
                       onClick={() => setIsOpen(false)}
                     >

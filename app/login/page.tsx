@@ -91,7 +91,7 @@ export default function LoginPage() {
             className={`w-full flex items-center justify-center space-x-3 py-4 px-6 rounded-full font-medium transition-all duration-200 ${
               loading
                 ? 'bg-gray-300 cursor-not-allowed text-gray-500'
-                : 'bg-white text-black hover:bg-pink-200'
+                : 'bg-[#8B3A3A] text-white hover:bg-[#A04747]'
             }`}
           >
             {loading ? (

@@ -17,11 +17,11 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-white hover:bg-pink-200 active:bg-pink-300 text-black font-medium py-3 px-8 rounded-full transition-all duration-300 hover:scale-105;
+    @apply bg-[#8B3A3A] hover:bg-[#A04747] active:bg-[#6B2D2D] text-white font-medium py-3 px-8 rounded-full transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl;
   }
   
   .btn-secondary {
-    @apply bg-white hover:bg-pink-200 active:bg-pink-300 text-black font-medium py-3 px-8 rounded-full transition-all duration-300;
+    @apply bg-[#8B3A3A] hover:bg-[#A04747] active:bg-[#6B2D2D] text-white font-medium py-3 px-8 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl;
   }
   
   .card {

@@ -100,7 +100,7 @@ function LeaderboardContent() {
             </div>
                 <button
                   onClick={() => setShowTutorial(!showTutorial)}
-                  className="flex items-center space-x-2 px-4 py-2 bg-white text-black rounded-lg hover:bg-pink-200 transition-colors"
+                  className="flex items-center space-x-2 px-4 py-2 bg-[#8B3A3A] text-white rounded-lg hover:bg-[#A04747] transition-colors"
                 >
                   <span>How it works</span>
                 </button>

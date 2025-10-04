@@ -190,13 +190,13 @@ export default function AdminDashboard() {
               <div className="flex items-center space-x-2">
                 <button 
                   onClick={() => exportData('users')}
-                  className="bg-white text-black px-4 py-2 rounded-lg hover:bg-pink-200 transition-colors"
+                  className="bg-[#8B3A3A] text-white px-4 py-2 rounded-lg hover:bg-[#A04747] transition-colors"
                 >
                   Export Users
                 </button>
                 <button 
                   onClick={() => exportData('analytics')}
-                  className="bg-white text-black px-4 py-2 rounded-lg hover:bg-pink-200 transition-colors"
+                  className="bg-[#8B3A3A] text-white px-4 py-2 rounded-lg hover:bg-[#A04747] transition-colors"
                 >
                   Export Analytics
                 </button>
