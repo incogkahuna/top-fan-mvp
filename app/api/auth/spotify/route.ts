@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 export async function GET() {
   try {
     const clientId = process.env.SPOTIFY_CLIENT_ID
-    const redirectUri = 'https://earlytwentiesstorture.vercel.app/api/spotify-callback'
+    const redirectUri = 'https://earlytwentiesstorture.vercel.app/test-spotify/callback'
     
     console.log('Spotify auth route called')
     console.log('Client ID exists:', !!clientId)
