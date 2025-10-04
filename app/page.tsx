@@ -116,7 +116,7 @@ export default function Home() {
             className="w-full max-w-lg"
           >
             {/* Countdown Timer */}
-            <CountdownTimer />
+            <CountdownTimer key="main-countdown" />
 
             {/* Compact Leaderboard */}
             <div className="bg-transparent backdrop-blur-sm rounded-2xl p-6 border border-[#f5f1e8]/10">

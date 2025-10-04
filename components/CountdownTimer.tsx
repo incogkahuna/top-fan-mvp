@@ -26,26 +26,38 @@ export default function CountdownTimer() {
 
   // Fetch countdown data from API
   useEffect(() => {
+    let mounted = true
+    
     const fetchCountdownData = async () => {
       try {
         const response = await fetch('/api/countdown')
         const data = await response.json()
-        setCountdownData(data)
+        if (mounted) {
+          setCountdownData(data)
+        }
       } catch (error) {
         console.error('Failed to fetch countdown data:', error)
         // Set default countdown data if API fails
-        setCountdownData({
-          targetDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days from now
-          title: "Next Release",
-          description: "Stay tuned for updates!",
-          isActive: true
-        })
+        if (mounted) {
+          setCountdownData({
+            targetDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days from now
+            title: "Next Release",
+            description: "Stay tuned for updates!",
+            isActive: true
+          })
+        }
       } finally {
-        setIsLoading(false)
+        if (mounted) {
+          setIsLoading(false)
+        }
       }
     }
 
     fetchCountdownData()
+    
+    return () => {
+      mounted = false
+    }
   }, [])
 
   // Calculate time left
