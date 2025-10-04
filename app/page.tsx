@@ -15,20 +15,20 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#282828]">
       {/* Countdown Timer Section */}
-      <section className="py-16 px-6">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="py-24 px-6 min-h-screen flex items-center justify-center">
+        <div className="max-w-6xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-5xl lg:text-6xl font-bold text-[#f5f1e8] mb-4 logo-font">
+            <h1 className="text-6xl lg:text-8xl font-bold text-[#f5f1e8] mb-8 logo-font">
               Early Twenties Torture
             </h1>
-            <p className="text-xl text-[#f5f1e8]/80 mb-12">New music coming soon</p>
+            <p className="text-2xl lg:text-3xl text-[#f5f1e8]/80 mb-16">New music coming soon</p>
             
             {/* Countdown Timer */}
-            <div className="mb-8">
+            <div className="mb-12">
               <CountdownTimer key="main-countdown" />
             </div>
           </motion.div>
@@ -36,8 +36,8 @@ export default function Home() {
       </section>
 
       {/* Album Cover Section */}
-      <section className="py-16 px-6 bg-gradient-to-br from-[#E98B8B]/5 to-transparent">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="py-24 px-6 min-h-screen flex items-center justify-center bg-gradient-to-br from-[#E98B8B]/5 to-transparent">
+        <div className="max-w-6xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -45,7 +45,7 @@ export default function Home() {
             className="text-center"
           >
             {/* Album Cover */}
-            <div className="w-80 h-80 lg:w-[400px] lg:h-[400px] mx-auto bg-gradient-to-br from-[#E98B8B] to-[#f5f1e8] rounded-2xl shadow-2xl mb-8 flex items-center justify-center relative overflow-hidden group">
+            <div className="w-96 h-96 lg:w-[500px] lg:h-[500px] mx-auto bg-gradient-to-br from-[#E98B8B] to-[#f5f1e8] rounded-2xl shadow-2xl mb-12 flex items-center justify-center relative overflow-hidden group">
               {albumCover ? (
                 <img 
                   src={albumCover} 
@@ -65,10 +65,10 @@ export default function Home() {
             </div>
             
             {/* Album Info */}
-            <h2 className="text-4xl font-bold text-[#f5f1e8] mb-4 logo-font">
+            <h2 className="text-5xl lg:text-6xl font-bold text-[#f5f1e8] mb-6 logo-font">
               Early Twenties Torture
             </h2>
-            <p className="text-xl text-[#f5f1e8]/80 mb-8">New music out now</p>
+            <p className="text-2xl lg:text-3xl text-[#f5f1e8]/80 mb-12">New music out now</p>
             
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -86,54 +86,54 @@ export default function Home() {
       </section>
 
       {/* Leaderboard Section */}
-      <section className="py-16 px-6">
-        <div className="max-w-4xl mx-auto">
+      <section className="py-24 px-6 min-h-screen flex items-center justify-center">
+        <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
             {/* Section Header */}
-            <div className="text-center mb-12">
-              <div className="flex items-center justify-center mb-4">
-                <Music className="h-6 w-6 text-[#E98B8B] mr-2" />
-                <h3 className="text-3xl font-bold text-[#f5f1e8]">Top Fans</h3>
+            <div className="text-center mb-16">
+              <div className="flex items-center justify-center mb-6">
+                <Music className="h-8 w-8 text-[#E98B8B] mr-3" />
+                <h3 className="text-4xl lg:text-5xl font-bold text-[#f5f1e8]">Top Fans</h3>
               </div>
-              <p className="text-[#f5f1e8]/60">See who's leading the Sadie Jean listening charts</p>
+              <p className="text-xl lg:text-2xl text-[#f5f1e8]/60">See who's leading the Sadie Jean listening charts</p>
             </div>
 
             {/* Compact Leaderboard */}
-            <div className="bg-transparent backdrop-blur-sm rounded-2xl p-8 border border-[#f5f1e8]/10 mb-8">
+            <div className="bg-transparent backdrop-blur-sm rounded-2xl p-12 border border-[#f5f1e8]/10 mb-12">
               {/* Top 5 Preview */}
-              <div className="space-y-4 mb-8">
+              <div className="space-y-6 mb-12">
                 {[1, 2, 3, 4, 5].map((rank) => (
                   <motion.div
                     key={rank}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: rank * 0.1 }}
-                    className="flex items-center justify-between p-4 bg-[#f5f1e8]/5 rounded-lg hover:bg-[#f5f1e8]/10 transition-colors"
+                    className="flex items-center justify-between p-6 bg-[#f5f1e8]/5 rounded-lg hover:bg-[#f5f1e8]/10 transition-colors"
                   >
                     <div className="flex items-center space-x-4">
-                      <div className="w-8 h-8 bg-gradient-to-r from-[#8B3A3A] to-[#A04747] rounded-full flex items-center justify-center">
-                        <span className="text-white font-bold text-sm">#{rank}</span>
+                      <div className="w-10 h-10 bg-gradient-to-r from-[#8B3A3A] to-[#A04747] rounded-full flex items-center justify-center">
+                        <span className="text-white font-bold text-base">#{rank}</span>
                       </div>
-                      <div className="w-10 h-10 bg-gradient-to-br from-[#E98B8B] to-[#E98B8B]/80 rounded-full flex items-center justify-center">
-                        <span className="text-white font-bold text-sm">♪</span>
+                      <div className="w-12 h-12 bg-gradient-to-br from-[#E98B8B] to-[#E98B8B]/80 rounded-full flex items-center justify-center">
+                        <span className="text-white font-bold text-base">♪</span>
                       </div>
                       <div>
-                        <p className="text-[#f5f1e8] font-medium">Fan {rank}</p>
-                        <p className="text-sm text-[#f5f1e8]/60">{Math.floor(Math.random() * 1000) + 100} plays</p>
+                        <p className="text-[#f5f1e8] font-medium text-lg">Fan {rank}</p>
+                        <p className="text-base text-[#f5f1e8]/60">{Math.floor(Math.random() * 1000) + 100} plays</p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-lg font-bold text-[#E98B8B]">#{rank}</p>
+                      <p className="text-xl font-bold text-[#E98B8B]">#{rank}</p>
                     </div>
                   </motion.div>
                 ))}
               </div>
               
-              <Link href="/leaderboard" className="w-full btn-primary text-center block py-4 text-lg">
+              <Link href="/leaderboard" className="w-full btn-primary text-center block py-6 text-xl">
                 View Full Leaderboard
               </Link>
             </div>
