@@ -22,13 +22,13 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-6xl lg:text-8xl font-bold text-[#f5f1e8] mb-8 logo-font">
+            <h1 className="text-7xl lg:text-9xl font-bold text-[#f5f1e8] mb-12 logo-font">
               Early Twenties Torture
             </h1>
-            <p className="text-2xl lg:text-3xl text-[#f5f1e8]/80 mb-16">New music coming soon</p>
+            <p className="text-3xl lg:text-4xl text-[#f5f1e8]/80 mb-20">New music coming soon</p>
             
             {/* Countdown Timer */}
-            <div className="mb-12">
+            <div className="mb-16 scale-125 lg:scale-150">
               <CountdownTimer key="main-countdown" />
             </div>
           </motion.div>
@@ -45,7 +45,7 @@ export default function Home() {
             className="text-center"
           >
             {/* Album Cover */}
-            <div className="w-96 h-96 lg:w-[500px] lg:h-[500px] mx-auto bg-gradient-to-br from-[#E98B8B] to-[#f5f1e8] rounded-2xl shadow-2xl mb-12 flex items-center justify-center relative overflow-hidden group">
+            <div className="w-[500px] h-[500px] lg:w-[700px] lg:h-[700px] mx-auto bg-gradient-to-br from-[#E98B8B] to-[#f5f1e8] rounded-2xl shadow-2xl mb-16 flex items-center justify-center relative overflow-hidden group">
               {albumCover ? (
                 <img 
                   src={albumCover} 
@@ -65,10 +65,10 @@ export default function Home() {
             </div>
             
             {/* Album Info */}
-            <h2 className="text-5xl lg:text-6xl font-bold text-[#f5f1e8] mb-6 logo-font">
+            <h2 className="text-6xl lg:text-8xl font-bold text-[#f5f1e8] mb-8 logo-font">
               Early Twenties Torture
             </h2>
-            <p className="text-2xl lg:text-3xl text-[#f5f1e8]/80 mb-12">New music out now</p>
+            <p className="text-3xl lg:text-4xl text-[#f5f1e8]/80 mb-16">New music out now</p>
             
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
