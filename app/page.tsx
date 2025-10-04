@@ -2,52 +2,129 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { Play, Music } from 'lucide-react'
+import { Play, Music, Clock } from 'lucide-react'
 import LeaderboardPreview from '@/components/LeaderboardPreview'
 
 export default function Home() {
   return (
     <div className="min-h-screen">
-          {/* Hero Section */}
-          <div className="relative min-h-screen flex items-center justify-center bg-[#282828]">
+      {/* Split Hero Section */}
+      <div className="relative min-h-screen flex flex-col lg:flex-row bg-[#282828]">
         
-        {/* Content */}
-        <div className="relative z-10 container mx-auto px-6 py-32">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center max-w-4xl mx-auto"
-        >
-          {/* Main Headline - Bold Logo Style */}
-              <h1 className="text-8xl md:text-9xl font-bold text-[#f5f1e8] mb-8 tracking-tight leading-none logo-font">
-                Early 20's<br/>Torture
-              </h1>
-              {/* Force deployment */}
-              
-              <p className="text-2xl text-[#f5f1e8]/80 mb-12 max-w-2xl mx-auto leading-relaxed">
-                New music out now
-              </p>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+        {/* Left Half - Album Cover */}
+        <div className="w-full lg:w-1/2 relative flex items-center justify-center bg-gradient-to-br from-[#E98B8B]/10 to-transparent min-h-[50vh] lg:min-h-screen">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            className="text-center p-12"
+          >
+            {/* Album Cover Placeholder */}
+            <div className="w-64 h-64 lg:w-80 lg:h-80 bg-gradient-to-br from-[#E98B8B] to-[#f5f1e8] rounded-2xl shadow-2xl mb-8 flex items-center justify-center relative overflow-hidden">
+              {/* You can replace this with an actual album cover image */}
+              <div className="absolute inset-0 bg-gradient-to-br from-[#E98B8B]/20 to-transparent"></div>
+              <div className="relative z-10 text-center">
+                <div className="text-8xl mb-4">♪</div>
+                <div className="text-white font-bold text-xl">Album Cover</div>
+                <div className="text-white/80 text-sm mt-2">Early Twenties Torture</div>
+              </div>
+            </div>
+            
+            {/* Album Info */}
+            <h2 className="text-4xl font-bold text-[#f5f1e8] mb-4 logo-font">
+              Early Twenties Torture
+            </h2>
+            <p className="text-xl text-[#f5f1e8]/80 mb-8">New music out now</p>
+            
+            {/* Listen Button */}
             <Link 
               href="https://open.spotify.com" 
               target="_blank"
-              className="btn-primary inline-flex items-center space-x-2"
+              className="btn-primary inline-flex items-center space-x-2 text-lg px-8 py-4"
             >
-              <Play className="h-5 w-5" />
+              <Play className="h-6 w-6" />
               <span>Listen Now</span>
             </Link>
-            
-          </div>
-            </motion.div>
+          </motion.div>
         </div>
-      </div>
 
-      {/* Leaderboard Preview */}
-      <div className="container mx-auto px-6 py-16">
-        <LeaderboardPreview />
+        {/* Right Half - Leaderboard & Countdown */}
+        <div className="w-full lg:w-1/2 relative flex flex-col items-center justify-center p-6 lg:p-12 min-h-[50vh] lg:min-h-screen">
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="w-full max-w-lg"
+          >
+            {/* Countdown Timer */}
+            <div className="bg-transparent backdrop-blur-sm rounded-2xl p-8 mb-8 border border-[#f5f1e8]/10 text-center">
+              <div className="flex items-center justify-center mb-4">
+                <Clock className="h-6 w-6 text-[#E98B8B] mr-2" />
+                <h3 className="text-2xl font-bold text-[#f5f1e8]">Next Release</h3>
+              </div>
+              <div className="grid grid-cols-4 gap-4 mb-6">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-[#E98B8B]">00</div>
+                  <div className="text-sm text-[#f5f1e8]/60">Days</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-[#E98B8B]">00</div>
+                  <div className="text-sm text-[#f5f1e8]/60">Hours</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-[#E98B8B]">00</div>
+                  <div className="text-sm text-[#f5f1e8]/60">Minutes</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-[#E98B8B]">00</div>
+                  <div className="text-sm text-[#f5f1e8]/60">Seconds</div>
+                </div>
+              </div>
+              <p className="text-[#f5f1e8]/60 text-sm">Stay tuned for updates!</p>
+            </div>
+
+            {/* Compact Leaderboard */}
+            <div className="bg-transparent backdrop-blur-sm rounded-2xl p-6 border border-[#f5f1e8]/10">
+              <div className="flex items-center justify-center mb-4">
+                <Music className="h-5 w-5 text-[#E98B8B] mr-2" />
+                <h3 className="text-xl font-bold text-[#f5f1e8]">Top Fans</h3>
+              </div>
+              
+              {/* Top 3 Preview */}
+              <div className="space-y-3 mb-6">
+                {[1, 2, 3].map((rank) => (
+                  <motion.div
+                    key={rank}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: rank * 0.1 }}
+                    className="flex items-center justify-between p-3 bg-[#f5f1e8]/5 rounded-lg"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div className="w-6 h-6 bg-gradient-to-r from-pink-300 to-pink-500 rounded-full flex items-center justify-center">
+                        <span className="text-white font-bold text-xs">#{rank}</span>
+                      </div>
+                      <div className="w-8 h-8 bg-gradient-to-br from-[#E98B8B] to-[#E98B8B]/80 rounded-full flex items-center justify-center">
+                        <span className="text-white font-bold text-xs">♪</span>
+                      </div>
+                      <div>
+                        <p className="text-[#f5f1e8] font-medium text-sm">Fan {rank}</p>
+                        <p className="text-xs text-[#f5f1e8]/60">{Math.floor(Math.random() * 1000) + 100} plays</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-bold text-[#E98B8B]">#{rank}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+              
+              <Link href="/leaderboard" className="w-full btn-primary text-center block py-3">
+                View Full Leaderboard
+              </Link>
+            </div>
+          </motion.div>
+        </div>
       </div>
 
       {/* Featured Content Grid */}
