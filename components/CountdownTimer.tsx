@@ -23,52 +23,34 @@ export default function CountdownTimer() {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 })
   const [isLoading, setIsLoading] = useState(true)
   const [hasExpired, setHasExpired] = useState(false)
-  const [isMounted, setIsMounted] = useState(false)
-
-  // Component mount effect
-  useEffect(() => {
-    setIsMounted(true)
-  }, [])
 
   // Fetch countdown data from API
   useEffect(() => {
-    if (!isMounted) return
-    
-    let mounted = true
-    
     const fetchCountdownData = async () => {
       try {
         const response = await fetch('/api/countdown')
         const data = await response.json()
-        if (mounted) {
-          setCountdownData(data)
-          setIsLoading(false)
-        }
+        setCountdownData(data)
       } catch (error) {
         console.error('Failed to fetch countdown data:', error)
         // Set default countdown data if API fails
-        if (mounted) {
-          setCountdownData({
-            targetDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days from now
-            title: "Next Release",
-            description: "Stay tuned for updates!",
-            isActive: true
-          })
-          setIsLoading(false)
-        }
+        setCountdownData({
+          targetDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days from now
+          title: "Next Release",
+          description: "Stay tuned for updates!",
+          isActive: true
+        })
+      } finally {
+        setIsLoading(false)
       }
     }
 
     fetchCountdownData()
-    
-    return () => {
-      mounted = false
-    }
-  }, [isMounted])
+  }, [])
 
   // Calculate time left
   useEffect(() => {
-    if (!countdownData?.targetDate || !countdownData.isActive) {
+    if (!countdownData?.targetDate || !countdownData.isActive || isLoading) {
       return
     }
 
@@ -98,10 +80,10 @@ export default function CountdownTimer() {
     const timer = setInterval(calculateTimeLeft, 1000)
 
     return () => clearInterval(timer)
-  }, [countdownData])
+  }, [countdownData, isLoading])
 
-  // Don't render until component is mounted
-  if (!isMounted || isLoading) {
+  // Show loading state
+  if (isLoading) {
     return (
       <div className="bg-transparent backdrop-blur-sm rounded-2xl p-8 mb-8 border border-[#f5f1e8]/10 text-center">
         <div className="flex items-center justify-center mb-4">
@@ -109,19 +91,13 @@ export default function CountdownTimer() {
           <h3 className="text-2xl font-bold text-[#f5f1e8]">Loading...</h3>
         </div>
         <div className="animate-pulse">
-          <div className="grid grid-cols-4 gap-4 mb-6">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="text-center">
-                <div className="h-12 bg-[#f5f1e8]/20 rounded-lg mb-2"></div>
-                <div className="h-4 bg-[#f5f1e8]/20 rounded"></div>
-              </div>
-            ))}
-          </div>
+          <div className="h-12 bg-[#f5f1e8]/20 rounded-lg mb-2"></div>
         </div>
       </div>
     )
   }
 
+  // Show inactive state
   if (!countdownData || !countdownData.isActive) {
     return (
       <div className="bg-transparent backdrop-blur-sm rounded-2xl p-8 mb-8 border border-[#f5f1e8]/10 text-center">
@@ -134,6 +110,7 @@ export default function CountdownTimer() {
     )
   }
 
+  // Show countdown
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -162,7 +139,7 @@ export default function CountdownTimer() {
         <>
           <div className="grid grid-cols-4 gap-4 mb-6">
             <motion.div
-              key={timeLeft.days}
+              key={`days-${timeLeft.days}`}
               initial={{ scale: 1.2 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.3 }}
@@ -175,7 +152,7 @@ export default function CountdownTimer() {
             </motion.div>
             
             <motion.div
-              key={timeLeft.hours}
+              key={`hours-${timeLeft.hours}`}
               initial={{ scale: 1.2 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.3 }}
@@ -188,7 +165,7 @@ export default function CountdownTimer() {
             </motion.div>
             
             <motion.div
-              key={timeLeft.minutes}
+              key={`minutes-${timeLeft.minutes}`}
               initial={{ scale: 1.2 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.3 }}
@@ -201,7 +178,7 @@ export default function CountdownTimer() {
             </motion.div>
             
             <motion.div
-              key={timeLeft.seconds}
+              key={`seconds-${timeLeft.seconds}`}
               initial={{ scale: 1.2 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.3 }}
