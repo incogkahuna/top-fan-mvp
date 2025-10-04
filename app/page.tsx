@@ -26,7 +26,7 @@ export default function Home() {
               Early Twenties Torture
             </h1>
             
-            {/* Countdown Timer */}
+            {/* Countdown Timer - Force cache refresh */}
             <div className="mb-16 scale-125 lg:scale-150">
               <CountdownTimer key="main-countdown" />
             </div>
