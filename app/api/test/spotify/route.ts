@@ -5,7 +5,7 @@ export async function GET() {
   try {
     // Test Spotify API credentials
     const clientId = process.env.SPOTIFY_CLIENT_ID
-    const clientSecret = process.env.SPIFY_CLIENT_SECRET
+    const clientSecret = process.env.SPOTIFY_CLIENT_SECRET
 
     if (!clientId || !clientSecret) {
       return NextResponse.json({ error: 'Spotify credentials not configured' }, { status: 400 })

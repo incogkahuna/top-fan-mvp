@@ -2,10 +2,28 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { Play, Music, Clock } from 'lucide-react'
+import { Play, Music, Clock, Upload, Image } from 'lucide-react'
+import { useState } from 'react'
 import LeaderboardPreview from '@/components/LeaderboardPreview'
+import CountdownTimer from '@/components/CountdownTimer'
 
 export default function Home() {
+  const [albumCover, setAlbumCover] = useState<string | null>('/album-cover.jpg') // Default album cover
+  const [isUploading, setIsUploading] = useState(false)
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      setIsUploading(true)
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        setAlbumCover(e.target?.result as string)
+        setIsUploading(false)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
   return (
     <div className="min-h-screen">
       {/* Split Hero Section */}
@@ -19,14 +37,43 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="text-center p-12"
           >
-            {/* Album Cover Placeholder */}
-            <div className="w-64 h-64 lg:w-80 lg:h-80 bg-gradient-to-br from-[#E98B8B] to-[#f5f1e8] rounded-2xl shadow-2xl mb-8 flex items-center justify-center relative overflow-hidden">
-              {/* You can replace this with an actual album cover image */}
-              <div className="absolute inset-0 bg-gradient-to-br from-[#E98B8B]/20 to-transparent"></div>
-              <div className="relative z-10 text-center">
-                <div className="text-8xl mb-4">♪</div>
-                <div className="text-white font-bold text-xl">Album Cover</div>
-                <div className="text-white/80 text-sm mt-2">Early Twenties Torture</div>
+            {/* Album Cover */}
+            <div className="w-64 h-64 lg:w-80 lg:h-80 bg-gradient-to-br from-[#E98B8B] to-[#f5f1e8] rounded-2xl shadow-2xl mb-8 flex items-center justify-center relative overflow-hidden group">
+              {albumCover ? (
+                <img 
+                  src={albumCover} 
+                  alt="Album Cover" 
+                  className="w-full h-full object-cover rounded-2xl"
+                />
+              ) : (
+                <>
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#E98B8B]/20 to-transparent"></div>
+                  <div className="relative z-10 text-center">
+                    <div className="text-8xl mb-4">♪</div>
+                    <div className="text-white font-bold text-xl">Album Cover</div>
+                    <div className="text-white/80 text-sm mt-2">Early Twenties Torture</div>
+                  </div>
+                </>
+              )}
+              
+              {/* Upload Overlay */}
+              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-2xl">
+                <label className="cursor-pointer flex flex-col items-center space-y-2">
+                  {isUploading ? (
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                  ) : (
+                    <Upload className="h-8 w-8 text-white" />
+                  )}
+                  <span className="text-white text-sm font-medium">
+                    {isUploading ? 'Uploading...' : 'Upload Cover'}
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                </label>
               </div>
             </div>
             
@@ -36,15 +83,27 @@ export default function Home() {
             </h2>
             <p className="text-xl text-[#f5f1e8]/80 mb-8">New music out now</p>
             
-            {/* Listen Button */}
-            <Link 
-              href="https://open.spotify.com" 
-              target="_blank"
-              className="btn-primary inline-flex items-center space-x-2 text-lg px-8 py-4"
-            >
-              <Play className="h-6 w-6" />
-              <span>Listen Now</span>
-            </Link>
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link 
+                href="https://open.spotify.com" 
+                target="_blank"
+                className="btn-primary inline-flex items-center space-x-2 text-lg px-8 py-4"
+              >
+                <Play className="h-6 w-6" />
+                <span>Listen Now</span>
+              </Link>
+              
+              {albumCover && (
+                <button
+                  onClick={() => setAlbumCover(null)}
+                  className="inline-flex items-center space-x-2 text-lg px-6 py-4 bg-transparent border border-[#f5f1e8]/20 text-[#f5f1e8] rounded-lg hover:bg-[#f5f1e8]/10 transition-colors"
+                >
+                  <Image className="h-5 w-5" />
+                  <span>Remove Cover</span>
+                </button>
+              )}
+            </div>
           </motion.div>
         </div>
 
@@ -57,31 +116,7 @@ export default function Home() {
             className="w-full max-w-lg"
           >
             {/* Countdown Timer */}
-            <div className="bg-transparent backdrop-blur-sm rounded-2xl p-8 mb-8 border border-[#f5f1e8]/10 text-center">
-              <div className="flex items-center justify-center mb-4">
-                <Clock className="h-6 w-6 text-[#E98B8B] mr-2" />
-                <h3 className="text-2xl font-bold text-[#f5f1e8]">Next Release</h3>
-              </div>
-              <div className="grid grid-cols-4 gap-4 mb-6">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-[#E98B8B]">00</div>
-                  <div className="text-sm text-[#f5f1e8]/60">Days</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-[#E98B8B]">00</div>
-                  <div className="text-sm text-[#f5f1e8]/60">Hours</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-[#E98B8B]">00</div>
-                  <div className="text-sm text-[#f5f1e8]/60">Minutes</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-[#E98B8B]">00</div>
-                  <div className="text-sm text-[#f5f1e8]/60">Seconds</div>
-                </div>
-              </div>
-              <p className="text-[#f5f1e8]/60 text-sm">Stay tuned for updates!</p>
-            </div>
+            <CountdownTimer key="main-countdown" />
 
             {/* Compact Leaderboard */}
             <div className="bg-transparent backdrop-blur-sm rounded-2xl p-6 border border-[#f5f1e8]/10">
