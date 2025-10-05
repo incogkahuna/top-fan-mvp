@@ -65,10 +65,10 @@ function LeaderboardContent() {
   }
 
   const getRankIcon = (rank: number) => {
-    if (rank === 1) return <span className="text-lg font-bold text-pink-300">#1</span>
-    if (rank === 2) return <span className="text-lg font-bold text-pink-200">#2</span>
-    if (rank === 3) return <span className="text-lg font-bold text-pink-100">#3</span>
-    return <span className="text-lg font-bold text-gray-400">#{rank}</span>
+    if (rank === 1) return <span className="text-lg font-bold text-pink-300">1</span>
+    if (rank === 2) return <span className="text-lg font-bold text-pink-200">2</span>
+    if (rank === 3) return <span className="text-lg font-bold text-pink-100">3</span>
+    return <span className="text-lg font-bold text-gray-400">{rank}</span>
   }
 
   const getRankColor = (rank: number) => {
@@ -95,7 +95,7 @@ function LeaderboardContent() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-4xl font-bold text-[#f5f1e8] mb-2">Sadie Jean Leaderboard ✨</h1>
+              <h1 className="text-4xl font-bold text-[#f5f1e8] mb-2">Sadie Jean Leaderboard</h1>
               <p className="text-[#f5f1e8]/60">See how you stack up against other Sadie Jean fans</p>
             </div>
                 <button
@@ -185,7 +185,7 @@ function LeaderboardContent() {
                     />
                   ) : (
                     <div className="w-10 h-10 bg-gradient-to-br from-pink-300 to-pink-500 rounded-full flex items-center justify-center">
-                      <span className="text-white font-bold">♪</span>
+                      <span className="text-white font-bold">U</span>
                     </div>
                   )}
                   <div>
@@ -196,7 +196,7 @@ function LeaderboardContent() {
                 <div className="flex items-center space-x-4">
                   <div className="text-right">
                     <p className="text-[#f5f1e8] font-bold text-lg">
-                      #N/A
+                      N/A
                     </p>
                     <p className="text-[#f5f1e8]/60 text-sm">Current Rank</p>
                   </div>
@@ -233,8 +233,8 @@ function LeaderboardContent() {
                     Your photo will be visible to other fans on the leaderboard.
                   </p>
                   <div className="flex items-center space-x-2 text-sm text-[#f5f1e8]/60">
-                    <span>• Max file size: 5MB</span>
-                    <span>• Supported formats: JPG, PNG, GIF</span>
+                    <span>- Max file size: 5MB</span>
+                    <span>- Supported formats: JPG, PNG, GIF</span>
                   </div>
                 </div>
               </div>
@@ -319,7 +319,7 @@ function LeaderboardContent() {
                 </div>
                 <div className="mt-4 p-4 bg-transparent backdrop-blur-sm rounded-lg border border-[#f5f1e8]/5">
                   <p className="text-[#f5f1e8]/80 text-sm">
-                    <strong>Your current rank:</strong> #N/A with 0 total plays
+                    <strong>Your current rank:</strong> N/A with 0 total plays
                   </p>
                 </div>
               </div>
@@ -360,7 +360,7 @@ function LeaderboardContent() {
                   {loading ? '...' : leaderboard.length}
                 </p>
               </div>
-              <span className="text-2xl text-[#E98B8B] font-bold">#</span>
+              <span className="text-2xl text-[#E98B8B] font-bold">F</span>
             </div>
           </div>
 
@@ -384,7 +384,7 @@ function LeaderboardContent() {
                   {loading ? '...' : leaderboard.reduce((sum, entry) => sum + entry.points, 0).toLocaleString()}
                 </p>
               </div>
-              <span className="text-2xl text-[#E98B8B] font-bold">*</span>
+              <span className="text-2xl text-[#E98B8B] font-bold">P</span>
             </div>
           </div>
         </div>
@@ -422,10 +422,10 @@ function LeaderboardContent() {
               {leaderboard.length === 0 ? (
                 <div className="text-center py-12">
           <div className="w-20 h-20 bg-[#E98B8B]/20 rounded-full flex items-center justify-center mx-auto mb-6">
-            <span className="text-3xl text-[#E98B8B] font-bold">#</span>
+            <span className="text-3xl text-[#E98B8B] font-bold">F</span>
           </div>
                   <h3 className="text-xl font-bold text-[#f5f1e8] mb-2">Be the First Fan!</h3>
-                  <p className="text-[#f5f1e8]/60 mb-6">Connect your Spotify to start tracking your Sadie Jean plays and become the #1 fan</p>
+                  <p className="text-[#f5f1e8]/60 mb-6">Connect your Spotify to start tracking your Sadie Jean plays and become the top fan</p>
                   {!user && (
                     <button
                       onClick={() => window.location.href = '/api/auth/spotify'}
@@ -473,7 +473,7 @@ function LeaderboardContent() {
                           />
                         ) : (
                           <div className="w-14 h-14 bg-gradient-to-br from-[#E98B8B] to-[#E98B8B]/80 rounded-full flex items-center justify-center shadow-lg">
-                            <span className="text-white font-bold text-lg">♪</span>
+                            <span className="text-white font-bold text-lg">U</span>
                           </div>
                         )}
                         {user.rank <= 3 && (
@@ -546,7 +546,7 @@ function LeaderboardContent() {
                         </div>
                       )}
                       <div className="text-right">
-                        <p className="text-lg font-bold text-white">#{user.rank}</p>
+                        <p className="text-lg font-bold text-white">{user.rank}</p>
                       </div>
                     </div>
                   </motion.div>
@@ -568,9 +568,9 @@ function LeaderboardContent() {
             <div className="flex items-center justify-between p-4 bg-transparent backdrop-blur-sm rounded-lg border border-spotify-green/30">
               <div className="flex items-center space-x-4">
                 <div className="flex items-center justify-center w-12 h-12">
-                  <span className="text-lg font-bold text-spotify-green">#{yourStats.rank}</span>
+                  <span className="text-lg font-bold text-spotify-green">{yourStats.rank}</span>
                 </div>
-                <div className="text-2xl">♪</div>
+                <div className="text-2xl">U</div>
                 <div>
                   <h3 className="text-lg font-semibold text-white">Daniel Horgan</h3>
                   <p className="text-sm text-gray-300">{yourStats.totalPlays.toLocaleString()} plays</p>
@@ -611,7 +611,7 @@ function LeaderboardContent() {
               animate={{ rotate: [0, 10, -10, 0] }}
               transition={{ duration: 3, repeat: Infinity }}
             >
-              <span className="text-4xl text-[#E98B8B] font-bold">#</span>
+              <span className="text-4xl text-[#E98B8B] font-bold">F</span>
             </motion.div>
               <h3 className="text-3xl font-bold text-[#f5f1e8] tracking-wide">Want to See Your Name Here?</h3>
             </motion.div>
@@ -706,14 +706,14 @@ function LeaderboardContent() {
                     />
                   ) : (
                     <div className="w-16 h-16 bg-gradient-to-br from-[#E98B8B] to-[#E98B8B]/80 rounded-full flex items-center justify-center">
-                      <span className="text-white font-bold text-xl">♪</span>
+                      <span className="text-white font-bold text-xl">U</span>
                     </div>
                   )}
                   <div>
                     <h2 className="text-2xl font-bold text-[#f5f1e8]">{selectedUser.displayName}</h2>
                     <div className="flex items-center space-x-2">
                       {getRankIcon(selectedUser.rank)}
-                      <span className="text-[#f5f1e8]/60">Rank #{selectedUser.rank}</span>
+                      <span className="text-[#f5f1e8]/60">Rank {selectedUser.rank}</span>
                     </div>
                   </div>
                 </div>
@@ -721,7 +721,7 @@ function LeaderboardContent() {
                   onClick={closeProfileModal}
                   className="p-2 hover:bg-[#f5f1e8]/10 rounded-full transition-colors text-[#f5f1e8]/60 font-bold text-xl"
                 >
-                  ×
+                  X
                 </button>
               </div>
 
@@ -729,7 +729,7 @@ function LeaderboardContent() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 <div className="bg-transparent backdrop-blur-sm border border-[#f5f1e8]/10 rounded-lg p-4 text-center">
                   <div className="flex items-center justify-center mb-2">
-                    <span className="text-[#E98B8B] font-bold text-lg">♪</span>
+                    <span className="text-[#E98B8B] font-bold text-lg">S</span>
                   </div>
                   <p className="text-2xl font-bold text-[#f5f1e8]">{selectedUser.totalPlays}</p>
                   <p className="text-xs text-[#f5f1e8]/60">Sadie Jean Plays</p>
@@ -745,7 +745,7 @@ function LeaderboardContent() {
                 
                 <div className="bg-transparent backdrop-blur-sm border border-[#f5f1e8]/10 rounded-lg p-4 text-center">
                   <div className="flex items-center justify-center mb-2">
-                    <span className="text-[#E98B8B] font-bold text-lg">⏱</span>
+                    <span className="text-[#E98B8B] font-bold text-lg">T</span>
                   </div>
                   <p className="text-2xl font-bold text-[#f5f1e8]">{selectedUser.totalListeningTime}m</p>
                   <p className="text-xs text-[#f5f1e8]/60">Listening Time</p>
@@ -753,7 +753,7 @@ function LeaderboardContent() {
                 
                 <div className="bg-transparent backdrop-blur-sm border border-[#f5f1e8]/10 rounded-lg p-4 text-center">
                   <div className="flex items-center justify-center mb-2">
-                    <span className="text-[#E98B8B] font-bold text-lg">♪</span>
+                    <span className="text-[#E98B8B] font-bold text-lg">S</span>
                   </div>
                   <p className="text-2xl font-bold text-[#f5f1e8]">{selectedUser.uniqueSongs}</p>
                   <p className="text-xs text-[#f5f1e8]/60">Unique Songs</p>
@@ -771,7 +771,7 @@ function LeaderboardContent() {
                       <div key={index} className="flex items-center justify-between bg-transparent backdrop-blur-sm border border-[#f5f1e8]/10 rounded-lg p-3">
                         <div className="flex items-center space-x-3">
                           <div className="w-8 h-8 bg-[#E98B8B]/20 rounded-full flex items-center justify-center">
-                            <span className="text-sm font-bold text-[#E98B8B]">#{index + 1}</span>
+                            <span className="text-sm font-bold text-[#E98B8B]">{index + 1}</span>
                           </div>
                           <span className="text-[#f5f1e8] font-medium">{song.name}</span>
                         </div>
