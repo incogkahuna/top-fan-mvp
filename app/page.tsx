@@ -31,20 +31,16 @@ export default function Home() {
               <CountdownTimer key="main-countdown" />
             </div>
           </motion.div>
-        </div>
-      </section>
-
-      {/* Album Cover Section */}
-      <section className="py-24 px-6 min-h-screen flex items-center justify-center bg-gradient-to-br from-[#E98B8B]/5 to-transparent">
-        <div className="max-w-6xl mx-auto text-center">
+          
+          {/* Album Cover - Moved closer to countdown */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-center"
+            className="text-center mt-16"
           >
             {/* Album Cover */}
-            <div className="w-[500px] h-[500px] lg:w-[700px] lg:h-[700px] mx-auto bg-gradient-to-br from-[#E98B8B] to-[#f5f1e8] rounded-2xl shadow-2xl mb-16 flex items-center justify-center relative overflow-hidden group">
+            <div className="w-[400px] h-[400px] lg:w-[500px] lg:h-[500px] mx-auto bg-gradient-to-br from-[#E98B8B] to-[#f5f1e8] rounded-2xl shadow-2xl mb-12 flex items-center justify-center relative overflow-hidden group">
               {albumCover ? (
                 <img 
                   src={albumCover} 
@@ -55,18 +51,13 @@ export default function Home() {
                 <>
                   <div className="absolute inset-0 bg-gradient-to-br from-[#E98B8B]/20 to-transparent"></div>
                   <div className="relative z-10 text-center">
-                    <div className="text-8xl mb-4">♪</div>
+                    <div className="text-8xl mb-4">M</div>
                     <div className="text-white font-bold text-xl">Album Cover</div>
                     <div className="text-white/80 text-sm mt-2">Early Twenties Torture</div>
                   </div>
                 </>
               )}
             </div>
-            
-            {/* Album Info */}
-            <h2 className="text-6xl lg:text-8xl font-bold text-[#f5f1e8] mb-16 album-font">
-              Early Twenties Torture
-            </h2>
             
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -117,7 +108,7 @@ export default function Home() {
                         <span className="text-white font-bold text-base">#{rank}</span>
                       </div>
                       <div className="w-12 h-12 bg-gradient-to-br from-[#E98B8B] to-[#E98B8B]/80 rounded-full flex items-center justify-center">
-                        <span className="text-white font-bold text-base">♪</span>
+                        <span className="text-white font-bold text-base">F</span>
                       </div>
                       <div>
                         <p className="text-[#f5f1e8] font-medium text-lg">Fan {rank}</p>
@@ -160,7 +151,7 @@ export default function Home() {
             {/* Tour Card */}
             <Link href="/tour" className="card group hover:scale-105 transition-transform duration-300">
               <div className="aspect-square bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-lg mb-4 flex items-center justify-center">
-                <div className="text-6xl">♪</div>
+                <div className="text-6xl">T</div>
               </div>
                   <h3 className="text-2xl font-bold text-[#f5f1e8] mb-2">Tour Dates</h3>
                   <p className="text-[#f5f1e8]/60">Find us on the road</p>
