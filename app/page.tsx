@@ -90,8 +90,7 @@ export default function Home() {
           >
             {/* Section Header */}
             <div className="text-center mb-16">
-              <div className="flex items-center justify-center mb-6">
-                <Music className="h-8 w-8 text-[#E98B8B] mr-3" />
+              <div className="text-center mb-6">
                 <h3 className="text-4xl lg:text-5xl font-bold text-[#f5f1e8]">Top Fans</h3>
               </div>
               <p className="text-xl lg:text-2xl text-[#f5f1e8]/60">See who's leading the Sadie Jean listening charts</p>
