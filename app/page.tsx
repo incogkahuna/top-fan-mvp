@@ -40,7 +40,7 @@ export default function Home() {
             className="text-center mt-16"
           >
             {/* Album Cover */}
-            <div className="w-[400px] h-[400px] lg:w-[500px] lg:h-[500px] mx-auto bg-gradient-to-br from-[#E98B8B] to-[#f5f1e8] rounded-2xl shadow-2xl mb-12 flex items-center justify-center relative overflow-hidden group">
+            <div className="w-[500px] h-[500px] lg:w-[700px] lg:h-[700px] mx-auto bg-gradient-to-br from-[#E98B8B] to-[#f5f1e8] rounded-2xl shadow-2xl mb-12 flex items-center justify-center relative overflow-hidden group">
               {albumCover ? (
                 <img 
                   src={albumCover} 
@@ -68,6 +68,12 @@ export default function Home() {
               >
                 <Play className="h-6 w-6" />
                 <span>Listen Now</span>
+              </Link>
+              <Link 
+                href="/tour" 
+                className="btn-primary inline-flex items-center space-x-2 text-lg px-8 py-4 bg-[#E98B8B] hover:bg-[#A04747] transition-colors"
+              >
+                <span>Buy Tickets</span>
               </Link>
             </div>
           </motion.div>
