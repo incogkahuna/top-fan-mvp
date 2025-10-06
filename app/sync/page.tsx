@@ -70,7 +70,7 @@ export default function SyncPage() {
           className="card mb-8"
         >
           <div className="text-center py-8">
-            <div className="w-20 h-20 bg-gradient-to-br from-spotify-green to-blue-500 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-6">
               <Music className="h-10 w-10 text-white" />
             </div>
             
@@ -182,7 +182,7 @@ export default function SyncPage() {
           <h3 className="text-xl font-semibold text-white mb-4">What Happens Next?</h3>
           <div className="space-y-4 text-gray-300">
             <div className="flex items-start space-x-3">
-              <span className="bg-spotify-green text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">1</span>
+              <span className="bg-green-400 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">1</span>
               <div>
                 <p className="font-semibold">Data Import</p>
                 <p className="text-sm">Your recently played tracks are imported from Spotify</p>

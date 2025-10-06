@@ -22,7 +22,7 @@ export const supabaseAdmin = supabaseUrl && supabaseServiceKey
 // Database types
 export interface User {
   id: string
-  spotify_id: string
+  music_id: string
   display_name: string
   email: string
   profile_image_url?: string

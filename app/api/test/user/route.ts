@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
       tokenCount: tokens?.length || 0,
       users: users?.map(user => ({
         id: user.id,
-        spotify_id: user.spotify_id,
+        music_id: user.music_id,
         display_name: user.display_name,
         email: user.email,
         created_at: user.created_at

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { refreshAccessToken } from '@/lib/spotify'
+// DISABLED: Spotify import removed
 
 export async function GET(request: NextRequest) {
   try {

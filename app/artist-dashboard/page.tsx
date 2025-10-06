@@ -59,7 +59,7 @@ export default function ArtistDashboard() {
               onClick={() => setTimeRange(range)}
               className={`px-4 py-2 rounded-md transition-colors ${
                 timeRange === range
-                  ? 'bg-spotify-green text-white'
+                  ? 'bg-green-400 text-white'
                   : 'text-gray-300 hover:text-white'
               }`}
             >
@@ -79,7 +79,7 @@ export default function ArtistDashboard() {
               <div>
                 <p className="text-gray-400 text-sm">Total Fans</p>
                 <p className="text-3xl font-bold text-white">{mockData.totalFans.toLocaleString()}</p>
-                <p className="text-sm text-spotify-green">+12% this month</p>
+                <p className="text-sm text-green-400">+12% this month</p>
               </div>
               <Users className="h-8 w-8 text-blue-400" />
             </div>
@@ -95,9 +95,9 @@ export default function ArtistDashboard() {
               <div>
                 <p className="text-gray-400 text-sm">Total Plays</p>
                 <p className="text-3xl font-bold text-white">{mockData.totalPlays.toLocaleString()}</p>
-                <p className="text-sm text-spotify-green">+8% this month</p>
+                <p className="text-sm text-green-400">+8% this month</p>
               </div>
-              <Music className="h-8 w-8 text-spotify-green" />
+              <Music className="h-8 w-8 text-green-400" />
             </div>
           </motion.div>
 
@@ -111,7 +111,7 @@ export default function ArtistDashboard() {
               <div>
                 <p className="text-gray-400 text-sm">Avg Session</p>
                 <p className="text-3xl font-bold text-white">{mockData.engagement.avgSessionTime}</p>
-                <p className="text-sm text-spotify-green">+2min this month</p>
+                <p className="text-sm text-green-400">+2min this month</p>
               </div>
               <TrendingUp className="h-8 w-8 text-purple-400" />
             </div>
@@ -127,7 +127,7 @@ export default function ArtistDashboard() {
               <div>
                 <p className="text-gray-400 text-sm">Repeat Rate</p>
                 <p className="text-3xl font-bold text-white">{mockData.engagement.repeatListeners}%</p>
-                <p className="text-sm text-spotify-green">+3% this month</p>
+                <p className="text-sm text-green-400">+3% this month</p>
               </div>
               <BarChart3 className="h-8 w-8 text-yellow-400" />
             </div>
@@ -147,7 +147,7 @@ export default function ArtistDashboard() {
               onClick={() => setActiveTab(tab.id)}
               className={`px-4 py-2 rounded-md transition-colors ${
                 activeTab === tab.id
-                  ? 'bg-spotify-green text-white'
+                  ? 'bg-green-400 text-white'
                   : 'text-gray-300 hover:text-white'
               }`}
             >
@@ -198,7 +198,7 @@ export default function ArtistDashboard() {
                     </div>
                     <div className="w-full bg-gray-700 rounded-full h-2">
                       <div 
-                        className="bg-gradient-to-r from-spotify-green to-blue-500 h-2 rounded-full transition-all duration-500"
+                        className="bg-gradient-to-r from-green-400 to-blue-500 h-2 rounded-full transition-all duration-500"
                         style={{ width: `${age.percentage}%` }}
                       ></div>
                     </div>
@@ -220,7 +220,7 @@ export default function ArtistDashboard() {
               {mockData.topTracks.map((track, index) => (
                 <div key={index} className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
                   <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-spotify-green to-blue-500 rounded-full flex items-center justify-center">
+                    <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center">
                       <Music className="h-6 w-6 text-white" />
                     </div>
                     <div>
@@ -229,7 +229,7 @@ export default function ArtistDashboard() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <span className="text-spotify-green font-semibold">{track.growth}</span>
+                    <span className="text-green-400 font-semibold">{track.growth}</span>
                     <p className="text-sm text-gray-400">vs last period</p>
                   </div>
                 </div>
@@ -304,7 +304,7 @@ export default function ArtistDashboard() {
                 {mockData.topCountries.slice(0, 5).map((country, index) => (
                   <div key={index} className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                      <MapPin className="h-5 w-5 text-spotify-green" />
+                      <MapPin className="h-5 w-5 text-green-400" />
                       <span className="text-white">{country.country}</span>
                     </div>
                     <div className="text-right">
@@ -327,7 +327,7 @@ export default function ArtistDashboard() {
                     </div>
                     <div className="w-full bg-gray-700 rounded-full h-3">
                       <div 
-                        className="bg-gradient-to-r from-spotify-green to-blue-500 h-3 rounded-full transition-all duration-500"
+                        className="bg-gradient-to-r from-green-400 to-blue-500 h-3 rounded-full transition-all duration-500"
                         style={{ width: `${age.percentage}%` }}
                       ></div>
                     </div>

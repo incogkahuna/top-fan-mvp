@@ -33,6 +33,8 @@ export async function POST(request: NextRequest) {
     
     if (now >= expiresAt) {
       console.log('Access token expired, refreshing...')
+      // DISABLED: Spotify functions removed
+      /*
       try {
         const refreshResult = await refreshAccessToken(tokenData.refresh_token)
         accessToken = refreshResult.access_token
@@ -52,11 +54,24 @@ export async function POST(request: NextRequest) {
         console.error('Token refresh failed:', refreshError)
         return NextResponse.json({ error: 'Failed to refresh access token. Please reconnect to music service.' }, { status: 401 })
       }
+      */
+      // Return error since Spotify functions are disabled
+      return NextResponse.json({ error: 'Music service integration disabled' }, { status: 503 })
     }
 
     // Force sync - fetch ALL recent tracks (ignore last sync time)
-    const recentlyPlayed = await getRecentlyPlayed(accessToken, 50)
+    // DISABLED: Spotify functions removed
+    // const recentlyPlayed = await getRecentlyPlayed(accessToken, 50)
     
+    // Return placeholder response since Spotify functions are disabled
+    return NextResponse.json({ 
+      message: 'Music service integration disabled',
+      tracks: [],
+      total: 0
+    })
+    
+    // DISABLED: Spotify functions removed
+    /*
     if (!recentlyPlayed.items || recentlyPlayed.items.length === 0) {
       return NextResponse.json({ 
         success: true, 
@@ -121,6 +136,7 @@ export async function POST(request: NextRequest) {
       totalPlays: playCount?.length || 0,
       message: 'Force sync completed - all recent tracks processed'
     })
+    */
   } catch (error) {
     console.error('Force sync error:', error)
     return NextResponse.json({ error: 'Force sync failed' }, { status: 500 })

@@ -6,7 +6,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- Users table
 CREATE TABLE users (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-  spotify_id VARCHAR(255) UNIQUE NOT NULL,
+  music_id VARCHAR(255) UNIQUE NOT NULL,
   display_name VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
   profile_image_url TEXT,

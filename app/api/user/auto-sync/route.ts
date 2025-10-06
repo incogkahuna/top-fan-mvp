@@ -1,8 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getRecentlyPlayed } from '@/lib/spotify'
+// DISABLED: Spotify import removed
 
 export async function POST(request: NextRequest) {
+  // DISABLED: Spotify integration removed
+  return NextResponse.json({ 
+    message: 'Music service integration disabled',
+    tracks: [],
+    total: 0
+  })
+  
+  /*
   try {
     if (!supabaseAdmin) {
       return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 })
@@ -46,8 +54,18 @@ export async function POST(request: NextRequest) {
           .single()
 
         // Fetch recently played tracks
-        const recentlyPlayed = await getRecentlyPlayed(tokenData.access_token, 50)
+        // DISABLED: Spotify functions removed
+        // const recentlyPlayed = await getRecentlyPlayed(tokenData.access_token, 50)
         
+        // Return placeholder response since Spotify functions are disabled
+        return NextResponse.json({ 
+          message: 'Music service integration disabled',
+          tracks: [],
+          total: 0
+        })
+        
+        // DISABLED: All Spotify-related code commented out
+        /*
         // Filter for tracks played after the last sync (if available)
         let newTracks = recentlyPlayed.items
         if (lastSync?.updated_at) {
@@ -141,6 +159,7 @@ export async function POST(request: NextRequest) {
     console.error('Auto sync error:', error)
     return NextResponse.json({ error: 'Auto sync failed' }, { status: 500 })
   }
+  */
 }
 
 // GET endpoint to check sync status

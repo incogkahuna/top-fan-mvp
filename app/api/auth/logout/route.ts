@@ -5,7 +5,7 @@ export async function POST() {
     const response = NextResponse.json({ success: true, message: 'Logged out successfully' })
     
     // Clear the session cookie
-    response.cookies.set('spotify_access_token', '', {
+    response.cookies.set('music_access_token', '', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',

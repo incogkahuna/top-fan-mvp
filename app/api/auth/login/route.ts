@@ -7,17 +7,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 })
     }
 
-    const { spotifyId } = await request.json()
+    const { musicId } = await request.json()
 
-    if (!spotifyId) {
-      return NextResponse.json({ error: 'Spotify ID required' }, { status: 400 })
+    if (!musicId) {
+      return NextResponse.json({ error: 'Music ID required' }, { status: 400 })
     }
 
-    // Find user by Spotify ID
+    // Find user by Music ID
     const { data: user, error } = await supabaseAdmin
       .from('users')
       .select('*')
-      .eq('spotify_id', spotifyId)
+      .eq('music_id', musicId)
       .single()
 
     if (error || !user) {
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
       success: true, 
       user: {
         id: user.id,
-        spotify_id: user.spotify_id,
+        music_id: user.music_id,
         display_name: user.display_name,
         email: user.email,
         profile_image_url: user.profile_image_url,
