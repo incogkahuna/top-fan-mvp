@@ -3,9 +3,9 @@ import { NextRequest, NextResponse } from 'next/server'
 // In a real app, you'd store this in a database
 // For now, we'll use a simple in-memory store
 let countdownConfig = {
-  targetDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days from now
-  title: "",
-  description: "Stay tuned for updates!",
+  targetDate: new Date(new Date().getFullYear(), 9, 24, 0, 0, 0).toISOString(), // October 24th at midnight
+  title: "Early Twenties Torture",
+  description: "New album release coming soon!",
   isActive: true
 }
 

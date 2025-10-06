@@ -23,6 +23,12 @@ export default function CountdownTimer() {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 })
   const [isLoading, setIsLoading] = useState(true)
   const [hasExpired, setHasExpired] = useState(false)
+  const [isHydrated, setIsHydrated] = useState(false)
+
+  // Handle hydration
+  useEffect(() => {
+    setIsHydrated(true)
+  }, [])
 
   // Fetch countdown data from API
   useEffect(() => {
@@ -50,7 +56,7 @@ export default function CountdownTimer() {
 
   // Calculate time left
   useEffect(() => {
-    if (!countdownData?.targetDate || !countdownData.isActive || isLoading) {
+    if (!countdownData?.targetDate || !countdownData.isActive || isLoading || !isHydrated) {
       return
     }
 
@@ -80,10 +86,10 @@ export default function CountdownTimer() {
     const timer = setInterval(calculateTimeLeft, 1000)
 
     return () => clearInterval(timer)
-  }, [countdownData, isLoading])
+  }, [countdownData, isLoading, isHydrated])
 
-  // Show loading state
-  if (isLoading) {
+  // Show loading state or until hydrated
+  if (isLoading || !isHydrated) {
     return (
       <div className="bg-transparent backdrop-blur-sm rounded-2xl p-8 mb-8 border border-[#f5f1e8]/10 text-center">
         <div className="flex items-center justify-center mb-4">

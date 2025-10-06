@@ -95,82 +95,9 @@ function LeaderboardContent() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-4xl font-bold text-[#f5f1e8] mb-2">Sadie Jean Leaderboard</h1>
-              <p className="text-[#f5f1e8]/60">See how you stack up against other Sadie Jean fans</p>
             </div>
-                <button
-                  onClick={() => setShowTutorial(!showTutorial)}
-                  className="flex items-center space-x-2 px-4 py-2 bg-[#8B3A3A] text-white rounded-lg hover:bg-[#A04747] transition-colors"
-                >
-                  <span>How it works</span>
-                </button>
           </div>
 
-          {/* Authentication Section */}
-          {!user && (
-            <motion.div
-              initial={{ opacity: 0, y: 30, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              className="bg-transparent backdrop-blur-sm rounded-xl p-6 mb-8 text-center"
-            >
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: 0.3, duration: 0.5, type: "spring", stiffness: 200 }}
-                    className="flex items-center justify-center mb-6"
-                  >
-                    <h3 className="text-3xl font-bold text-[#f5f1e8] tracking-wide">Join the Competition</h3>
-                  </motion.div>
-              
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5, duration: 0.4 }}
-                className="text-[#f5f1e8]/90 mb-6 text-xl font-light leading-relaxed"
-              >
-                See your name on the leaderboard and compete with other Sadie Jean fans
-              </motion.p>
-              
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7, duration: 0.4 }}
-                className="flex items-center justify-center space-x-8 mb-8 text-sm text-[#f5f1e8]/70"
-              >
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  className="flex items-center space-x-2"
-                >
-                  <div className="w-2 h-2 bg-[#E98B8B] rounded-full animate-pulse"></div>
-                  <span className="font-medium">Track your Sadie Jean plays</span>
-                </motion.div>
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  className="flex items-center space-x-2"
-                >
-                  <div className="w-2 h-2 bg-[#E98B8B] rounded-full animate-pulse"></div>
-                  <span className="font-medium">Climb the ranks</span>
-                </motion.div>
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  className="flex items-center space-x-2"
-                >
-                  <div className="w-2 h-2 bg-[#E98B8B] rounded-full animate-pulse"></div>
-                  <span className="font-medium">Real-time updates</span>
-                </motion.div>
-              </motion.div>
-              
-                  <motion.button
-                    onClick={() => window.location.href = '#'}
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="btn-primary inline-flex items-center space-x-3 text-lg px-10 py-5 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-                  >
-                    <span>Authentication Coming Soon</span>
-                  </motion.button>
-            </motion.div>
-          )}
 
           {/* User Status Section */}
           {user && (
