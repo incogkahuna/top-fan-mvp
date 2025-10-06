@@ -185,7 +185,7 @@ function LeaderboardContent() {
                     </div>
                     <div>
                       <h4 className="font-semibold text-[#f5f1e8] mb-1">1. Connect Account</h4>
-                      <p className="text-[#f5f1e8]/60 text-sm">Connect your account to start tracking your Sadie Jean listening</p>
+                      <p className="text-[#f5f1e8]/60 text-sm">Connect your account to start tracking</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
@@ -352,7 +352,7 @@ function LeaderboardContent() {
             <span className="text-3xl text-[#E98B8B] font-bold">F</span>
           </div>
                   <h3 className="text-xl font-bold text-[#f5f1e8] mb-2">Be the First Fan!</h3>
-                  <p className="text-[#f5f1e8]/60 mb-6">Connect your account to start tracking your Sadie Jean plays and become the top fan</p>
+                  <p className="text-[#f5f1e8]/60 mb-6">Connect your account to start tracking and become the top fan</p>
                   {!user && (
                     <button
                       onClick={() => window.location.href = '#'}
@@ -539,58 +539,6 @@ function LeaderboardContent() {
               transition={{ duration: 3, repeat: Infinity }}
             >
               <span className="text-4xl text-[#E98B8B] font-bold">F</span>
-            </motion.div>
-              <h3 className="text-3xl font-bold text-[#f5f1e8] tracking-wide">Want to See Your Name Here?</h3>
-            </motion.div>
-            
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.2, duration: 0.6 }}
-              className="text-[#f5f1e8]/90 mb-8 text-xl font-light leading-relaxed"
-            >
-              Connect your account to start tracking your Sadie Jean plays and compete for the top spot!
-            </motion.p>
-            
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.4, duration: 0.6 }}
-              className="flex items-center justify-center space-x-10 mb-8 text-sm text-[#f5f1e8]/70"
-            >
-              <motion.div
-                whileHover={{ scale: 1.05, y: -2 }}
-                className="flex items-center space-x-2"
-              >
-                <motion.div
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="w-2 h-2 bg-[#E98B8B] rounded-full"
-                ></motion.div>
-                <span className="font-medium">Automatic tracking</span>
-              </motion.div>
-              <motion.div
-                whileHover={{ scale: 1.05, y: -2 }}
-                className="flex items-center space-x-2"
-              >
-                <motion.div
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-                  className="w-2 h-2 bg-[#E98B8B] rounded-full"
-                ></motion.div>
-                <span className="font-medium">Real-time updates</span>
-              </motion.div>
-              <motion.div
-                whileHover={{ scale: 1.05, y: -2 }}
-                className="flex items-center space-x-2"
-              >
-                <motion.div
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 2, repeat: Infinity, delay: 1 }}
-                  className="w-2 h-2 bg-[#E98B8B] rounded-full"
-                ></motion.div>
-                <span className="font-medium">Compete with friends</span>
-              </motion.div>
             </motion.div>
             
             <motion.button
