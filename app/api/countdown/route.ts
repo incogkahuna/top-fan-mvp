@@ -2,8 +2,16 @@ import { NextRequest, NextResponse } from 'next/server'
 
 // In a real app, you'd store this in a database
 // For now, we'll use a simple in-memory store
+// Set countdown to October 24th - if we're past this year's date, use next year
+const currentYear = new Date().getFullYear()
+const october24ThisYear = new Date(currentYear, 9, 24, 0, 0, 0) // October 24th this year
+const now = new Date()
+const targetDate = now > october24ThisYear 
+  ? new Date(currentYear + 1, 9, 24, 0, 0, 0) // Next year if we're past this year's date
+  : october24ThisYear // This year if we haven't reached it yet
+
 let countdownConfig = {
-  targetDate: new Date(new Date().getFullYear(), 9, 24, 0, 0, 0).toISOString(), // October 24th at midnight
+  targetDate: targetDate.toISOString(),
   title: "Sadie Jean Early Twenties Torture tour",
   description: "New album release coming soon!",
   isActive: true
