@@ -23,7 +23,7 @@ export default function Home() {
             transition={{ duration: 0.8 }}
           >
             <h1 className="text-7xl lg:text-9xl font-bold text-[#f5f1e8] mb-20 album-font">
-              Early Twenties Torture
+              Sadie Jean Early Twenties Torture tour
             </h1>
             
             {/* Countdown Timer - Force cache refresh */}
@@ -53,7 +53,7 @@ export default function Home() {
                   <div className="relative z-10 text-center">
                     <div className="text-8xl mb-4">M</div>
                     <div className="text-white font-bold text-xl">Album Cover</div>
-                    <div className="text-white/80 text-sm mt-2">Early Twenties Torture</div>
+                    <div className="text-white/80 text-sm mt-2">Sadie Jean Early Twenties Torture tour</div>
                   </div>
                 </>
               )}
@@ -179,7 +179,7 @@ export default function Home() {
       <footer className="border-t border-white/10 py-12 mt-32">
             <div className="max-w-7xl mx-auto px-6 text-center">
                   <p className="text-[#f5f1e8]/60 text-sm">
-                    © 2025 Early Twenties Torture. All rights reserved.
+                    © 2025 Sadie Jean Early Twenties Torture tour. All rights reserved.
                   </p>
             </div>
       </footer>

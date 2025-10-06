@@ -91,7 +91,7 @@ export default function CountdownTimer() {
   // Show loading state or until hydrated
   if (isLoading || !isHydrated) {
     return (
-      <div className="bg-transparent backdrop-blur-sm rounded-2xl p-8 mb-8 border border-[#f5f1e8]/10 text-center">
+      <div className="bg-transparent backdrop-blur-sm rounded-2xl p-4 sm:p-8 mb-8 border border-[#f5f1e8]/10 text-center">
         <div className="flex items-center justify-center mb-4">
           <h3 className="text-2xl font-bold text-[#f5f1e8]">Loading...</h3>
         </div>
@@ -105,7 +105,7 @@ export default function CountdownTimer() {
   // Show inactive state
   if (!countdownData || !countdownData.isActive) {
     return (
-      <div className="bg-transparent backdrop-blur-sm rounded-2xl p-8 mb-8 border border-[#f5f1e8]/10 text-center">
+      <div className="bg-transparent backdrop-blur-sm rounded-2xl p-4 sm:p-8 mb-8 border border-[#f5f1e8]/10 text-center">
         <div className="flex items-center justify-center mb-4">
           <Calendar className="h-6 w-6 text-[#E98B8B] mr-2" />
           <h3 className="text-2xl font-bold text-[#f5f1e8]">No Active Countdown</h3>
@@ -121,7 +121,7 @@ export default function CountdownTimer() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="bg-transparent backdrop-blur-sm rounded-2xl p-8 mb-8 border border-[#f5f1e8]/10 text-center"
+      className="bg-transparent backdrop-blur-sm rounded-2xl p-4 sm:p-8 mb-8 border border-[#f5f1e8]/10 text-center"
     >
       {countdownData.title && (
         <div className="flex items-center justify-center mb-4">
@@ -143,7 +143,7 @@ export default function CountdownTimer() {
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 mb-6 max-w-md mx-auto">
             <motion.div
               key={`days-${timeLeft.days}`}
               initial={{ scale: 1.2 }}
@@ -151,7 +151,7 @@ export default function CountdownTimer() {
               transition={{ duration: 0.3 }}
               className="text-center"
             >
-              <div className="text-3xl font-bold text-[#E98B8B] bg-[#f5f1e8]/5 rounded-lg py-4 px-2">
+              <div className="text-2xl sm:text-3xl font-bold text-[#E98B8B] bg-[#f5f1e8]/5 rounded-lg py-3 sm:py-4 px-1 sm:px-2">
                 {timeLeft.days.toString().padStart(2, '0')}
               </div>
               <div className="text-sm text-[#f5f1e8]/60 mt-2">Days</div>
@@ -164,7 +164,7 @@ export default function CountdownTimer() {
               transition={{ duration: 0.3 }}
               className="text-center"
             >
-              <div className="text-3xl font-bold text-[#E98B8B] bg-[#f5f1e8]/5 rounded-lg py-4 px-2">
+              <div className="text-2xl sm:text-3xl font-bold text-[#E98B8B] bg-[#f5f1e8]/5 rounded-lg py-3 sm:py-4 px-1 sm:px-2">
                 {timeLeft.hours.toString().padStart(2, '0')}
               </div>
               <div className="text-sm text-[#f5f1e8]/60 mt-2">Hours</div>
@@ -177,7 +177,7 @@ export default function CountdownTimer() {
               transition={{ duration: 0.3 }}
               className="text-center"
             >
-              <div className="text-3xl font-bold text-[#E98B8B] bg-[#f5f1e8]/5 rounded-lg py-4 px-2">
+              <div className="text-2xl sm:text-3xl font-bold text-[#E98B8B] bg-[#f5f1e8]/5 rounded-lg py-3 sm:py-4 px-1 sm:px-2">
                 {timeLeft.minutes.toString().padStart(2, '0')}
               </div>
               <div className="text-sm text-[#f5f1e8]/60 mt-2">Minutes</div>
@@ -190,7 +190,7 @@ export default function CountdownTimer() {
               transition={{ duration: 0.3 }}
               className="text-center"
             >
-              <div className="text-3xl font-bold text-[#E98B8B] bg-[#f5f1e8]/5 rounded-lg py-4 px-2">
+              <div className="text-2xl sm:text-3xl font-bold text-[#E98B8B] bg-[#f5f1e8]/5 rounded-lg py-3 sm:py-4 px-1 sm:px-2">
                 {timeLeft.seconds.toString().padStart(2, '0')}
               </div>
               <div className="text-sm text-[#f5f1e8]/60 mt-2">Seconds</div>

@@ -5,7 +5,7 @@ import Navigation from '@/components/Navigation'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'Top Fan - Gamify Your Spotify Listening',
+  title: 'Sadie Jean Early Twenties Torture tour',
   description: 'Compete with other fans and help your favorite artists understand their audience',
 }
 

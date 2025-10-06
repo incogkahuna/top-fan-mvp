@@ -34,10 +34,7 @@ export default function Navigation() {
         <nav className="border-b border-white/10 bg-[#282828]">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <div className="flex justify-between items-center h-20">
-          {/* Logo - Script font like Sadie Jean */}
-          <Link href="/" className="text-3xl text-[#f5f1e8] tracking-tight logo-font">
-            Early Twenties Torture
-          </Link>
+          {/* Logo removed - using main homepage title instead */}
 
           {/* Desktop Navigation - Clean minimal links */}
           <div className="hidden md:flex items-center space-x-12">

@@ -218,7 +218,7 @@ function LeaderboardContent() {
                       <span className="text-white font-bold text-sm">1</span>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-[#f5f1e8] mb-1">1. Connect Account</h4>
+                      <h4 className="font-semibold text-[#f5f1e8] mb-1">1. Connect Spotify</h4>
                       <p className="text-[#f5f1e8]/60 text-sm">Connect your account to start tracking</p>
                     </div>
                   </div>
@@ -367,11 +367,11 @@ function LeaderboardContent() {
 
             <div className="flex justify-center">
               <button
-                onClick={() => window.location.href = '#'}
+                onClick={() => window.location.href = '/api/auth/spotify'}
                 className="btn-primary inline-flex items-center space-x-3 text-lg px-8 py-4 rounded-full font-medium transition-all duration-200"
               >
                 <span className="text-lg">♪</span>
-                <span>Connect Account</span>
+                <span>Connect Spotify</span>
               </button>
             </div>
 
@@ -422,10 +422,10 @@ function LeaderboardContent() {
                   <p className="text-[#f5f1e8]/60 mb-6">Connect your account to start tracking and become the top fan</p>
                   {!user && (
                     <button
-                      onClick={() => window.location.href = '#'}
+                      onClick={() => window.location.href = '/api/auth/spotify'}
                       className="btn-primary inline-flex items-center space-x-2"
                     >
-                      <span>Connect Account</span>
+                      <span>Connect Spotify</span>
                     </button>
                   )}
                 </div>
@@ -607,6 +607,9 @@ function LeaderboardContent() {
             >
               <span className="text-4xl text-[#E98B8B] font-bold">F</span>
             </motion.div>
+        </motion.div>
+            
+            
         </motion.div>
       )}
 

@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
 // For now, we'll use a simple in-memory store
 let countdownConfig = {
   targetDate: new Date(new Date().getFullYear(), 9, 24, 0, 0, 0).toISOString(), // October 24th at midnight
-  title: "Early Twenties Torture",
+  title: "Sadie Jean Early Twenties Torture tour",
   description: "New album release coming soon!",
   isActive: true
 }
