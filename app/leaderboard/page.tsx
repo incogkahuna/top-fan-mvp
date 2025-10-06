@@ -59,7 +59,10 @@ function LeaderboardContent() {
 
   // Calculate your stats
   const yourStats = {
-    rank: leaderboard.findIndex(entry => entry.displayName === 'Daniel Horgan') + 1 || leaderboard.length + 1,
+    rank: (() => {
+      const foundIndex = leaderboard.findIndex(entry => entry.displayName === 'Daniel Horgan')
+      return foundIndex !== -1 ? foundIndex + 1 : leaderboard.length + 1
+    })(),
     totalPlays: leaderboard.find(entry => entry.displayName === 'Daniel Horgan')?.totalPlays || 0,
     totalPlayers: leaderboard.length
   }
