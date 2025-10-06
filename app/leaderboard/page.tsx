@@ -91,6 +91,37 @@ function LeaderboardContent() {
     setSelectedUser(null)
   }
 
+  // Add debugging
+  console.log('Leaderboard render:', { loading, error, leaderboardLength: leaderboard.length })
+
+  if (error) {
+    return (
+      <div className="min-h-screen p-6 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-[#f5f1e8] mb-4">Error Loading Leaderboard</h2>
+          <p className="text-[#f5f1e8]/60 mb-4">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="btn-primary px-4 py-2 rounded-lg"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen p-6 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#E98B8B] mx-auto mb-4"></div>
+          <h2 className="text-2xl font-bold text-[#f5f1e8]">Loading Leaderboard...</h2>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen p-6">
       <div className="max-w-6xl mx-auto">
