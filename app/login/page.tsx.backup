@@ -26,20 +26,20 @@ export default function LoginPage() {
     const error = urlParams.get('error')
     
     if (error) {
-      setError(`Connection failed: ${error}`)
+      setError(`Spotify connection failed: ${error}`)
     }
   }, [])
 
-  const handleLogin = async () => {
+  const handleSpotifyLogin = async () => {
     try {
       setLoading(true)
       setError(null)
       
-      // Direct redirect to OAuth
-      window.location.href = '#'
+      // Direct redirect to Spotify OAuth
+      window.location.href = '/api/auth/spotify'
     } catch (err) {
-      setError('Failed to connect')
-      console.error('Login error:', err)
+      setError('Failed to connect to Spotify')
+      console.error('Spotify login error:', err)
     } finally {
       setLoading(false)
     }
@@ -72,7 +72,7 @@ export default function LoginPage() {
         >
           <div className="text-center mb-6">
             <h2 className="text-3xl font-bold text-black mb-2">Join the Leaderboard</h2>
-            <p className="text-gray-600">Connect your account to compete with other Sadie Jean fans</p>
+            <p className="text-gray-600">Connect your Spotify to compete with other Sadie Jean fans</p>
           </div>
 
           {error && (
@@ -86,7 +86,7 @@ export default function LoginPage() {
           )}
 
           <button
-            onClick={handleLogin}
+            onClick={handleSpotifyLogin}
             disabled={loading}
             className={`w-full flex items-center justify-center space-x-3 py-4 px-6 rounded-full font-medium transition-all duration-200 ${
               loading
@@ -102,7 +102,7 @@ export default function LoginPage() {
             ) : (
               <>
                 <span className="text-lg">♪</span>
-                <span>Connect Account</span>
+                <span>Connect with Spotify</span>
               </>
             )}
           </button>

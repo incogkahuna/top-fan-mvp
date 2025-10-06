@@ -1,10 +1,10 @@
 # Top Fan MVP
 
-A web app that gamifies music listening data for fans and provides data insights dashboard for artists.
+A web app that gamifies Spotify listening data for fans and provides data insights dashboard for artists.
 
 ## Features
 
-- 🎵 **Music Integration - Connect your music account and track listening habits
+- 🎵 **Spotify Integration**: Connect your Spotify account and track listening habits
 - 🏆 **Leaderboards**: Compete with other fans and climb the rankings
 - 🎁 **Rewards System**: Earn points and unlock exclusive prizes
 - 📊 **Artist Dashboard**: Comprehensive analytics for artists about their fanbase
@@ -18,7 +18,7 @@ A web app that gamifies music listening data for fans and provides data insights
 - **Frontend**: Next.js 14, React, TypeScript, Tailwind CSS, Framer Motion
 - **Backend**: Next.js API Routes, Supabase
 - **Database**: PostgreSQL (via Supabase)
-- **Authentication**: Music OAuth
+- **Authentication**: Spotify OAuth
 - **Tour Management**: Laylo API integration
 - **Charts**: Recharts
 - **Icons**: Lucide React
@@ -29,7 +29,7 @@ A web app that gamifies music listening data for fans and provides data insights
 
 - Node.js 18+ 
 - npm or yarn
-- Music Developer Account
+- Spotify Developer Account
 - Supabase Account
 - Laylo Account (for tour management)
 
@@ -46,11 +46,11 @@ cd top-fan-mvp
 npm install
 ```
 
-### 3. Set up Music App
+### 3. Set up Spotify App
 
-1. Go to [Music Developer Dashboard](https://developer.music.com/dashboard)
+1. Go to [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
 2. Create a new app
-3. Set redirect URI to: `http://localhost:3001/api/auth/music/callback`
+3. Set redirect URI to: `http://localhost:3001/api/auth/spotify/callback`
 4. Copy your Client ID and Client Secret
 
 ### 4. Set up Supabase
@@ -72,10 +72,10 @@ npm install
 Create a `.env.local` file in the root directory:
 
 ```env
-# Music API Configuration
-music_client_id=your_music_client_id
-music_client_secret=your_music_client_secret
-MUSIC_REDIRECT_URI=http://localhost:3000/api/auth/music/callback
+# Spotify API Configuration
+SPOTIFY_CLIENT_ID=your_spotify_client_id
+SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
+SPOTIFY_REDIRECT_URI=http://localhost:3000/api/auth/spotify/callback
 
 # Supabase Configuration
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
@@ -125,7 +125,7 @@ The photo gallery automatically loads images from the `public/photos` folder:
 ├── components/           # Reusable components
 ├── lib/                 # Utility libraries
 │   ├── supabase.ts      # Supabase client
-│   └── music.ts - Music API helpers
+│   └── spotify.ts       # Spotify API helpers
 ├── styles/              # Global styles
 └── supabase-schema.sql  # Database schema
 ```
@@ -133,11 +133,11 @@ The photo gallery automatically loads images from the `public/photos` folder:
 ## API Endpoints
 
 ### Authentication
-- `GET /api/auth/music` - Initiate Music OAuth
-- `GET /api/auth/music/callback` - Handle OAuth callback
+- `GET /api/auth/spotify` - Initiate Spotify OAuth
+- `GET /api/auth/spotify/callback` - Handle OAuth callback
 
 ### Data
-- `POST /api/data/sync` - Sync user music data
+- `POST /api/data/sync` - Sync user's Spotify data
 - `GET /api/leaderboard` - Get leaderboard data
 - `GET /api/notifications` - Get user notifications
 - `POST /api/notifications` - Create notification
@@ -148,7 +148,7 @@ The photo gallery automatically loads images from the `public/photos` folder:
 The app uses the following main tables:
 
 - **users**: User profiles and basic info
-- **user_tokens**: Music access tokens
+- **user_tokens**: Spotify access tokens
 - **listening_data**: Tracked listening history
 - **prizes**: Available rewards
 - **user_prizes**: Earned prizes
@@ -207,9 +207,9 @@ The app uses the following main tables:
 
 - [x] Project setup and scaffolding
 - [x] UI components with mock data
-- [x] Music OAuth integration
+- [x] Spotify OAuth integration
 - [x] Database schema and API endpoints
-- [ ] Real music data integration
+- [ ] Real Spotify data integration
 - [ ] Leaderboard calculations
 - [ ] Achievement system
 - [ ] Notification system

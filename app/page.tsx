@@ -62,7 +62,7 @@ export default function Home() {
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link 
-                href="https://open.spotify.com" 
+                href="#" 
                 target="_blank"
                 className="btn-primary inline-flex items-center space-x-2 text-lg px-8 py-4"
               >

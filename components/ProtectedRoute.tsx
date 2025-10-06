@@ -28,7 +28,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
           animate={{ opacity: 1 }}
           className="text-center"
         >
-          <div className="w-16 h-16 border-4 border-spotify-green border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="w-16 h-16 border-4 border-green-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-white text-lg">Loading your dashboard...</p>
         </motion.div>
       </div>

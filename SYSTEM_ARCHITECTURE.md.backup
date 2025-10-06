@@ -5,7 +5,7 @@
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                        TOP FAN MVP                              │
-│                    Gamified Music Platform                    │
+│                    Gamified Spotify Platform                    │
 └─────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
@@ -24,8 +24,8 @@
           │
           ▼
 ┌─────────────────┐    ┌─────────────────┐
-│  Connect        │───▶│  Music OAuth  │
-│  Music - Authentication │
+│  Connect        │───▶│  Spotify OAuth  │
+│  Spotify        │    │  Authentication │
 └─────────────────┘    └─────────┬───────┘
           │                       │
           ▼                       ▼
@@ -58,7 +58,7 @@
 │    users    │    │user_tokens  │    │listening_  │
 │             │    │             │    │data        │
 │ • id        │    │ • user_id   │    │ • user_id  │
-│ • music_id│    │ • access_   │    │ • track_id │
+│ • spotify_id│    │ • access_   │    │ • track_id │
 │ • display_  │    │   token     │    │ • played_at│
 │   name      │    │ • refresh_  │    │ • duration │
 │ • email     │    │   token     │    │            │
@@ -86,11 +86,11 @@
 └─────────────────────────────────────────────────────────────────┘
 
 Authentication:
-├── GET  /api/auth/music          → Initiate OAuth
-└── GET  /api/auth/music/callback → Handle OAuth callback
+├── GET  /api/auth/spotify          → Initiate OAuth
+└── GET  /api/auth/spotify/callback → Handle OAuth callback
 
 Data Management:
-├── POST /api/data/sync             → Sync music data
+├── POST /api/data/sync             → Sync Spotify data
 ├── GET  /api/leaderboard           → Get rankings
 ├── GET  /api/notifications         → Get user notifications
 ├── POST /api/notifications         → Create notification
@@ -98,7 +98,7 @@ Data Management:
 
 Testing:
 ├── GET  /api/test/supabase         → Test database connection
-├── GET  /api/test/music          → Test Music API
+├── GET  /api/test/spotify          → Test Spotify API
 └── GET  /api/test/database         → Test schema
 ```
 
@@ -120,7 +120,7 @@ Pages:
 
 Components:
 ├── Navigation.tsx       → Main navigation bar
-├── MusicConnect.tsx - OAuth connection button
+├── SpotifyConnect.tsx   → OAuth connection button
 ├── StatsCard.tsx        → Reusable stats display
 └── LoadingSpinner.tsx   → Loading states
 ```
@@ -132,11 +132,11 @@ Components:
 │                    SECURITY LAYER                              │
 └─────────────────────────────────────────────────────────────────┘
 
-Music OAuth Flow:
-1. User clicks "Connect Music"
-2. Redirect to Music authorization
+Spotify OAuth Flow:
+1. User clicks "Connect Spotify"
+2. Redirect to Spotify authorization
 3. User grants permissions
-4. Music service redirects with code
+4. Spotify redirects with code
 5. Exchange code for access token
 6. Store token securely in database
 7. Redirect to dashboard
@@ -155,9 +155,9 @@ Row Level Security (RLS):
 │                        DATA PIPELINE                           │
 └─────────────────────────────────────────────────────────────────┘
 
-Music API → Data Sync → Database → Analytics → UI
+Spotify API → Data Sync → Database → Analytics → UI
 
-1. User connects music account
+1. User connects Spotify account
 2. Background job fetches listening history
 3. Data processed and stored in Supabase
 4. Real-time leaderboard calculations
@@ -174,7 +174,7 @@ Music API → Data Sync → Database → Analytics → UI
 
 Frontend:     Vercel (Next.js)
 Database:     Supabase (PostgreSQL)
-Auth:         Music OAuth
+Auth:         Spotify OAuth
 CDN:          Vercel Edge Network
 Monitoring:   Vercel Analytics
 CI/CD:        GitHub Actions
@@ -187,7 +187,7 @@ CI/CD:        GitHub Actions
 │                        FEATURE MATRIX                          │
 └─────────────────────────────────────────────────────────────────┘
 
-✅ User Authentication (Music OAuth)
+✅ User Authentication (Spotify OAuth)
 ✅ Data Synchronization (Listening History)
 ✅ Leaderboard System (Rankings & Competition)
 ✅ Reward System (Points & Prizes)
@@ -209,7 +209,7 @@ CI/CD:        GitHub Actions
 Frontend:     Next.js 14, React, TypeScript, Tailwind CSS
 Backend:      Next.js API Routes, Supabase
 Database:     PostgreSQL (via Supabase)
-Auth:         Music Web API
+Auth:         Spotify Web API
 UI/UX:        Framer Motion, Lucide Icons
 Charts:       Recharts
 Deployment:   Vercel

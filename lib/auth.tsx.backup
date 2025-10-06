@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 
 interface User {
   id: string
-  music_id: string
+  spotify_id: string
   display_name: string
   email: string
   profile_image_url?: string
@@ -64,8 +64,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async () => {
     try {
-      // Redirect to OAuth
-      window.location.href = '#'
+      // Redirect to Spotify OAuth
+      window.location.href = '/api/auth/spotify'
     } catch (error) {
       console.error('Login error:', error)
       throw error
@@ -84,7 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       setUser(null)
       // Clear any stored tokens or session data
-      localStorage.removeItem('music_token')
+      localStorage.removeItem('spotify_token')
       localStorage.removeItem('user_session')
     }
   }

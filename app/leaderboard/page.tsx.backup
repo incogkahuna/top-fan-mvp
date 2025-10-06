@@ -106,7 +106,7 @@ function LeaderboardContent() {
                 </button>
           </div>
 
-          {/* Authentication Section */}
+          {/* Spotify Login Section */}
           {!user && (
             <motion.div
               initial={{ opacity: 0, y: 30, scale: 0.95 }}
@@ -162,12 +162,12 @@ function LeaderboardContent() {
               </motion.div>
               
                   <motion.button
-                    onClick={() => window.location.href = '#'}
+                    onClick={() => window.location.href = '/api/auth/spotify'}
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.98 }}
                     className="btn-primary inline-flex items-center space-x-3 text-lg px-10 py-5 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                   >
-                    <span>Authentication Coming Soon</span>
+                    <span>Connect Spotify & Join</span>
                   </motion.button>
             </motion.div>
           )}
@@ -257,8 +257,8 @@ function LeaderboardContent() {
                       <span className="text-white font-bold text-sm">1</span>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-[#f5f1e8] mb-1">1. Connect Account</h4>
-                      <p className="text-[#f5f1e8]/60 text-sm">Connect your account to start tracking your Sadie Jean listening</p>
+                      <h4 className="font-semibold text-[#f5f1e8] mb-1">1. Connect Spotify</h4>
+                      <p className="text-[#f5f1e8]/60 text-sm">Sign in with your Spotify account to start tracking your Sadie Jean listening</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
@@ -267,7 +267,7 @@ function LeaderboardContent() {
                     </div>
                     <div>
                       <h4 className="font-semibold text-[#f5f1e8] mb-1">2. Listen to Sadie Jean</h4>
-                      <p className="text-[#f5f1e8]/60 text-sm">Play Sadie Jean songs - only her tracks count toward your score</p>
+                      <p className="text-[#f5f1e8]/60 text-sm">Play Sadie Jean songs on Spotify - only her tracks count toward your score</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
@@ -400,7 +400,7 @@ function LeaderboardContent() {
             <h2 className="text-2xl font-bold text-[#f5f1e8]">Top Sadie Jean Fans</h2>
             {!user && (
               <div className="text-sm text-[#f5f1e8]/60">
-                Connect account to see your rank
+                Connect Spotify to see your rank
               </div>
             )}
           </div>
@@ -425,13 +425,13 @@ function LeaderboardContent() {
             <span className="text-3xl text-[#E98B8B] font-bold">F</span>
           </div>
                   <h3 className="text-xl font-bold text-[#f5f1e8] mb-2">Be the First Fan!</h3>
-                  <p className="text-[#f5f1e8]/60 mb-6">Connect your account to start tracking your Sadie Jean plays and become the top fan</p>
+                  <p className="text-[#f5f1e8]/60 mb-6">Connect your Spotify to start tracking your Sadie Jean plays and become the top fan</p>
                   {!user && (
                     <button
-                      onClick={() => window.location.href = '#'}
+                      onClick={() => window.location.href = '/api/auth/spotify'}
                       className="btn-primary inline-flex items-center space-x-2"
                     >
-                      <span>Authentication Coming Soon</span>
+                      <span>Connect Spotify & Start</span>
                     </button>
                   )}
                 </div>
@@ -565,10 +565,10 @@ function LeaderboardContent() {
             className="bg-transparent backdrop-blur-sm rounded-2xl p-6 mt-8"
           >
             <h3 className="text-xl font-semibold text-white mb-4">Your Position</h3>
-            <div className="flex items-center justify-between p-4 bg-transparent backdrop-blur-sm rounded-lg border border-green-400/30">
+            <div className="flex items-center justify-between p-4 bg-transparent backdrop-blur-sm rounded-lg border border-spotify-green/30">
               <div className="flex items-center space-x-4">
                 <div className="flex items-center justify-center w-12 h-12">
-                  <span className="text-lg font-bold text-green-400">{yourStats.rank}</span>
+                  <span className="text-lg font-bold text-spotify-green">{yourStats.rank}</span>
                 </div>
                 <div className="text-2xl">U</div>
                 <div>
@@ -579,12 +579,12 @@ function LeaderboardContent() {
               <div className="text-right">
                 {yourStats.totalPlays === 0 ? (
                   <>
-                    <p className="text-green-400 font-semibold">Connect account to start!</p>
+                    <p className="text-spotify-green font-semibold">Connect Spotify to start!</p>
                     <p className="text-sm text-gray-300">Sync your listening data</p>
                   </>
                 ) : (
                   <>
-                    <p className="text-green-400 font-semibold">Keep listening to climb!</p>
+                    <p className="text-spotify-green font-semibold">Keep listening to climb!</p>
                     <p className="text-sm text-gray-300">You're doing great!</p>
                   </>
                 )}
@@ -622,7 +622,7 @@ function LeaderboardContent() {
               transition={{ delay: 1.2, duration: 0.6 }}
               className="text-[#f5f1e8]/90 mb-8 text-xl font-light leading-relaxed"
             >
-              Connect your account to start tracking your Sadie Jean plays and compete for the top spot!
+              Connect your Spotify to start tracking your Sadie Jean plays and compete for the top spot!
             </motion.p>
             
             <motion.div
@@ -667,12 +667,12 @@ function LeaderboardContent() {
             </motion.div>
             
             <motion.button
-              onClick={() => window.location.href = '#'}
+              onClick={() => window.location.href = '/api/auth/spotify'}
               whileHover={{ scale: 1.05, y: -3 }}
               whileTap={{ scale: 0.98 }}
               className="btn-primary inline-flex items-center space-x-3 text-xl px-12 py-6 rounded-2xl font-bold shadow-2xl hover:shadow-3xl transition-all duration-300"
             >
-              <span>Authentication Coming Soon the Competition</span>
+              <span>Connect Spotify & Join the Competition</span>
             </motion.button>
         </motion.div>
       )}

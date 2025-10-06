@@ -233,11 +233,11 @@ function DashboardContent() {
     }
   }
 
-  // Sync data from music service
+  // Sync data from Spotify
   const handleSyncData = async () => {
     try {
       setSyncing(true)
-      setSyncMessage('Syncing your music data...')
+      setSyncMessage('Syncing your Spotify data...')
       
       // First get the user ID
       const userResponse = await fetch('/api/test/user')
@@ -250,7 +250,7 @@ function DashboardContent() {
       const yourUser = userData.users.find((user: any) => user.display_name === 'Daniel Horgan')
       
       if (!yourUser) {
-        throw new Error('User not found. Please make sure you are connected to the music service.')
+        throw new Error('User not found. Please make sure you\'re connected to Spotify.')
       }
 
       // Trigger the sync
@@ -278,8 +278,8 @@ function DashboardContent() {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error'
       
-      if (errorMessage.includes('reconnect to music service')) {
-        setSyncMessage(`❌ Please reconnect to music service. Your session has expired.`)
+      if (errorMessage.includes('reconnect to Spotify')) {
+        setSyncMessage(`❌ Please reconnect to Spotify. Your session has expired.`)
       } else {
         setSyncMessage(`❌ Sync failed: ${errorMessage}`)
       }
@@ -306,7 +306,7 @@ function DashboardContent() {
       const yourUser = userData.users.find((user: any) => user.display_name === 'Daniel Horgan')
       
       if (!yourUser) {
-        throw new Error('User not found. Please make sure you are connected to the music service.')
+        throw new Error('User not found. Please make sure you\'re connected to Spotify.')
       }
 
       // Call a force sync endpoint that ignores the last sync time
@@ -591,7 +591,7 @@ function DashboardContent() {
                   <div className="text-center py-12 text-[#f5f1e8]/60">
                     <Clock className="h-16 w-16 mx-auto mb-4 opacity-50" />
                     <p>No recent activity</p>
-                    <p className="text-sm">Sync your music data to see your listening history</p>
+                    <p className="text-sm">Sync your Spotify data to see your listening history</p>
                 </div>
                 )}
           </motion.div>

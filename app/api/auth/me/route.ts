@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get access token from cookie
-    const accessToken = request.cookies.get('spotify_access_token')?.value
+    const accessToken = request.cookies.get('music_access_token')?.value
 
     if (!accessToken) {
       return NextResponse.json({ error: 'No access token found' }, { status: 401 })
@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
 
     const { data: user, error: userError } = await supabaseAdmin
       .from('users')
-      .select('id, spotify_id, display_name, email, profile_image_url')
+      .select('id, music_id, display_name, email, profile_image_url')
       .eq('id', userToken.user_id)
       .single()
 

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getRecentlyPlayed, refreshAccessToken } from '@/lib/spotify'
+// DISABLED: Spotify import removed
 
 export async function POST(request: NextRequest) {
   try {
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
         console.log('Token refreshed successfully')
       } catch (refreshError) {
         console.error('Token refresh failed:', refreshError)
-        return NextResponse.json({ error: 'Failed to refresh access token. Please reconnect to Spotify.' }, { status: 401 })
+        return NextResponse.json({ error: 'Failed to refresh access token. Please reconnect to music service.' }, { status: 401 })
       }
     }
 
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ 
         success: true, 
         synced: 0,
-        message: 'No tracks found in Spotify API'
+        message: 'No tracks found in music API'
       })
     }
 
