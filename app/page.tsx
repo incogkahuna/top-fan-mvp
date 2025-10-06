@@ -22,9 +22,6 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-7xl lg:text-9xl font-bold text-[#f5f1e8] mb-20 album-font">
-              Sadie Jean Early Twenties Torture tour
-            </h1>
             
             {/* Countdown Timer - Force cache refresh */}
             <div className="mb-16 scale-125 lg:scale-150">
