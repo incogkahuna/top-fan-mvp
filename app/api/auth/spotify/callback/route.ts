@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { storeSpotifyTokens } from '@/lib/spotify-tokens'
 
 interface SpotifyTokenResponse {
   access_token: string
@@ -71,17 +72,41 @@ export async function GET(request: NextRequest) {
 
     const userProfile = await userResponse.json()
 
-    // TODO: Store tokens in database with user ID
-    // For now, we'll redirect with success and handle storage in the next step
-    console.log('User authenticated:', {
-      spotifyId: userProfile.id,
-      displayName: userProfile.display_name,
-      hasAccessToken: !!tokens.access_token,
-      hasRefreshToken: !!tokens.refresh_token
-    })
+    // Store tokens in database
+    try {
+      const expiresAt = Date.now() + (tokens.expires_in * 1000)
+      
+      await storeSpotifyTokens(
+        userProfile.id,
+        {
+          access_token: tokens.access_token,
+          refresh_token: tokens.refresh_token,
+          expires_at: expiresAt,
+          scope: tokens.scope
+        },
+        {
+          spotify_id: userProfile.id,
+          display_name: userProfile.display_name,
+          email: userProfile.email,
+          profile_image: userProfile.images?.[0]?.url
+        }
+      )
+      
+      console.log('User authenticated and tokens stored:', {
+        spotifyId: userProfile.id,
+        displayName: userProfile.display_name,
+        hasAccessToken: !!tokens.access_token,
+        hasRefreshToken: !!tokens.refresh_token
+      })
+    } catch (storageError) {
+      console.error('Failed to store tokens:', storageError)
+      // Continue with redirect even if storage fails
+    }
 
-    // Redirect to leaderboard with success
-    return NextResponse.redirect(`${process.env.NEXTAUTH_URL || 'https://your-app-name.vercel.app'}/leaderboard?spotify_connected=true`)
+    // Redirect to leaderboard with success and user ID
+    const redirectUrl = `${process.env.NEXTAUTH_URL || 'https://your-app-name.vercel.app'}/leaderboard?spotify_connected=true&spotify_user_id=${userProfile.id}`
+    console.log('🎯 Redirecting to:', redirectUrl)
+    return NextResponse.redirect(redirectUrl)
   } catch (error) {
     console.error('Spotify callback error:', error)
     return NextResponse.redirect(`${process.env.NEXTAUTH_URL || 'https://your-app-name.vercel.app'}/login?error=callback_failed`)

@@ -1,11 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
+  console.log('🎯 SPOTIFY AUTH ROUTE CALLED!')
+  console.log('Request URL:', request.url)
+  
   try {
     const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID
     const redirectUri = process.env.SPOTIFY_REDIRECT_URI
     
+    console.log('Client ID exists:', !!clientId)
+    console.log('Redirect URI exists:', !!redirectUri)
+    console.log('Redirect URI value:', redirectUri)
+    
     if (!clientId || !redirectUri) {
+      console.log('❌ Spotify configuration missing')
       return NextResponse.json(
         { error: 'Spotify configuration missing' },
         { status: 500 }
@@ -32,7 +40,8 @@ export async function GET(request: NextRequest) {
     })
 
     const spotifyAuthUrl = `https://accounts.spotify.com/authorize?${params.toString()}`
-
+    
+    console.log('🚀 Redirecting to Spotify:', spotifyAuthUrl)
     return NextResponse.redirect(spotifyAuthUrl)
   } catch (error) {
     console.error('Spotify auth error:', error)

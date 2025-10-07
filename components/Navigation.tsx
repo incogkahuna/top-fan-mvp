@@ -22,6 +22,7 @@ export default function Navigation() {
     { href: '/shop', label: 'Shop' },
     { href: '/jeanmail', label: 'JeanMail' },
     { href: '/admin', label: 'Admin' },
+    { href: '/test-spotify', label: 'Test Spotify' },
   ]
 
   const handleLogout = () => {

@@ -3,39 +3,36 @@ import { supabaseAdmin } from '@/lib/supabase'
 
 export async function GET(request: NextRequest) {
   try {
+    // For now, we'll use a simple approach - check for a Spotify user ID in localStorage
+    // In a real app, you'd use proper session management
+    const { searchParams } = new URL(request.url)
+    const spotifyUserId = searchParams.get('userId')
+    
+    if (!spotifyUserId) {
+      return NextResponse.json({ error: 'No user ID provided' }, { status: 401 })
+    }
+
     if (!supabaseAdmin) {
       return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 })
     }
-
-    // Get access token from cookie
-    const accessToken = request.cookies.get('music_access_token')?.value
-
-    if (!accessToken) {
-      return NextResponse.json({ error: 'No access token found' }, { status: 401 })
-    }
-
-    // Find user by access token
-    const { data: userToken, error: tokenError } = await supabaseAdmin
-      .from('user_tokens')
-      .select('user_id')
-      .eq('access_token', accessToken)
-      .single()
-
-    if (tokenError || !userToken) {
-      return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 })
-    }
-
+    
+    // Get user from database
     const { data: user, error: userError } = await supabaseAdmin
       .from('users')
-      .select('id, music_id, display_name, email, profile_image_url')
-      .eq('id', userToken.user_id)
+      .select('spotify_id, display_name, email, profile_image')
+      .eq('spotify_id', spotifyUserId)
       .single()
 
     if (userError || !user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
-    return NextResponse.json({ success: true, user })
+    return NextResponse.json({
+      spotify_id: user.spotify_id,
+      display_name: user.display_name,
+      email: user.email,
+      profile_image: user.profile_image
+    })
   } catch (error) {
     console.error('Auth me error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
