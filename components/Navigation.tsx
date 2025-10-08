@@ -1,18 +1,35 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { Menu, X, LogOut, User } from 'lucide-react'
+import { Menu, X, LogOut, User, Settings, Music } from 'lucide-react'
+import { useSpotifyAuth } from '@/lib/useSpotifyAuth'
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
   const [showUserMenu, setShowUserMenu] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
-  // const { user, logout } = useAuth() // DISABLED FOR DEBUGGING
-  const user = null
-  const logout = () => {}
+  const { user, isLoading: authLoading, disconnectSpotify } = useSpotifyAuth()
+  const userMenuRef = useRef<HTMLDivElement>(null)
+
+  // Close user menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setShowUserMenu(false)
+      }
+    }
+
+    if (showUserMenu) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showUserMenu])
 
   const navItems = [
     { href: '/', label: 'Home' },
@@ -25,8 +42,8 @@ export default function Navigation() {
     { href: '/test-spotify', label: 'Test Spotify' },
   ]
 
-  const handleLogout = () => {
-    logout()
+  const handleLogout = async () => {
+    await disconnectSpotify()
     router.push('/')
   }
 
@@ -58,31 +75,69 @@ export default function Navigation() {
 
             {/* User Menu */}
             {user && (
-              <div className="relative">
-                    <button
-                      onClick={() => setShowUserMenu(!showUserMenu)}
-                      className="flex items-center space-x-2 text-sm font-medium text-[#f5f1e8]/80 hover:text-[#f5f1e8]"
-                    >
-                  <div className="w-8 h-8 bg-[#f5f1e8]/20 text-[#f5f1e8] rounded-full flex items-center justify-center">
-                    <span className="text-xs font-bold">U</span>
-                  </div>
-                  <span>User</span>
+              <div className="relative" ref={userMenuRef}>
+                <button
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  className="flex items-center space-x-2 text-sm font-medium text-[#f5f1e8]/80 hover:text-[#f5f1e8] transition-colors"
+                >
+                  {user.profile_image ? (
+                    <img 
+                      src={user.profile_image} 
+                      alt={user.display_name}
+                      className="w-8 h-8 rounded-full object-cover border border-[#f5f1e8]/20"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 bg-[#1DB954] text-white rounded-full flex items-center justify-center">
+                      <Music className="h-4 w-4" />
+                    </div>
+                  )}
+                  <span className="hidden lg:block">{user.display_name}</span>
                 </button>
 
                 {showUserMenu && (
-                    <div className="absolute right-0 mt-2 w-48 bg-[#1f1a16]/90 rounded-lg border border-[#f5f1e8]/10 shadow-lg py-2 z-50">
-                      <div className="px-4 py-3 border-b border-[#f5f1e8]/10">
-                        <p className="text-sm font-medium text-[#f5f1e8]">User</p>
-                        <p className="text-xs text-[#f5f1e8]/60">user@example.com</p>
-                      </div>
+                  <div className="absolute right-0 mt-2 w-56 bg-[#1f1a16]/95 backdrop-blur-sm rounded-lg border border-[#f5f1e8]/10 shadow-lg py-2 z-50">
+                    <div className="px-4 py-3 border-b border-[#f5f1e8]/10">
+                      <p className="text-sm font-medium text-[#f5f1e8]">{user.display_name}</p>
+                      <p className="text-xs text-[#f5f1e8]/60">Connected via Spotify</p>
+                    </div>
+                    
+                    <div className="py-1">
                       <button
-                        onClick={handleLogout}
-                        className="w-full flex items-center space-x-2 px-4 py-2 text-sm text-[#f5f1e8]/80 hover:bg-[#f5f1e8]/5"
+                        onClick={() => {
+                          setShowUserMenu(false)
+                          router.push('/leaderboard')
+                        }}
+                        className="w-full flex items-center space-x-2 px-4 py-2 text-sm text-[#f5f1e8]/80 hover:bg-[#f5f1e8]/5 transition-colors"
                       >
-                        <LogOut className="h-4 w-4" />
-                        <span>Logout</span>
+                        <User className="h-4 w-4" />
+                        <span>My Stats</span>
+                      </button>
+                      
+                      <button
+                        onClick={() => {
+                          setShowUserMenu(false)
+                          window.open('https://open.spotify.com/user/' + user.spotify_id, '_blank')
+                        }}
+                        className="w-full flex items-center space-x-2 px-4 py-2 text-sm text-[#f5f1e8]/80 hover:bg-[#f5f1e8]/5 transition-colors"
+                      >
+                        <Music className="h-4 w-4" />
+                        <span>Open Spotify</span>
                       </button>
                     </div>
+                    
+                    <div className="border-t border-[#f5f1e8]/10 pt-1">
+                      <button
+                        onClick={() => {
+                          setShowUserMenu(false)
+                          handleLogout()
+                        }}
+                        className="w-full flex items-center space-x-2 px-4 py-2 text-sm text-[#f5f1e8]/80 hover:bg-red-500/20 hover:text-red-400 transition-colors"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        <span>Disconnect Spotify</span>
+                      </button>
+                    </div>
+                  </div>
                 )}
               </div>
             )}
@@ -123,12 +178,55 @@ export default function Navigation() {
                 })}
                 
                 {user && (
-                      <button
-                        onClick={handleLogout}
-                        className="w-full text-left px-4 py-3 text-sm font-medium text-[#f5f1e8]/60 hover:text-[#f5f1e8] hover:bg-[#f5f1e8]/5"
-                      >
-                    Logout
-                  </button>
+                  <div className="border-t border-[#f5f1e8]/10 mt-4 pt-4">
+                    <div className="flex items-center space-x-3 px-4 py-2">
+                      {user.profile_image ? (
+                        <img 
+                          src={user.profile_image} 
+                          alt={user.display_name}
+                          className="w-10 h-10 rounded-full object-cover border border-[#f5f1e8]/20"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 bg-[#1DB954] text-white rounded-full flex items-center justify-center">
+                          <Music className="h-5 w-5" />
+                        </div>
+                      )}
+                      <div>
+                        <p className="text-sm font-medium text-[#f5f1e8]">{user.display_name}</p>
+                        <p className="text-xs text-[#f5f1e8]/60">Connected via Spotify</p>
+                      </div>
+                    </div>
+                    
+                    <button
+                      onClick={() => {
+                        setIsOpen(false)
+                        router.push('/leaderboard')
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm font-medium text-[#f5f1e8]/60 hover:text-[#f5f1e8] hover:bg-[#f5f1e8]/5"
+                    >
+                      My Stats
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        setIsOpen(false)
+                        window.open('https://open.spotify.com/user/' + user.spotify_id, '_blank')
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm font-medium text-[#f5f1e8]/60 hover:text-[#f5f1e8] hover:bg-[#f5f1e8]/5"
+                    >
+                      Open Spotify
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        setIsOpen(false)
+                        handleLogout()
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                    >
+                      Disconnect Spotify
+                    </button>
+                  </div>
                 )}
               </div>
             </div>
