@@ -488,9 +488,20 @@ function LeaderboardContent() {
                 console.log('🎯 Testing direct redirect to Spotify OAuth')
                 window.location.href = '/api/auth/spotify'
               }}
-              className="bg-purple-600 text-white px-4 py-2 rounded"
+              className="bg-purple-600 text-white px-4 py-2 rounded mr-2"
             >
               Test Spotify Redirect
+            </button>
+            <button 
+              onClick={() => {
+                console.log('🚪 Logging out of Spotify')
+                localStorage.removeItem('spotify_user_id')
+                sessionStorage.clear()
+                window.location.reload()
+              }}
+              className="bg-orange-600 text-white px-4 py-2 rounded"
+            >
+              Logout Spotify
             </button>
           </div>
         </motion.div>
