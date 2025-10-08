@@ -2,6 +2,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 
+// Force dynamic rendering for this API route
+export const dynamic = 'force-dynamic'
+
 // Point calculation system for Sadie Jean listening only
 function calculateUserPoints(listeningData: any[]): number {
   let points = 0

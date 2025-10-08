@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 
+// Force dynamic rendering for this API route
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   try {
     // For now, we'll use a simple approach - check for a Spotify user ID in localStorage

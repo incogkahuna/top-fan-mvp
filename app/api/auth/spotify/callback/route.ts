@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { storeSpotifyTokens } from '@/lib/spotify-tokens'
 
+// Force dynamic rendering for this API route
+export const dynamic = 'force-dynamic'
+
 interface SpotifyTokenResponse {
   access_token: string
   token_type: string
