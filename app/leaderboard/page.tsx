@@ -34,7 +34,7 @@ function LeaderboardContent() {
   // Use the fixed useSpotifyAuth hook
   const { user, isLoading: authLoading, isConnected } = useSpotifyAuth()
   
-  console.log('🔍 Leaderboard render: user=', user, 'authLoading=', authLoading, 'isConnected=', isConnected)
+  // Debug logging removed for clean deployment
 
   // Fetch real leaderboard data
   useEffect(() => {
@@ -137,7 +137,7 @@ function LeaderboardContent() {
   }
 
   // Add debugging
-  console.log('Leaderboard render:', { loading, error, leaderboardLength: leaderboard.length })
+  // Debug logging removed for clean deployment
 
   if (error) {
     return (

@@ -21,11 +21,11 @@ export function useSpotifyAuth(): UseSpotifyAuthReturn {
   const [user, setUser] = useState<SpotifyUser | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  console.log('🔍 useSpotifyAuth hook initialized, user state:', user, 'isLoading:', isLoading)
+  // Debug logging removed for clean deployment
 
   // Check if user is connected on mount
   useEffect(() => {
-    console.log('🔍 useSpotifyAuth useEffect triggered')
+    // Debug logging removed for clean deployment
     checkAuthStatus()
   }, [])
 
@@ -34,23 +34,21 @@ export function useSpotifyAuth(): UseSpotifyAuthReturn {
       const spotifyUserId = localStorage.getItem('spotify_user_id')
       
       if (!spotifyUserId) {
-        console.log('🔍 No spotify_user_id in localStorage')
+        // Debug logging removed for clean deployment
         setIsLoading(false)
         return
       }
       
-      console.log('🔍 Checking auth for user ID:', spotifyUserId)
+      // Debug logging removed for clean deployment
       const response = await fetch(`/api/auth/me?userId=${spotifyUserId}`)
       
       if (response.ok) {
         const userData = await response.json()
-        console.log('✅ User authenticated:', userData.display_name)
-        console.log('✅ Setting user state:', userData)
+        // Debug logging removed for clean deployment
         setUser(userData)
       } else {
-        console.log('❌ Auth check failed:', response.status)
+        // Debug logging removed for clean deployment
         const errorData = await response.json().catch(() => ({}))
-        console.log('❌ Error details:', errorData)
         // Clear invalid localStorage
         localStorage.removeItem('spotify_user_id')
       }
@@ -76,7 +74,7 @@ export function useSpotifyAuth(): UseSpotifyAuthReturn {
       try {
         await fetch('/api/auth/logout', { method: 'POST' })
       } catch (apiError) {
-        console.log('Logout API call failed, but continuing with local logout')
+        // Debug logging removed for clean deployment
       }
       
       // Clear user state
