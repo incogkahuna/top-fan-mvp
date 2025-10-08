@@ -105,12 +105,12 @@ export default function Navigation() {
                       <button
                         onClick={() => {
                           setShowUserMenu(false)
-                          router.push('/leaderboard')
+                          router.push('/profile')
                         }}
                         className="w-full flex items-center space-x-2 px-4 py-2 text-sm text-[#f5f1e8]/80 hover:bg-[#f5f1e8]/5 transition-colors"
                       >
                         <User className="h-4 w-4" />
-                        <span>My Stats</span>
+                        <span>My Profile</span>
                       </button>
                       
                       <button
@@ -200,11 +200,11 @@ export default function Navigation() {
                     <button
                       onClick={() => {
                         setIsOpen(false)
-                        router.push('/leaderboard')
+                        router.push('/profile')
                       }}
                       className="w-full text-left px-4 py-2 text-sm font-medium text-[#f5f1e8]/60 hover:text-[#f5f1e8] hover:bg-[#f5f1e8]/5"
                     >
-                      My Stats
+                      My Profile
                     </button>
                     
                     <button
