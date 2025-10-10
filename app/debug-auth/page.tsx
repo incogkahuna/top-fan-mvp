@@ -5,7 +5,7 @@ import { useSpotifyAuth } from '@/lib/useSpotifyAuth'
 import { getSpotifyUserId, setSpotifyUserId, clearAuthData } from '@/lib/auth-storage'
 
 export default function DebugAuthPage() {
-  const { user, isLoading, isConnected, connectSpotify, disconnectSpotify, checkAuthStatus } = useSpotifyAuth()
+  const { user, isLoading, isConnected, connectSpotify, disconnectSpotify } = useSpotifyAuth()
   const [localStorageData, setLocalStorageData] = useState<any>({})
   const [apiResponse, setApiResponse] = useState<any>(null)
   const [apiLoading, setApiLoading] = useState(false)
@@ -146,10 +146,10 @@ export default function DebugAuthPage() {
               Disconnect Spotify
             </button>
             <button
-              onClick={checkAuthStatus}
+              onClick={() => window.location.reload()}
               className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
             >
-              Check Auth Status
+              Refresh Page
             </button>
             <button
               onClick={simulateCallback}

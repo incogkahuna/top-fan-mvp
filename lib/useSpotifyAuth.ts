@@ -111,6 +111,5 @@ export function useSpotifyAuth(): UseSpotifyAuthReturn {
     isConnected: !!user,
     connectSpotify,
     disconnectSpotify,
-    checkAuthStatus // Expose for debugging
   }
 }
