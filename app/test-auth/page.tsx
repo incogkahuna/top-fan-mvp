@@ -12,7 +12,7 @@ export default function TestAuthPage() {
     // Check localStorage
     if (typeof window !== 'undefined') {
       const spotifyUserId = localStorage.getItem('spotify_user_id')
-      const allLocalStorage = {}
+      const allLocalStorage: { [key: string]: string | null } = {}
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i)
         if (key) {
@@ -32,7 +32,7 @@ export default function TestAuthPage() {
           const data = await response.json()
           setApiTest({ status: response.status, data })
         } catch (error) {
-          setApiTest({ error: error.message })
+          setApiTest({ error: error instanceof Error ? error.message : String(error) })
         }
       } else {
         setApiTest({ error: 'No spotify_user_id in localStorage' })
