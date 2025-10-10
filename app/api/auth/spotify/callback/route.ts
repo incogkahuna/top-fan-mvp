@@ -19,13 +19,16 @@ export async function GET(request: NextRequest) {
     const state = searchParams.get('state')
     const error = searchParams.get('error')
 
+    console.log('Spotify callback received:', { code: !!code, state, error })
+
     if (error) {
       console.error('Spotify auth error:', error)
-      return NextResponse.redirect(`${process.env.NEXTAUTH_URL || 'https://your-app-name.vercel.app'}/login?error=spotify_auth_failed`)
+      return NextResponse.redirect(`${process.env.NEXTAUTH_URL || 'http://127.0.0.1:3002'}/user?error=spotify_auth_failed&message=${encodeURIComponent(error)}`)
     }
 
     if (!code) {
-      return NextResponse.redirect(`${process.env.NEXTAUTH_URL || 'https://your-app-name.vercel.app'}/login?error=no_auth_code`)
+      console.error('No authorization code received')
+      return NextResponse.redirect(`${process.env.NEXTAUTH_URL || 'http://127.0.0.1:3002'}/user?error=no_auth_code&message=${encodeURIComponent('No authorization code received')}`)
     }
 
     const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID
@@ -75,40 +78,39 @@ export async function GET(request: NextRequest) {
 
     const userProfile = await userResponse.json()
 
-    // Store tokens in database
-    try {
-      const expiresAt = Date.now() + (tokens.expires_in * 1000)
-      
-      await storeSpotifyTokens(
-        userProfile.id,
-        {
-          access_token: tokens.access_token,
-          refresh_token: tokens.refresh_token,
-          expires_at: expiresAt,
-          scope: tokens.scope
-        },
-        {
-          spotify_id: userProfile.id,
-          display_name: userProfile.display_name,
-          email: userProfile.email,
-          profile_image: userProfile.images?.[0]?.url
-        }
-      )
-      
-      console.log('User authenticated and tokens stored:', {
-        spotifyId: userProfile.id,
-        displayName: userProfile.display_name,
-        hasAccessToken: !!tokens.access_token,
-        hasRefreshToken: !!tokens.refresh_token
-      })
-    } catch (storageError) {
-      console.error('Failed to store tokens:', storageError)
-      // Continue with redirect even if storage fails
-    }
+            // Store tokens in database
+            try {
+              const expiresAt = Date.now() + (tokens.expires_in * 1000)
+              
+              await storeSpotifyTokens(
+                userProfile.id,
+                {
+                  access_token: tokens.access_token,
+                  refresh_token: tokens.refresh_token,
+                  expires_at: expiresAt,
+                  scope: tokens.scope
+                },
+                {
+                  spotify_id: userProfile.id,
+                  display_name: userProfile.display_name,
+                  email: userProfile.email,
+                  profile_image: userProfile.images?.[0]?.url
+                }
+              )
+              
+              console.log('User authenticated and tokens stored:', {
+                spotifyId: userProfile.id,
+                displayName: userProfile.display_name,
+                hasAccessToken: !!tokens.access_token,
+                hasRefreshToken: !!tokens.refresh_token
+              })
+            } catch (storageError) {
+              console.error('Failed to store tokens:', storageError)
+              // Continue with redirect even if storage fails
+            }
 
-    // Redirect to leaderboard with success and user ID
-    const redirectUrl = `${process.env.NEXTAUTH_URL || 'https://your-app-name.vercel.app'}/leaderboard?spotify_connected=true&spotify_user_id=${userProfile.id}`
-    console.log('🎯 Redirecting to:', redirectUrl)
+    // Redirect to user page with success and user ID (user page will handle localStorage storage)
+    const redirectUrl = `${process.env.NEXTAUTH_URL || 'https://your-app-name.vercel.app'}/user?spotify_connected=true&spotify_user_id=${userProfile.id}`
     return NextResponse.redirect(redirectUrl)
   } catch (error) {
     console.error('Spotify callback error:', error)

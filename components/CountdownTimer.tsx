@@ -24,10 +24,12 @@ export default function CountdownTimer() {
   const [isLoading, setIsLoading] = useState(true)
   const [hasExpired, setHasExpired] = useState(false)
   const [isHydrated, setIsHydrated] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
-  // Handle hydration
+  // Handle hydration and mounting
   useEffect(() => {
     setIsHydrated(true)
+    setMounted(true)
   }, [])
 
   // Fetch countdown data from API
@@ -88,8 +90,8 @@ export default function CountdownTimer() {
     return () => clearInterval(timer)
   }, [countdownData, isLoading, isHydrated])
 
-  // Show loading state or until hydrated
-  if (isLoading || !isHydrated) {
+  // Show loading state until hydrated and mounted - prevent hydration mismatch
+  if (isLoading || !isHydrated || !mounted) {
     return (
       <div className="bg-transparent backdrop-blur-sm rounded-2xl p-4 sm:p-8 mb-8 border border-[#f5f1e8]/10 text-center">
         <div className="flex items-center justify-center mb-4">

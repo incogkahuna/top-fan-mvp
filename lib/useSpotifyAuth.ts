@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { getSpotifyUserId, setSpotifyUserId, removeSpotifyUserId } from './auth-storage'
 
 interface SpotifyUser {
   spotify_id: string
@@ -20,68 +21,85 @@ interface UseSpotifyAuthReturn {
 export function useSpotifyAuth(): UseSpotifyAuthReturn {
   const [user, setUser] = useState<SpotifyUser | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isHydrated, setIsHydrated] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
-  // Debug logging removed for clean deployment
-
-  // Check if user is connected on mount
+  // Handle hydration and mounting
   useEffect(() => {
-    // Debug logging removed for clean deployment
-    checkAuthStatus()
+    setIsHydrated(true)
+    setMounted(true)
   }, [])
+
+  // Check if user is connected on mount (only after hydration and mounting)
+  useEffect(() => {
+    if (isHydrated && mounted) {
+      checkAuthStatus()
+    }
+  }, [isHydrated, mounted])
 
   const checkAuthStatus = async () => {
     try {
-      const spotifyUserId = localStorage.getItem('spotify_user_id')
+      // Only access localStorage after hydration
+      if (typeof window === 'undefined') {
+        setIsLoading(false)
+        return
+      }
+
+      const spotifyUserId = getSpotifyUserId()
       
       if (!spotifyUserId) {
-        // Debug logging removed for clean deployment
         setIsLoading(false)
         return
       }
       
-      // Debug logging removed for clean deployment
       const response = await fetch(`/api/auth/me?userId=${spotifyUserId}`)
       
       if (response.ok) {
         const userData = await response.json()
-        // Debug logging removed for clean deployment
         setUser(userData)
       } else {
-        // Debug logging removed for clean deployment
-        const errorData = await response.json().catch(() => ({}))
-        // Clear invalid localStorage
-        localStorage.removeItem('spotify_user_id')
+        // Clear invalid storage
+        removeSpotifyUserId()
       }
     } catch (error) {
       console.error('Error checking auth status:', error)
-      // Clear localStorage on error
-      localStorage.removeItem('spotify_user_id')
+      // Clear storage on error
+      removeSpotifyUserId()
     } finally {
       setIsLoading(false)
     }
   }
 
   const connectSpotify = () => {
-    window.location.href = '/api/auth/spotify'
+    if (typeof window !== 'undefined') {
+      window.location.href = 'https://accounts.spotify.com/authorize?scope=user-read-recently-played%20user-top-read%20user-read-private&response_type=code&redirect_uri=http%3A%2F%2F127.0.0.1%3A3002%2Fapi%2Fauth%2Fspotify%2Fcallback&client_id=3d8d032ed282470cac128ad3e41ccf6a'
+    }
   }
 
   const disconnectSpotify = async () => {
     try {
-      // Clear localStorage first
-      localStorage.removeItem('spotify_user_id')
+      // Clear all auth storage
+      removeSpotifyUserId()
+      
+      // Also clear sessionStorage for good measure
+      if (typeof window !== 'undefined') {
+        sessionStorage.removeItem('spotify_user_id')
+      }
       
       // Try to call logout API (optional)
       try {
         await fetch('/api/auth/logout', { method: 'POST' })
       } catch (apiError) {
-        // Debug logging removed for clean deployment
+        // Ignore API errors
       }
       
       // Clear user state
       setUser(null)
       
-      // Reload page to reset everything
-      window.location.reload()
+      // Reload to reset auth state
+      if (typeof window !== 'undefined') {
+        window.location.reload()
+      }
     } catch (error) {
       console.error('Error disconnecting Spotify:', error)
     }
@@ -92,6 +110,7 @@ export function useSpotifyAuth(): UseSpotifyAuthReturn {
     isLoading,
     isConnected: !!user,
     connectSpotify,
-    disconnectSpotify
+    disconnectSpotify,
+    checkAuthStatus // Expose for debugging
   }
 }

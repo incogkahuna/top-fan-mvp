@@ -49,8 +49,10 @@ export default function ProfilePage() {
 
   // Redirect if not authenticated
   useEffect(() => {
+    console.log('🔍 Profile page - authLoading:', authLoading, 'user:', user)
     if (!authLoading && !user) {
-      router.push('/leaderboard')
+      console.log('❌ No user, redirecting to /user')
+      router.push('/user')
     }
   }, [user, authLoading, router])
 

@@ -27,6 +27,7 @@ export async function GET(request: NextRequest) {
       .single()
 
     if (userError || !user) {
+      console.error('User not found or error fetching user:', userError)
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 

@@ -1,30 +1,52 @@
-import { NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { NextRequest, NextResponse } from 'next/server'
+import { supabaseAdmin } from '@/lib/supabase'
 
-export async function GET() {
+export const dynamic = 'force-dynamic'
+
+export async function GET(request: NextRequest) {
   try {
-    if (!supabase) {
+    if (!supabaseAdmin) {
       return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 })
     }
 
-    // Test if all required tables exist
-    const requiredTables = ['users', 'listening_data', 'prizes', 'notifications', 'achievements']
-    
-    for (const table of requiredTables) {
-      const { error } = await supabase
-        .from(table)
-        .select('*')
-        .limit(1)
+    // Test database connection
+    const { data: users, error: usersError } = await supabaseAdmin
+      .from('users')
+      .select('*')
+      .limit(5)
 
-      if (error && error.code === 'PGRST116') {
-        return NextResponse.json({ 
-          error: `Table '${table}' does not exist. Please run the database schema.` 
-        }, { status: 400 })
-      }
+    if (usersError) {
+      console.error('Database error:', usersError)
+      return NextResponse.json({ 
+        error: 'Database error', 
+        details: usersError.message,
+        code: usersError.code 
+      }, { status: 500 })
     }
 
-    return NextResponse.json({ success: true, message: 'Database schema is properly configured' })
+    // Check if Spotify columns exist by trying to query them
+    const { data: spotifyUsers, error: spotifyError } = await supabaseAdmin
+      .from('users')
+      .select('spotify_id, display_name, email, profile_image')
+      .limit(5)
+
+    return NextResponse.json({
+      connection: 'success',
+      totalUsers: users?.length || 0,
+      users: users || [],
+      spotifyColumns: spotifyError ? {
+        error: spotifyError.message,
+        code: spotifyError.code
+      } : {
+        success: true,
+        spotifyUsers: spotifyUsers || []
+      }
+    })
   } catch (error) {
-    return NextResponse.json({ error: 'Database schema test failed' }, { status: 500 })
+    console.error('Test database error:', error)
+    return NextResponse.json({ 
+      error: 'Internal server error', 
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 })
   }
 }
