@@ -356,40 +356,55 @@ function LeaderboardContent() {
           </button>
         </div>
 
-        {/* Stats Cards */}
+        {/* Enhanced Stats Cards - Tonal Inspired */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <div className="bg-transparent backdrop-blur-sm rounded-xl p-6 transition-all duration-300 hover:bg-[#f5f1e8]/5">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-[#f5f1e8]/70 text-sm font-medium uppercase tracking-wider">Total Fans</p>
-                <p className="text-4xl font-bold text-[#f5f1e8]">
-                  {loading ? '...' : leaderboard.length}
-                </p>
-              </div>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-2xl p-8 text-center border-2 border-[#E98B8B]/20 hover:border-[#E98B8B]/40 transition-all duration-300 shadow-xl hover:shadow-[#E98B8B]/10"
+          >
+            <div className="w-16 h-16 bg-[#E98B8B]/20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Users className="h-8 w-8 text-[#E98B8B]" />
             </div>
-          </div>
-
-          <div className="bg-transparent backdrop-blur-sm rounded-xl p-6 transition-all duration-300 hover:bg-[#f5f1e8]/5">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-[#f5f1e8]/70 text-sm font-medium uppercase tracking-wider">Top Player</p>
-                <p className="text-4xl font-bold text-[#f5f1e8]">
-                  {loading ? '...' : leaderboard[0]?.totalPlays || 0}
-                </p>
-              </div>
+            <div className="text-5xl font-bold text-[#E98B8B] mb-3">
+              {loading ? '...' : leaderboard.length}
             </div>
-          </div>
-
-          <div className="bg-transparent backdrop-blur-sm rounded-xl p-6 transition-all duration-300 hover:bg-[#f5f1e8]/5">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-[#f5f1e8]/70 text-sm font-medium uppercase tracking-wider">Total Points</p>
-                <p className="text-4xl font-bold text-[#f5f1e8]">
-                  {loading ? '...' : leaderboard.reduce((sum, entry) => sum + entry.points, 0).toLocaleString()}
-                </p>
-              </div>
+            <div className="text-[#f5f1e8] font-semibold text-lg mb-2">Total Fans</div>
+            <div className="text-[#f5f1e8]/60 text-sm">Competing Now</div>
+          </motion.div>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-2xl p-8 text-center border-2 border-[#1DB954]/20 hover:border-[#1DB954]/40 transition-all duration-300 shadow-xl hover:shadow-[#1DB954]/10"
+          >
+            <div className="w-16 h-16 bg-[#1DB954]/20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Crown className="h-8 w-8 text-[#1DB954]" />
             </div>
-          </div>
+            <div className="text-5xl font-bold text-[#1DB954] mb-3">
+              {loading ? '...' : leaderboard[0]?.totalPlays || 0}
+            </div>
+            <div className="text-[#f5f1e8] font-semibold text-lg mb-2">Top Player</div>
+            <div className="text-[#f5f1e8]/60 text-sm">Leading the Pack</div>
+          </motion.div>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] rounded-2xl p-8 text-center border-2 border-[#8B3A3A]/20 hover:border-[#8B3A3A]/40 transition-all duration-300 shadow-xl hover:shadow-[#8B3A3A]/10"
+          >
+            <div className="w-16 h-16 bg-[#8B3A3A]/20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Trophy className="h-8 w-8 text-[#8B3A3A]" />
+            </div>
+            <div className="text-5xl font-bold text-[#8B3A3A] mb-3">
+              {loading ? '...' : leaderboard.reduce((sum, entry) => sum + entry.points, 0).toLocaleString()}
+            </div>
+            <div className="text-[#f5f1e8] font-semibold text-lg mb-2">Total Points</div>
+            <div className="text-[#f5f1e8]/60 text-sm">Community Score</div>
+          </motion.div>
         </div>
 
         {/* Join the Leaderboard Section */}
@@ -603,111 +618,146 @@ function LeaderboardContent() {
                     initial={{ opacity: 0, x: -30, y: 20 }}
                     animate={{ opacity: 1, x: 0, y: 0 }}
                     transition={{ 
-                      delay: index * 0.15, 
+                      delay: index * 0.1, 
                       duration: 0.6, 
                       ease: "easeOut",
                       type: "spring",
                       stiffness: 100
                     }}
                     whileHover={{ 
-                      y: -2,
+                      y: -4,
+                      scale: 1.02,
                       transition: { duration: 0.2 }
                     }}
                     onClick={() => handleProfileClick(user)}
-                    className={`group flex items-center justify-between p-4 rounded-xl bg-transparent backdrop-blur-sm ${
-                      user.rank <= 3 
-                        ? 'border-l-4 border-l-[#E98B8B]' 
-                        : ''
-                    } transition-all duration-300 cursor-pointer hover:bg-[#f5f1e8]/5`}
+                    className={`group relative overflow-hidden rounded-2xl transition-all duration-300 cursor-pointer ${
+                      user.rank === 1 
+                        ? 'bg-gradient-to-br from-[#FFD700]/10 to-[#FFA500]/10 border-2 border-[#FFD700]/30 shadow-lg shadow-[#FFD700]/10' 
+                        : user.rank === 2
+                        ? 'bg-gradient-to-br from-[#C0C0C0]/10 to-[#A0A0A0]/10 border-2 border-[#C0C0C0]/30 shadow-lg shadow-[#C0C0C0]/10'
+                        : user.rank === 3
+                        ? 'bg-gradient-to-br from-[#CD7F32]/10 to-[#B8860B]/10 border-2 border-[#CD7F32]/30 shadow-lg shadow-[#CD7F32]/10'
+                        : 'bg-gradient-to-br from-[#1a1a1a] to-[#2a2a2a] border border-[#f5f1e8]/10 hover:border-[#E98B8B]/30'
+                    } hover:shadow-xl hover:shadow-[#E98B8B]/5`}
                   >
-                    <div className="flex items-center space-x-4">
-                      <div className="flex items-center justify-center w-16 h-16">
-                        {getRankIcon(user.rank)}
+                    {/* Podium Badge for Top 3 */}
+                    {user.rank <= 3 && (
+                      <div className="absolute top-4 right-4">
+                        <motion.div
+                          animate={{ scale: [1, 1.1, 1] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                          className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                            user.rank === 1 ? 'bg-[#FFD700]' :
+                            user.rank === 2 ? 'bg-[#C0C0C0]' :
+                            'bg-[#CD7F32]'
+                          }`}
+                        >
+                          <span className="text-xs font-bold text-white">{user.rank}</span>
+                        </motion.div>
                       </div>
-                      
-                      <div className="relative">
-                        {user.profileImageUrl ? (
-                          <img 
-                            src={user.profileImageUrl} 
-                            alt={user.displayName}
-                            className="w-14 h-14 rounded-full border-3 border-[#E98B8B]/40 shadow-lg"
-                          />
-                        ) : (
-                          <div className="w-14 h-14 bg-gradient-to-br from-[#E98B8B] to-[#E98B8B]/80 rounded-full flex items-center justify-center shadow-lg">
-                            <span className="text-white font-bold text-lg">U</span>
-                          </div>
-                        )}
-                        {user.rank <= 3 && (
-                          <motion.div
-                            animate={{ scale: [1, 1.2, 1] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                            className="absolute -top-1 -right-1 w-6 h-6 bg-[#E98B8B] rounded-full flex items-center justify-center"
-                          >
-                            <span className="text-xs font-bold text-white">{user.rank}</span>
-                          </motion.div>
-                        )}
-                      </div>
-                      
-                      <div className="flex-1">
-                        <h3 className="text-xl font-bold text-[#f5f1e8] mb-1">
-                          {user.displayName}
-                        </h3>
-                        <div className="flex items-center space-x-4 mb-2">
-                          <p className="text-sm text-[#f5f1e8]/80 font-medium">
-                            {user.totalPlays.toLocaleString()} Sadie Jean plays
-                          </p>
-                          <div className="flex items-center space-x-1">
-                            <span className="text-sm font-bold text-[#E98B8B]">
-                              {user.points.toLocaleString()} pts
-                            </span>
-                          </div>
+                    )}
+
+                    <div className="flex items-center justify-between p-6">
+                      <div className="flex items-center space-x-6">
+                        {/* Rank Number */}
+                        <div className="flex items-center justify-center w-16 h-16">
+                          {getRankIcon(user.rank)}
                         </div>
                         
-                        {/* Top Sadie Jean Songs */}
-                        {user.topSongs.length > 0 && (
-                          <div className="mb-2">
-                            <p className="text-xs text-[#f5f1e8]/60 mb-1">Top Sadie Jean Songs:</p>
-                            <div className="flex flex-wrap gap-1">
-                              {user.topSongs.slice(0, 2).map((song, idx) => (
-                                <span key={idx} className="text-xs bg-[#E98B8B]/20 text-[#f5f1e8]/80 px-2 py-1 rounded-full">
-                                  {song.name} ({song.plays})
-                                </span>
-                              ))}
+                        {/* Profile Picture */}
+                        <div className="relative">
+                          {user.profileImageUrl ? (
+                            <img 
+                              src={user.profileImageUrl} 
+                              alt={user.displayName}
+                              className="w-16 h-16 rounded-full border-3 border-[#f5f1e8]/20 shadow-lg object-cover"
+                            />
+                          ) : (
+                            <div className="w-16 h-16 bg-gradient-to-br from-[#E98B8B] to-[#8B3A3A] rounded-full flex items-center justify-center shadow-lg">
+                              <span className="text-white font-bold text-xl">
+                                {user.displayName.charAt(0).toUpperCase()}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      
+                        {/* User Info */}
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3 mb-3">
+                            <h3 className="text-2xl font-bold text-[#f5f1e8]">
+                              {user.displayName}
+                            </h3>
+                            {user.rank <= 3 && (
+                              <motion.div
+                                animate={{ rotate: [0, 5, -5, 0] }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                                className={`px-3 py-1 rounded-full text-xs font-bold ${
+                                  user.rank === 1 ? 'bg-[#FFD700] text-black' :
+                                  user.rank === 2 ? 'bg-[#C0C0C0] text-black' :
+                                  'bg-[#CD7F32] text-white'
+                                }`}
+                              >
+                                #{user.rank}
+                              </motion.div>
+                            )}
+                          </div>
+                          
+                          <div className="grid grid-cols-2 gap-4 mb-4">
+                            <div className="bg-[#f5f1e8]/5 rounded-lg p-3">
+                              <div className="text-2xl font-bold text-[#E98B8B] mb-1">
+                                {user.totalPlays.toLocaleString()}
+                              </div>
+                              <div className="text-sm text-[#f5f1e8]/70">Sadie Jean Plays</div>
+                            </div>
+                            <div className="bg-[#f5f1e8]/5 rounded-lg p-3">
+                              <div className="text-2xl font-bold text-[#1DB954] mb-1">
+                                {user.points.toLocaleString()}
+                              </div>
+                              <div className="text-sm text-[#f5f1e8]/70">Points</div>
                             </div>
                           </div>
-                        )}
+                          
+                          {/* Top Songs */}
+                          {user.topSongs.length > 0 && (
+                            <div className="mb-2">
+                              <p className="text-xs text-[#f5f1e8]/60 mb-2 font-medium">Top Songs:</p>
+                              <div className="flex flex-wrap gap-2">
+                                {user.topSongs.slice(0, 3).map((song, idx) => (
+                                  <span key={idx} className="text-xs bg-[#E98B8B]/20 text-[#f5f1e8]/80 px-3 py-1 rounded-full">
+                                    {song.name} ({song.plays})
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        
+                        </div>
+                      </div>
+
+                      {/* Right Side - Stats & Actions */}
+                      <div className="flex flex-col items-end space-y-3">
+                        {/* Rank Badge */}
+                        <div className="text-right">
+                          <div className="text-3xl font-bold text-[#f5f1e8] mb-1">
+                            #{user.rank}
+                          </div>
+                          <div className="text-sm text-[#f5f1e8]/60">Rank</div>
+                        </div>
                         
                         {/* Additional Stats */}
-                        <div className="flex items-center space-x-3 text-xs text-[#f5f1e8]/60">
-                          <span>{user.totalListeningTime}m Sadie Jean listening</span>
-                          <span>{user.uniqueSongs} unique Sadie Jean songs</span>
+                        <div className="text-right space-y-1">
+                          <div className="text-sm text-[#f5f1e8]/80">
+                            {user.totalListeningTime}m listening
+                          </div>
+                          <div className="text-sm text-[#f5f1e8]/80">
+                            {user.uniqueSongs} songs
+                          </div>
                         </div>
                         
-                        {user.rank <= 3 && (
-                          <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.5 }}
-                            className="flex items-center space-x-1 mt-2"
-                          >
-                            <div className="w-2 h-2 bg-[#E98B8B] rounded-full animate-pulse"></div>
-                            <span className="text-xs text-[#f5f1e8]/70 font-medium">
-                              {user.rank === 1 ? 'Champion' : user.rank === 2 ? 'Runner-up' : 'Top 3'}
-                            </span>
-                          </motion.div>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      {user.rank <= 3 && (
-                        <div className="flex items-center space-x-1 bg-white/20 px-3 py-1 rounded-full">
-                          <span className="text-sm text-white">
-                            {user.rank === 1 ? 'Crown' : user.rank === 2 ? 'Medal' : 'Trophy'}
-                          </span>
-                        </div>
-                      )}
-                      <div className="text-right">
-                        <p className="text-lg font-bold text-white">{user.rank}</p>
+                        {/* Action Button */}
+                        <button className="px-4 py-2 bg-[#E98B8B]/20 hover:bg-[#E98B8B]/30 text-[#E98B8B] rounded-full text-sm font-medium transition-colors">
+                          View Profile
+                        </button>
                       </div>
                     </div>
                   </motion.div>
