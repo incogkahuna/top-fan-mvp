@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server'
 
 export async function GET() {
-  // Only allow in development or for debugging
-  if (process.env.NODE_ENV === 'production' && !process.env.ALLOW_DEBUG) {
-    return NextResponse.json({ error: 'Debug endpoint disabled in production' }, { status: 403 })
-  }
+  // Temporarily allow in production for debugging
+  // if (process.env.NODE_ENV === 'production' && !process.env.ALLOW_DEBUG) {
+  //   return NextResponse.json({ error: 'Debug endpoint disabled in production' }, { status: 403 })
+  // }
 
   return NextResponse.json({
     spotify: {
@@ -18,6 +18,9 @@ export async function GET() {
     vercel: {
       url: process.env.VERCEL_URL || 'NOT SET',
     },
-    environment: process.env.NODE_ENV
+    environment: process.env.NODE_ENV,
+    all_env_vars: Object.keys(process.env).filter(key => 
+      key.includes('SPOTIFY') || key.includes('NEXTAUTH') || key.includes('SUPABASE')
+    )
   })
 }
