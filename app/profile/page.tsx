@@ -127,13 +127,48 @@ export default function ProfilePage() {
 
   const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
-    if (!file) return
+    if (!file || !user?.spotify_id) return
 
-    // For now, just show a message - full upload implementation would need file storage
-    alert('Photo upload functionality coming soon! This would upload to cloud storage and update your profile picture.')
-    
-    // TODO: Implement actual file upload to cloud storage (AWS S3, Cloudinary, etc.)
-    // Then update the profile with the new image URL
+    try {
+      setError(null)
+      
+      // Create FormData for file upload
+      const formData = new FormData()
+      formData.append('photo', file)
+      formData.append('userId', user.spotify_id)
+
+      const response = await fetch('/api/user/upload-photo', {
+        method: 'POST',
+        body: formData
+      })
+
+      const result = await response.json()
+
+      if (response.ok) {
+        // Update local profile data with new photo URL
+        setProfileData(prev => ({
+          ...prev,
+          custom_avatar_url: result.photoUrl
+        }))
+        
+        // Update temp profile too if editing
+        if (editing) {
+          setTempProfile(prev => ({
+            ...prev,
+            custom_avatar_url: result.photoUrl
+          }))
+        }
+
+        // Show success message
+        setError(null)
+        alert('Profile picture updated successfully!')
+      } else {
+        setError(result.error || 'Failed to upload photo')
+      }
+    } catch (error) {
+      console.error('Photo upload error:', error)
+      setError('Failed to upload photo. Please try again.')
+    }
   }
 
   const formatListeningTime = (ms: number) => {
@@ -173,9 +208,9 @@ export default function ProfilePage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-6">
               <div className="relative">
-                {user.profile_image ? (
+                {(profileData.custom_avatar_url || user.profile_image) ? (
                   <img 
-                    src={user.profile_image} 
+                    src={profileData.custom_avatar_url || user.profile_image} 
                     alt={user.display_name}
                     className="w-24 h-24 rounded-full object-cover border-4 border-[#E98B8B]"
                   />
