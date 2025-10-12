@@ -37,19 +37,19 @@ export default function UserPage() {
         // Clean up URL parameters
         window.history.replaceState({}, document.title, window.location.pathname)
         
-        // Immediately redirect to profile page - no confirmation needed!
-        router.push('/profile')
+        // Immediately redirect to leaderboard page - no confirmation needed!
+        router.push('/leaderboard')
         return
       }
     }
   }, [router])
 
-  // Redirect to profile page if connected (with a small delay to prevent flash)
+  // Redirect to leaderboard page if connected (with a small delay to prevent flash)
   useEffect(() => {
     // Only redirect if we're not loading and we have a confirmed user
     if (!authLoading && isConnected && user) {
       const timer = setTimeout(() => {
-        router.push('/profile')
+        router.push('/leaderboard')
       }, 100) // Small delay to prevent flash
       return () => clearTimeout(timer)
     }
@@ -73,7 +73,7 @@ export default function UserPage() {
       <div className="min-h-screen flex items-center justify-center bg-[#1a1a1a] text-[#f5f1e8]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#E98B8B] mx-auto mb-4"></div>
-          <p>Welcome back! Loading your profile...</p>
+          <p>Welcome back! Loading leaderboard...</p>
         </div>
       </div>
     )

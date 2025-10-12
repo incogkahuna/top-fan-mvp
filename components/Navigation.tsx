@@ -41,10 +41,6 @@ export default function Navigation() {
     { href: '/shop', label: 'Shop' },
     { href: '/jeanmail', label: 'JeanMail' },
     { href: '/admin', label: 'Admin' },
-    { href: '/test-spotify', label: 'Test Spotify' },
-    { href: '/test-redirect', label: 'Test Redirect' },
-    { href: '/test-auth', label: 'Test Auth' },
-    { href: '/debug-auth', label: 'Debug Auth' },
   ]
 
   const handleLogout = async () => {

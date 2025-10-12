@@ -446,49 +446,6 @@ function LeaderboardContent() {
         )}
 
 
-        {/* User Connected Section - Show when user is logged in */}
-        {user && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="bg-transparent backdrop-blur-sm rounded-2xl p-8 mb-12 border border-green-400/30"
-          >
-            <div className="text-center mb-6">
-              <div className="flex items-center justify-center mb-4">
-                <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center">
-                  <span className="text-white font-bold text-2xl">✓</span>
-                </div>
-              </div>
-              <h2 className="text-3xl font-bold text-[#f5f1e8] mb-2">Connected as {user.display_name}</h2>
-              <p className="text-[#f5f1e8]/60">Your Sadie Jean listening is being tracked</p>
-            </div>
-
-            <div className="flex justify-center space-x-4">
-              <button
-                onClick={() => {
-                  localStorage.removeItem('spotify_user_id')
-                  window.location.reload()
-                }}
-                className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full font-medium transition-all duration-200"
-              >
-                Disconnect Spotify
-              </button>
-              <button
-                onClick={() => window.location.href = '/api/auth/spotify'}
-                className="bg-[#1DB954] hover:bg-[#1ed760] text-white px-6 py-3 rounded-full font-medium transition-all duration-200"
-              >
-                Reconnect Spotify
-              </button>
-            </div>
-
-            <div className="mt-6 text-center">
-              <p className="text-[#f5f1e8]/40 text-sm">
-                Only your Sadie Jean listening will be tracked
-              </p>
-            </div>
-          </motion.div>
-        )}
 
         {/* Leaderboard */}
         <motion.div
