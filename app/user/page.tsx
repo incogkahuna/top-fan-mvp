@@ -31,24 +31,27 @@ export default function UserPage() {
       }
       
       if (spotifyConnected === 'true' && spotifyUserId) {
-        setSuccessMessage('Successfully connected to Spotify!')
         // Store the user ID using enhanced storage
         setSpotifyUserId(spotifyUserId)
         
         // Clean up URL parameters
         window.history.replaceState({}, document.title, window.location.pathname)
         
-        // Trigger auth status check
-        window.location.reload()
+        // Immediately redirect to profile page - no confirmation needed!
+        router.push('/profile')
+        return
       }
     }
-  }, [])
+  }, [router])
 
-  // Redirect to profile page if connected
+  // Redirect to profile page if connected (with a small delay to prevent flash)
   useEffect(() => {
     // Only redirect if we're not loading and we have a confirmed user
     if (!authLoading && isConnected && user) {
-      router.push('/profile')
+      const timer = setTimeout(() => {
+        router.push('/profile')
+      }, 100) // Small delay to prevent flash
+      return () => clearTimeout(timer)
     }
   }, [isConnected, user, authLoading, router])
 
@@ -70,7 +73,7 @@ export default function UserPage() {
       <div className="min-h-screen flex items-center justify-center bg-[#1a1a1a] text-[#f5f1e8]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#E98B8B] mx-auto mb-4"></div>
-          <p>Redirecting to profile...</p>
+          <p>Welcome back! Loading your profile...</p>
         </div>
       </div>
     )

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Authentication Flow</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #f5f1e8;
+        }
+        .test-section {
+            background-color: #282828;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border: 1px solid #f5f1e8/10;
+        }
+        button {
+            background-color: #1DB954;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #1ed760;
+        }
+        .debug-info {
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .success { color: #1DB954; }
+        .error { color: #ff6b6b; }
+        .info { color: #4fc3f7; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Authentication Flow Test</h1>
+    
+    <div class="test-section">
+        <h2>Current State</h2>
+        <div id="current-state" class="debug-info">Loading...</div>
+        <button onclick="checkCurrentState()">Refresh State</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Test Authentication Flow</h2>
+        <button onclick="simulateCallback()">Simulate Spotify Callback</button>
+        <button onclick="testAuthAPI()">Test /api/auth/me</button>
+        <button onclick="clearLocalStorage()">Clear localStorage</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Debug Logs</h2>
+        <div id="debug-logs" class="debug-info">No logs yet...</div>
+        <button onclick="clearLogs()">Clear Logs</button>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const logs = document.getElementById('debug-logs');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = type;
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            logs.appendChild(logEntry);
+            logs.scrollTop = logs.scrollHeight;
+        }
+
+        function checkCurrentState() {
+            const stateDiv = document.getElementById('current-state');
+            const spotifyUserId = localStorage.getItem('spotify_user_id');
+            const allLocalStorage = {};
+            
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key) {
+                    allLocalStorage[key] = localStorage.getItem(key);
+                }
+            }
+
+            stateDiv.innerHTML = `
+                <div><strong>Spotify User ID:</strong> ${spotifyUserId || 'Not set'}</div>
+                <div><strong>All localStorage:</strong> ${JSON.stringify(allLocalStorage, null, 2)}</div>
+                <div><strong>Current URL:</strong> ${window.location.href}</div>
+            `;
+
+            log(`Current state checked - spotifyUserId: ${spotifyUserId}`, spotifyUserId ? 'success' : 'error');
+        }
+
+        async function testAuthAPI() {
+            const spotifyUserId = localStorage.getItem('spotify_user_id');
+            if (!spotifyUserId) {
+                log('No spotify_user_id in localStorage - cannot test API', 'error');
+                return;
+            }
+
+            log(`Testing /api/auth/me with userId: ${spotifyUserId}`, 'info');
+            
+            try {
+                const response = await fetch(`/api/auth/me?userId=${spotifyUserId}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    log(`✅ API Success: ${JSON.stringify(data)}`, 'success');
+                } else {
+                    log(`❌ API Error (${response.status}): ${JSON.stringify(data)}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ API Request Failed: ${error.message}`, 'error');
+            }
+        }
+
+        function simulateCallback() {
+            // Simulate what happens after Spotify callback
+            const testUserId = 'test_user_12345';
+            
+            log(`Simulating Spotify callback with userId: ${testUserId}`, 'info');
+            
+            // Store user ID in localStorage
+            localStorage.setItem('spotify_user_id', testUserId);
+            
+            // Simulate URL parameters
+            const urlParams = new URLSearchParams();
+            urlParams.set('spotify_connected', 'true');
+            urlParams.set('spotify_user_id', testUserId);
+            
+            // Update URL to simulate callback
+            window.history.replaceState({}, document.title, `/user?${urlParams.toString()}`);
+            
+            log('✅ Simulated callback - stored userId and updated URL', 'success');
+            checkCurrentState();
+        }
+
+        function clearLocalStorage() {
+            localStorage.clear();
+            log('🧹 Cleared all localStorage', 'info');
+            checkCurrentState();
+        }
+
+        function clearLogs() {
+            document.getElementById('debug-logs').innerHTML = 'Logs cleared...';
+        }
+
+        // Initialize
+        checkCurrentState();
+        log('Authentication flow test page loaded', 'info');
+    </script>
+</body>
+</html>
