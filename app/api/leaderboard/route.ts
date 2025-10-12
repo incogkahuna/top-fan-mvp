@@ -160,10 +160,11 @@ export async function GET(request: NextRequest) {
     // Get Sadie Jean listening data for each user
     const usersWithSadieData = await Promise.all(
       users.map(async (user) => {
+        // Listening data is stored with database id, not spotify_id
         const { data: sadieData, error: sadieError } = await supabaseAdmin
           .from('listening_data')
-          .select('track_name, artist_name, played_at, duration_ms')
-          .eq('user_id', user.spotify_id)
+          .select('track_name, artist_name, played_at, duration_ms, user_id')
+          .eq('user_id', user.id) // Use database id, not spotify_id
           .eq('artist_name', 'Sadie Jean')
         
         if (sadieError) {
@@ -196,7 +197,7 @@ export async function GET(request: NextRequest) {
       return {
         rank: index + 1,
         userId: user.spotify_id, // Use spotify_id instead of id
-        displayName: user.display_name,
+        displayName: user.display_name || user.email?.split('@')[0] || 'Anonymous',
         profileImageUrl: user.profile_image_url,
         totalPlays: sadieJeanPlays, // Only Sadie Jean plays
         points: points,

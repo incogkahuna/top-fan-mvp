@@ -102,13 +102,14 @@ function LeaderboardContent() {
     handleSpotifyCallback()
   }, [])
 
-  // Calculate your stats
+  // Calculate your stats based on actual logged-in user
   const yourStats = {
     rank: (() => {
-      const foundIndex = leaderboard.findIndex(entry => entry.displayName === 'Daniel Horgan')
+      if (!user) return 0
+      const foundIndex = leaderboard.findIndex(entry => entry.userId === user.spotify_id)
       return foundIndex !== -1 ? foundIndex + 1 : leaderboard.length + 1
     })(),
-    totalPlays: leaderboard.find(entry => entry.displayName === 'Daniel Horgan')?.totalPlays || 0,
+    totalPlays: user ? (leaderboard.find(entry => entry.userId === user.spotify_id)?.totalPlays || 0) : 0,
     totalPlayers: leaderboard.length
   }
 
@@ -774,8 +775,8 @@ function LeaderboardContent() {
           )}
         </motion.div>
 
-        {/* Your Position */}
-        {!loading && !error && (
+        {/* Your Position - Only show when user is logged in */}
+        {user && !loading && !error && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -788,17 +789,38 @@ function LeaderboardContent() {
                 <div className="flex items-center justify-center w-12 h-12">
                   <span className="text-lg font-bold text-green-400">{yourStats.rank}</span>
                 </div>
-                <div className="text-2xl">U</div>
+                <div className="relative">
+                  {user?.profile_image ? (
+                    <img 
+                      src={user.profile_image} 
+                      alt={user.display_name || user.email?.split('@')[0]}
+                      className="w-12 h-12 rounded-full object-cover border-2 border-green-400/30"
+                    />
+                  ) : (
+                    <div className="w-12 h-12 bg-gradient-to-br from-[#E98B8B] to-[#8B3A3A] rounded-full flex items-center justify-center border-2 border-green-400/30">
+                      <span className="text-white font-bold text-lg">
+                        {(user?.display_name || user?.email?.split('@')[0] || 'U').charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                  )}
+                </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-white">Daniel Horgan</h3>
+                  <h3 className="text-lg font-semibold text-white">
+                    {user?.display_name || user?.email?.split('@')[0] || 'User'}
+                  </h3>
                   <p className="text-sm text-gray-300">{yourStats.totalPlays.toLocaleString()} plays</p>
                 </div>
               </div>
               <div className="text-right">
-                {yourStats.totalPlays === 0 ? (
+                {!user ? (
                   <>
                     <p className="text-green-400 font-semibold">Connect account to start!</p>
                     <p className="text-sm text-gray-300">Sync your listening data</p>
+                  </>
+                ) : yourStats.totalPlays === 0 ? (
+                  <>
+                    <p className="text-green-400 font-semibold">No Sadie Jean plays yet!</p>
+                    <p className="text-sm text-gray-300">Start listening to see your stats</p>
                   </>
                 ) : (
                   <>
