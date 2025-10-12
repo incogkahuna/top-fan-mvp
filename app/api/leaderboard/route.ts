@@ -87,7 +87,7 @@ function getTopSongs(listeningData: any[]): Array<{name: string, plays: number}>
   return Object.entries(trackCounts)
     .map(([name, plays]) => ({ name, plays }))
     .sort((a, b) => b.plays - a.plays)
-    .slice(0, 3)
+    .slice(0, 3) // Get top 3 songs
 }
 
 // Calculate average session length
@@ -145,7 +145,9 @@ export async function GET(request: NextRequest) {
         id, 
         spotify_id,
         display_name, 
-        profile_image_url, 
+        email,
+        profile_image_url,
+        custom_avatar_url,
         total_plays
       `)
       .not('spotify_id', 'is', null)
@@ -198,7 +200,7 @@ export async function GET(request: NextRequest) {
         rank: index + 1,
         userId: user.spotify_id, // Use spotify_id instead of id
         displayName: user.display_name || user.email?.split('@')[0] || 'Anonymous',
-        profileImageUrl: user.profile_image_url,
+        profileImageUrl: user.custom_avatar_url || user.profile_image_url,
         totalPlays: sadieJeanPlays, // Only Sadie Jean plays
         points: points,
         topSongs: topSongs,

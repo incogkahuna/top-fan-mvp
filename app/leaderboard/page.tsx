@@ -648,9 +648,15 @@ function LeaderboardContent() {
                               <p className="text-xs text-[#f5f1e8]/60 mb-2 font-medium">Top Songs:</p>
                               <div className="flex flex-wrap gap-2">
                                 {user.topSongs.slice(0, 3).map((song, idx) => (
-                                  <span key={idx} className="text-xs bg-[#E98B8B]/20 text-[#f5f1e8]/80 px-3 py-1 rounded-full">
+                                  <motion.span 
+                                    key={idx} 
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ delay: idx * 0.1 }}
+                                    className="text-xs bg-[#E98B8B]/20 hover:bg-[#E98B8B]/30 text-[#f5f1e8]/80 px-3 py-1 rounded-full transition-colors cursor-default"
+                                  >
                                     {song.name} ({song.plays})
-                                  </span>
+                                  </motion.span>
                                 ))}
                               </div>
                             </div>
