@@ -36,7 +36,7 @@ interface SadieJeanStats {
 }
 
 export default function ProfilePage() {
-  const { user, isLoading: authLoading } = useSpotifyAuth()
+  const { user, isLoading: authLoading, disconnectSpotify } = useSpotifyAuth()
   const router = useRouter()
   const [activeTab, setActiveTab] = useState('profile')
   const [profileData, setProfileData] = useState<ProfileData>({})
