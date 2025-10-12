@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { verifyAdminPassword, createAdminSession } from '@/lib/admin-auth'
+import { createAdminSession } from '@/lib/admin-auth'
+
+const ADMIN_PASSWORD = 'Gaviotagoeshard!!'
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,17 +15,10 @@ export async function POST(request: NextRequest) {
       )
     }
     
-    // Verify password
-    const authResult = verifyAdminPassword(new Request(request.url, {
-      method: 'POST',
-      headers: {
-        'authorization': `Bearer ${password}`
-      }
-    }))
-    
-    if (!authResult.authorized) {
+    // Verify password directly
+    if (password !== ADMIN_PASSWORD) {
       return NextResponse.json(
-        { error: authResult.error || 'Invalid password' }, 
+        { error: 'Invalid password' }, 
         { status: 401 }
       )
     }

@@ -41,6 +41,14 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
+    // Check if supabaseAdmin is available
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { error: 'Storage service not available' },
+        { status: 500 }
+      )
+    }
+
     // Upload to Supabase Storage
     const { data, error } = await supabaseAdmin.storage
       .from('profile-photos')

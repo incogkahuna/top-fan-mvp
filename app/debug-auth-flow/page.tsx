@@ -5,7 +5,7 @@ import { useSpotifyAuth } from '@/lib/useSpotifyAuth'
 import { getSpotifyUserId, setSpotifyUserId, clearAuthData } from '@/lib/auth-storage'
 
 export default function DebugAuthFlowPage() {
-  const { user, isLoading, isConnected, connectSpotify, disconnectSpotify, checkAuthStatus } = useSpotifyAuth()
+  const { user, isLoading, isConnected, connectSpotify, disconnectSpotify } = useSpotifyAuth()
   const [debugLogs, setDebugLogs] = useState<string[]>([])
   const [localStorageData, setLocalStorageData] = useState<any>({})
   const [apiResponse, setApiResponse] = useState<any>(null)
@@ -77,8 +77,7 @@ export default function DebugAuthFlowPage() {
     addLog(`🧪 Simulating login with real user ID: ${testUserId}`)
     setSpotifyUserId(testUserId)
     setTimeout(() => {
-      addLog('🔄 Triggering auth check...')
-      checkAuthStatus()
+      addLog('🔄 Checking current state...')
       checkCurrentState()
     }, 100)
   }
@@ -178,7 +177,7 @@ export default function DebugAuthFlowPage() {
               Real Spotify Login
             </button>
             <button
-              onClick={checkAuthStatus}
+              onClick={checkCurrentState}
               className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors"
             >
               Check Auth Status
