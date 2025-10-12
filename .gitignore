@@ -85,3 +85,8 @@ jspm_packages/
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 .vercel
+
+# Hot module replacement files (OneDrive sync issues)
+*.hot-update.json
+*.hot-update.js
+*.hot-update.js.map
