@@ -190,19 +190,26 @@ function LeaderboardContent() {
                       className="w-10 h-10 rounded-full border-2 border-pink-300"
                     />
                   ) : (
-                    <div className="w-10 h-10 bg-gradient-to-br from-pink-300 to-pink-500 rounded-full flex items-center justify-center">
-                      <span className="text-white font-bold">U</span>
+                    <div className="w-10 h-10 bg-gradient-to-br from-[#E98B8B] to-[#8B3A3A] rounded-full flex items-center justify-center">
+                      <span className="text-white font-bold">
+                        {(user?.display_name || user?.email?.split('@')[0] || 'U').charAt(0).toUpperCase()}
+                      </span>
                     </div>
                   )}
                   <div>
-                    <h3 className="text-lg font-semibold text-[#f5f1e8]">Welcome back, User!</h3>
+                    <h3 className="text-lg font-semibold text-[#f5f1e8]">
+                      Welcome back, {user?.display_name || user?.email?.split('@')[0] || 'User'}!
+                    </h3>
                     <p className="text-[#f5f1e8]/60 text-sm">Your Sadie Jean listening is being tracked</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-4">
                   <div className="text-right">
                     <p className="text-[#f5f1e8] font-bold text-lg">
-                      N/A
+                      {user && leaderboard.length > 0 
+                        ? `#${leaderboard.findIndex(entry => entry.userId === user.spotify_id) + 1 || leaderboard.length + 1}`
+                        : 'N/A'
+                      }
                     </p>
                     <p className="text-[#f5f1e8]/60 text-sm">Current Rank</p>
                   </div>
@@ -407,8 +414,8 @@ function LeaderboardContent() {
           </motion.div>
         </div>
 
-        {/* Join the Leaderboard Section */}
-        {!user && (
+        {/* Join the Leaderboard Section - Only show when not connected */}
+        {!user && !authLoading && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

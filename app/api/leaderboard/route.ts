@@ -143,10 +143,12 @@ export async function GET(request: NextRequest) {
       .from('users')
       .select(`
         id, 
+        spotify_id,
         display_name, 
         profile_image_url, 
         total_plays
       `)
+      .not('spotify_id', 'is', null)
       .order('total_plays', { ascending: false })
       .limit(limit)
 
@@ -161,7 +163,7 @@ export async function GET(request: NextRequest) {
         const { data: sadieData, error: sadieError } = await supabaseAdmin
           .from('listening_data')
           .select('track_name, artist_name, played_at, duration_ms')
-          .eq('user_id', user.id)
+          .eq('user_id', user.spotify_id)
           .eq('artist_name', 'Sadie Jean')
         
         if (sadieError) {
@@ -193,7 +195,7 @@ export async function GET(request: NextRequest) {
       
       return {
         rank: index + 1,
-        userId: user.id,
+        userId: user.spotify_id, // Use spotify_id instead of id
         displayName: user.display_name,
         profileImageUrl: user.profile_image_url,
         totalPlays: sadieJeanPlays, // Only Sadie Jean plays
