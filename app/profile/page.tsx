@@ -125,6 +125,17 @@ export default function ProfilePage() {
     setError(null)
   }
 
+  const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    // For now, just show a message - full upload implementation would need file storage
+    alert('Photo upload functionality coming soon! This would upload to cloud storage and update your profile picture.')
+    
+    // TODO: Implement actual file upload to cloud storage (AWS S3, Cloudinary, etc.)
+    // Then update the profile with the new image URL
+  }
+
   const formatListeningTime = (ms: number) => {
     const hours = Math.floor(ms / (1000 * 60 * 60))
     const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60))
@@ -329,11 +340,19 @@ export default function ProfilePage() {
                       <Camera className="h-6 w-6 text-[#f5f1e8]/40" />
                     </div>
                     <button
+                      onClick={() => document.getElementById('photo-upload')?.click()}
                       disabled={!editing}
                       className="px-4 py-2 bg-[#E98B8B] text-white rounded-lg hover:bg-[#f0a0a0] transition-colors disabled:opacity-50"
                     >
                       Upload Photo
                     </button>
+                    <input
+                      id="photo-upload"
+                      type="file"
+                      accept="image/*"
+                      onChange={handlePhotoUpload}
+                      className="hidden"
+                    />
                   </div>
                 </div>
               </div>
@@ -445,7 +464,10 @@ export default function ProfilePage() {
                       <div className="text-[#f5f1e8]/60 text-sm">{user.display_name}</div>
                     </div>
                   </div>
-                  <button className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                  <button 
+                    onClick={disconnectSpotify}
+                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                  >
                     Disconnect
                   </button>
                 </div>
