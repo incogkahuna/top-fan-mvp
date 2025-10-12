@@ -10,6 +10,10 @@ const nextConfig = {
   },
   experimental: {
     serverComponentsExternalPackages: ['@supabase/supabase-js']
+  },
+  // Ensure API routes are properly handled
+  async rewrites() {
+    return []
   }
 }
 
