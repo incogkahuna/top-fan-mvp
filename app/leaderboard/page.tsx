@@ -66,17 +66,13 @@ function LeaderboardContent() {
     const handleSpotifyCallback = () => {
       // Get the full URL to debug
       const fullUrl = window.location.href
-      console.log('🔍 Full URL on mount:', fullUrl)
       
       const urlParams = new URLSearchParams(window.location.search)
       const spotifyConnected = urlParams.get('spotify_connected')
       const spotifyUserId = urlParams.get('spotify_user_id')
       
-      console.log('🔍 URL params check:', { spotifyConnected, spotifyUserId })
-      console.log('🔍 URL search string:', window.location.search)
       
       if (spotifyConnected === 'true' && spotifyUserId) {
-        console.log('🎯 Setting localStorage spotify_user_id:', spotifyUserId)
         localStorage.setItem('spotify_user_id', spotifyUserId)
         
         // Set a flag to prevent infinite reloads
@@ -86,18 +82,14 @@ function LeaderboardContent() {
         window.history.replaceState({}, document.title, window.location.pathname)
         
         // Reload to trigger auth check
-        console.log('🔄 Reloading page to trigger auth check...')
         window.location.reload()
       }
     }
 
     // Also check what's currently in localStorage
     const currentUserId = localStorage.getItem('spotify_user_id')
-    console.log('🔍 Current localStorage spotify_user_id:', currentUserId)
-    
     // Check if we already processed auth in this session
     const authProcessed = sessionStorage.getItem('spotify_auth_processed')
-    console.log('🔍 Auth already processed this session:', authProcessed)
 
     handleSpotifyCallback()
   }, [])
@@ -436,9 +428,6 @@ function LeaderboardContent() {
             <div className="flex justify-center">
               <button
                 onClick={() => {
-                  console.log('🎯 Connect Spotify button clicked!')
-                  console.log('🎯 Current user state:', user)
-                  console.log('🎯 Redirecting to: /api/auth/spotify')
                   window.location.href = '/api/auth/spotify'
                 }}
                 className="btn-primary inline-flex items-center space-x-3 text-lg px-8 py-4 rounded-full font-medium transition-all duration-200"
@@ -456,78 +445,6 @@ function LeaderboardContent() {
           </motion.div>
         )}
 
-        {/* DEBUG SECTION - Remove this after testing */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-red-900/20 backdrop-blur-sm rounded-2xl p-6 mb-8 border border-red-400/30"
-        >
-          <h3 className="text-xl font-semibold text-red-400 mb-4">🐛 DEBUG INFO</h3>
-          <div className="space-y-2 text-sm">
-            <p>User state: {JSON.stringify(user)}</p>
-            <p>Auth loading: {authLoading.toString()}</p>
-            <p>Is connected: {isConnected.toString()}</p>
-            <p>LocalStorage spotify_user_id: {typeof window !== 'undefined' ? localStorage.getItem('spotify_user_id') : 'undefined'}</p>
-            <button 
-              onClick={() => {
-                const userId = localStorage.getItem('spotify_user_id')
-                console.log('🔍 Manual check for user:', userId)
-                if (userId) {
-                  fetch(`/api/auth/me?userId=${userId}`)
-                    .then(r => r.json())
-                    .then(data => console.log('🔍 Manual API response:', data))
-                    .catch(err => console.error('🔍 Manual API error:', err))
-                }
-              }}
-              className="bg-blue-600 text-white px-4 py-2 rounded mr-2"
-            >
-              Test API Call
-            </button>
-            <button 
-              onClick={() => {
-                // Use the known Spotify user ID from the database
-                const knownUserId = '31slexnyzlffio42t3gyxhy53tzy' // Daniel Horgan's Spotify ID from terminal logs
-                console.log('🎯 Setting known user ID:', knownUserId)
-                localStorage.setItem('spotify_user_id', knownUserId)
-                sessionStorage.removeItem('spotify_auth_processed')
-                window.location.reload()
-              }}
-              className="bg-green-600 text-white px-4 py-2 rounded mr-2"
-            >
-              Set Known User ID
-            </button>
-            <button 
-              onClick={() => {
-                localStorage.removeItem('spotify_user_id')
-                window.location.reload()
-              }}
-              className="bg-red-600 text-white px-4 py-2 rounded mr-2"
-            >
-              Clear localStorage
-            </button>
-            <button 
-              onClick={() => {
-                console.log('🎯 Testing direct redirect to Spotify OAuth')
-                window.location.href = '/api/auth/spotify'
-              }}
-              className="bg-purple-600 text-white px-4 py-2 rounded mr-2"
-            >
-              Test Spotify Redirect
-            </button>
-            <button 
-              onClick={() => {
-                console.log('🚪 Logging out of Spotify')
-                localStorage.removeItem('spotify_user_id')
-                sessionStorage.clear()
-                window.location.reload()
-              }}
-              className="bg-orange-600 text-white px-4 py-2 rounded"
-            >
-              Logout Spotify
-            </button>
-          </div>
-        </motion.div>
 
         {/* User Connected Section - Show when user is logged in */}
         {user && (
