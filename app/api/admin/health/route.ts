@@ -1,7 +1,18 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
+import { verifyAdminSession } from '@/lib/admin-auth'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // Check admin authentication
+  const authResult = verifyAdminSession(request)
+  
+  if (!authResult.authorized) {
+    return NextResponse.json(
+      { error: authResult.error || 'Admin authentication required' }, 
+      { status: 401 }
+    )
+  }
+
   try {
     const health = {
       status: 'healthy',

@@ -98,7 +98,7 @@ export default function DebugAuthFlowPage() {
 
   return (
     <div className="min-h-screen bg-[#1a1a1a] text-[#f5f1e8] p-6">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold mb-8">🔍 Authentication Flow Debug</h1>
 
         {/* Current State */}

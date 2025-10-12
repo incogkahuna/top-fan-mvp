@@ -35,7 +35,6 @@ export default function Navigation() {
   const navItems = [
     { href: '/', label: 'Home' },
     { href: '/leaderboard', label: 'Leaderboard' },
-    { href: '/user', label: 'My Profile' },
     { href: '/photos', label: 'Photos' },
     { href: '/tour', label: 'Tour Dates' },
     { href: '/shop', label: 'Shop' },

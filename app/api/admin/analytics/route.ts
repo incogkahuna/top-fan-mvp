@@ -1,11 +1,22 @@
 // @ts-nocheck
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
+import { verifyAdminSession } from '@/lib/admin-auth'
 
 // Force dynamic rendering for this API route
 export const dynamic = 'force-dynamic'
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
+  // Check admin authentication
+  const authResult = verifyAdminSession(request)
+  
+  if (!authResult.authorized) {
+    return NextResponse.json(
+      { error: authResult.error || 'Admin authentication required' }, 
+      { status: 401 }
+    )
+  }
+
   try {
     if (!supabaseAdmin) {
       return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 })

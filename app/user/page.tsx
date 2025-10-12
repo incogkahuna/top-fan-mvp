@@ -82,7 +82,7 @@ export default function UserPage() {
   // Show connect page if not authenticated
   return (
     <div className="min-h-screen bg-[#1a1a1a] text-[#f5f1e8] p-6 sm:p-8 lg:p-12">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         {/* Error/Success Messages */}
         {errorMessage && (
           <motion.div

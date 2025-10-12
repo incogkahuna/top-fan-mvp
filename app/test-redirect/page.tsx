@@ -25,7 +25,7 @@ export default function TestRedirectPage() {
 
   return (
     <div className="min-h-screen bg-[#1a1a1a] text-[#f5f1e8] p-8">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold mb-8">Test Spotify Redirect</h1>
         
         <div className="bg-[#282828] p-6 rounded-lg border border-[#f5f1e8]/10 mb-8">

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import AdminGuard from '@/components/AdminGuard'
 import { 
   Users, 
   TrendingUp, 
@@ -139,30 +140,43 @@ export default function AdminDashboard() {
   const fetchAdminData = async () => {
     try {
       setLoading(true)
+      
       // Fetch admin stats
       const statsResponse = await fetch('/api/admin/stats')
-      const statsData = await statsResponse.json()
-      setStats(statsData)
+      if (statsResponse.ok) {
+        const statsData = await statsResponse.json()
+        setStats(statsData)
+      } else {
+        console.error('Failed to fetch stats:', statsResponse.status)
+        setStats(null)
+      }
 
       // Fetch users data
       const usersResponse = await fetch('/api/admin/users')
-      const usersData = await usersResponse.json()
-      setUsers(usersData)
+      if (usersResponse.ok) {
+        const usersData = await usersResponse.json()
+        setUsers(Array.isArray(usersData) ? usersData : [])
+      } else {
+        console.error('Failed to fetch users:', usersResponse.status)
+        setUsers([])
+      }
     } catch (error) {
       console.error('Error fetching admin data:', error)
+      setStats(null)
+      setUsers([])
     } finally {
       setLoading(false)
     }
   }
 
-  const filteredUsers = users.filter(user => {
+  const filteredUsers = Array.isArray(users) ? users.filter(user => {
     const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          user.email.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesFilter = filterStatus === 'all' || 
                           (filterStatus === 'active' && user.isActive) ||
                           (filterStatus === 'inactive' && !user.isActive)
     return matchesSearch && matchesFilter
-  })
+  }) : []
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: BarChart3 },
@@ -173,15 +187,16 @@ export default function AdminDashboard() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#282828]">
-      {/* Header */}
-      <div className="bg-[#1a1a1a] border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-[#f5f1e8]">Admin Dashboard</h1>
-              <p className="text-[#f5f1e8]/60 mt-1">Manage your fan community and track performance</p>
-            </div>
+    <AdminGuard>
+      <div className="min-h-screen bg-[#282828]">
+        {/* Header */}
+        <div className="bg-[#1a1a1a] border-b border-white/10">
+          <div className="max-w-7xl mx-auto px-6 py-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold text-[#f5f1e8]">Admin Dashboard</h1>
+                <p className="text-[#f5f1e8]/60 mt-1">Manage your fan community and track performance</p>
+              </div>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2 text-sm text-[#f5f1e8]/60">
                 <Shield className="h-4 w-4" />
@@ -438,7 +453,7 @@ export default function AdminDashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredUsers.map((user) => (
+                    {filteredUsers.length > 0 ? filteredUsers.map((user) => (
                       <tr key={user.id} className="border-b border-white/5 hover:bg-[#404040]">
                         <td className="px-6 py-4">
                           <div className="flex items-center space-x-3">
@@ -479,7 +494,13 @@ export default function AdminDashboard() {
                           </div>
                         </td>
                       </tr>
-                    ))}
+                    )) : (
+                      <tr>
+                        <td colSpan={6} className="px-6 py-8 text-center text-[#f5f1e8]/60">
+                          {users.length === 0 ? 'No users found' : 'No users match your search criteria'}
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -692,6 +713,7 @@ export default function AdminDashboard() {
           </motion.div>
         )}
       </div>
-    </div>
+      </div>
+    </AdminGuard>
   )
 }

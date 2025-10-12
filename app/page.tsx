@@ -16,7 +16,7 @@ export default function Home() {
     <div className="min-h-screen bg-[#282828]">
       {/* Countdown Timer Section */}
       <section className="py-24 px-6 min-h-screen flex items-center justify-center">
-        <div className="max-w-6xl mx-auto text-center">
+        <div className="max-w-7xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -79,7 +79,7 @@ export default function Home() {
 
       {/* Leaderboard Section */}
       <section className="py-24 px-6 min-h-screen flex items-center justify-center">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
@@ -138,7 +138,7 @@ export default function Home() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="max-w-6xl mx-auto"
+          className="max-w-7xl mx-auto"
         >
           <div className="grid md:grid-cols-3 gap-8">
             {/* Photos Card */}

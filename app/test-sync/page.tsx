@@ -39,7 +39,7 @@ export default function TestSync() {
 
   return (
     <div className="min-h-screen p-6">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-white mb-8">Auto-Sync Test</h1>
         
         <div className="bg-white/10 rounded-lg p-6 mb-6">

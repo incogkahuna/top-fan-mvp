@@ -1,8 +1,19 @@
 // @ts-nocheck
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
+import { verifyAdminSession } from '@/lib/admin-auth'
 
-export async function GET(request: Request, { params }: { params: { userId: string } }) {
+export async function GET(request: NextRequest, { params }: { params: { userId: string } }) {
+  // Check admin authentication
+  const authResult = verifyAdminSession(request)
+  
+  if (!authResult.authorized) {
+    return NextResponse.json(
+      { error: authResult.error || 'Admin authentication required' }, 
+      { status: 401 }
+    )
+  }
+
   try {
     if (!supabaseAdmin) {
       return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 })

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-// DISABLED: Spotify import removed
+import { refreshAccessToken, getRecentlyPlayed } from '@/lib/spotify-api'
 
 export async function POST(request: NextRequest) {
   try {
@@ -33,8 +33,6 @@ export async function POST(request: NextRequest) {
     
     if (now >= expiresAt) {
       console.log('Access token expired, refreshing...')
-      // DISABLED: Spotify functions removed
-      /*
       try {
         const refreshResult = await refreshAccessToken(tokenData.refresh_token)
         accessToken = refreshResult.access_token
@@ -54,29 +52,16 @@ export async function POST(request: NextRequest) {
         console.error('Token refresh failed:', refreshError)
         return NextResponse.json({ error: 'Failed to refresh access token. Please reconnect to music service.' }, { status: 401 })
       }
-      */
-      // Return error since Spotify functions are disabled
-      return NextResponse.json({ error: 'Music service integration disabled' }, { status: 503 })
     }
 
     // Fetch recently played tracks (limit to 20 for faster response)
-    // DISABLED: Spotify functions removed
-    // const recentlyPlayed = await getRecentlyPlayed(accessToken, 20)
+    const recentlyPlayed = await getRecentlyPlayed(accessToken, 20)
     
-    // Return placeholder response since Spotify functions are disabled
-    return NextResponse.json({ 
-      message: 'Music service integration disabled',
-      tracks: [],
-      total: 0
-    })
-    
-    // DISABLED: All Spotify-related code commented out
-    /*
     if (!recentlyPlayed.items || recentlyPlayed.items.length === 0) {
       return NextResponse.json({ 
         success: true, 
         synced: 0,
-        message: 'No tracks found in music API'
+        message: 'No tracks found in Spotify API'
       })
     }
 
@@ -93,8 +78,8 @@ export async function POST(request: NextRequest) {
         message: 'No Sadie Jean tracks found in recent listening history'
       })
     }
-
-    // Process only Sadie Jean tracks
+    
+    // Process and store only Sadie Jean listening data
     const listeningData = sadieJeanTracks.map((item: any) => ({
       user_id: userId,
       track_id: item.track.id,
@@ -133,9 +118,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ 
       success: true, 
       synced: listeningData.length,
-      totalPlays: playCount?.length || 0
+      totalPlays: playCount?.length || 0,
+      message: 'Sync completed successfully'
     })
-    */
   } catch (error) {
     console.error('Data sync error:', error)
     return NextResponse.json({ error: 'Sync failed' }, { status: 500 })
