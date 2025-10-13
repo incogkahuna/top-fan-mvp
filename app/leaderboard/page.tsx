@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Trophy, Medal, Crown, Star, TrendingUp, Users, Music, Play, Info, LogIn, X, Clock, Calendar, Headphones, Award, Settings } from 'lucide-react'
 import ProfilePhotoUpload from '@/components/ProfilePhotoUpload'
+import MobileSpotifyConnect from '@/components/MobileSpotifyConnect'
 import { useSpotifyAuth } from '@/lib/useSpotifyAuth'
 
 interface LeaderboardEntry {
@@ -426,15 +427,13 @@ function LeaderboardContent() {
             </div>
 
             <div className="flex justify-center">
-              <button
-                onClick={() => {
-                  window.location.href = '/api/auth/spotify'
-                }}
+              <MobileSpotifyConnect
+                onConnect={() => window.location.href = '/api/auth/spotify'}
                 className="btn-primary inline-flex items-center space-x-3 text-lg px-8 py-4 rounded-full font-medium transition-all duration-200"
               >
                 <span className="text-lg">♪</span>
                 <span>Connect Spotify</span>
-              </button>
+              </MobileSpotifyConnect>
             </div>
 
             <div className="mt-6 text-center">
@@ -485,12 +484,12 @@ function LeaderboardContent() {
                   <h3 className="text-xl font-bold text-[#f5f1e8] mb-2">Be the First Fan!</h3>
                   <p className="text-[#f5f1e8]/60 mb-6">Connect your account to start tracking and become the top fan</p>
                   {!user && (
-                    <button
-                      onClick={() => window.location.href = '/api/auth/spotify'}
+                    <MobileSpotifyConnect
+                      onConnect={() => window.location.href = '/api/auth/spotify'}
                       className="btn-primary inline-flex items-center space-x-2"
                     >
                       <span>Connect Spotify</span>
-                    </button>
+                    </MobileSpotifyConnect>
                   )}
                 </div>
               ) : (

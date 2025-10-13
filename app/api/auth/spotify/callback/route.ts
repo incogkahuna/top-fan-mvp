@@ -18,19 +18,25 @@ export async function GET(request: NextRequest) {
     const code = searchParams.get('code')
     const state = searchParams.get('state')
     const error = searchParams.get('error')
+    
+    // Check if this is a mobile device
+    const userAgent = request.headers.get('user-agent') || ''
+    const isMobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase())
 
-    console.log('Spotify callback received:', { code: !!code, state, error })
+    console.log('Spotify callback received:', { code: !!code, state, error, isMobile })
 
     if (error) {
       console.error('Spotify auth error:', error)
       const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
-      return NextResponse.redirect(`${baseUrl}/test-redirect?error=spotify_auth_failed&message=${encodeURIComponent(error)}`)
+      const redirectPath = isMobile ? '/mobile-redirect' : '/test-redirect'
+      return NextResponse.redirect(`${baseUrl}${redirectPath}?error=spotify_auth_failed&message=${encodeURIComponent(error)}`)
     }
 
     if (!code) {
       console.error('No authorization code received')
       const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
-      return NextResponse.redirect(`${baseUrl}/test-redirect?error=no_auth_code&message=${encodeURIComponent('No authorization code received')}`)
+      const redirectPath = isMobile ? '/mobile-redirect' : '/test-redirect'
+      return NextResponse.redirect(`${baseUrl}${redirectPath}?error=no_auth_code&message=${encodeURIComponent('No authorization code received')}`)
     }
 
     const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID
@@ -62,7 +68,8 @@ export async function GET(request: NextRequest) {
       const errorData = await tokenResponse.json()
       console.error('Token exchange failed:', errorData)
       const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
-      return NextResponse.redirect(`${baseUrl}/test-redirect?error=token_exchange_failed`)
+      const redirectPath = isMobile ? '/mobile-redirect' : '/test-redirect'
+      return NextResponse.redirect(`${baseUrl}${redirectPath}?error=token_exchange_failed`)
     }
 
     const tokens: SpotifyTokenResponse = await tokenResponse.json()
@@ -77,7 +84,8 @@ export async function GET(request: NextRequest) {
     if (!userResponse.ok) {
       console.error('Failed to get user profile')
       const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
-      return NextResponse.redirect(`${baseUrl}/test-redirect?error=user_profile_failed`)
+      const redirectPath = isMobile ? '/mobile-redirect' : '/test-redirect'
+      return NextResponse.redirect(`${baseUrl}${redirectPath}?error=user_profile_failed`)
     }
 
     const userProfile = await userResponse.json()
@@ -113,13 +121,17 @@ export async function GET(request: NextRequest) {
               // Continue with redirect even if storage fails
             }
 
-    // Redirect to leaderboard with success and user ID (leaderboard will handle localStorage storage)
+    // Redirect to appropriate page based on device type
     const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
-    const redirectUrl = `${baseUrl}/leaderboard?spotify_connected=true&spotify_user_id=${userProfile.id}`
+    const redirectPath = isMobile ? '/mobile-redirect' : '/leaderboard'
+    const redirectUrl = `${baseUrl}${redirectPath}?spotify_connected=true&spotify_user_id=${userProfile.id}`
     return NextResponse.redirect(redirectUrl)
   } catch (error) {
     console.error('Spotify callback error:', error)
     const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
-    return NextResponse.redirect(`${baseUrl}/leaderboard?error=callback_failed`)
+    const userAgent = request.headers.get('user-agent') || ''
+    const isMobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase())
+    const redirectPath = isMobile ? '/mobile-redirect' : '/leaderboard'
+    return NextResponse.redirect(`${baseUrl}${redirectPath}?error=callback_failed`)
   }
 }
