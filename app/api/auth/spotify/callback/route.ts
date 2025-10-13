@@ -113,13 +113,13 @@ export async function GET(request: NextRequest) {
               // Continue with redirect even if storage fails
             }
 
-    // Redirect to test page with success and user ID (for testing redirect functionality)
+    // Redirect to leaderboard with success and user ID (leaderboard will handle localStorage storage)
     const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
-    const redirectUrl = `${baseUrl}/test-redirect?spotify_connected=true&spotify_user_id=${userProfile.id}`
+    const redirectUrl = `${baseUrl}/leaderboard?spotify_connected=true&spotify_user_id=${userProfile.id}`
     return NextResponse.redirect(redirectUrl)
   } catch (error) {
     console.error('Spotify callback error:', error)
     const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
-    return NextResponse.redirect(`${baseUrl}/test-redirect?error=callback_failed`)
+    return NextResponse.redirect(`${baseUrl}/leaderboard?error=callback_failed`)
   }
 }
