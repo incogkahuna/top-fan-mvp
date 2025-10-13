@@ -122,9 +122,19 @@ export async function GET(request: NextRequest) {
             }
 
     // Redirect to appropriate page based on device type
+    // Debug logging for base URL calculation
+    console.log('🔍 Base URL Debug:', {
+      NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+      VERCEL_URL: process.env.VERCEL_URL,
+      calculatedBaseUrl: process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002'),
+      host: request.headers.get('host')
+    })
+    
     const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
     const redirectPath = isMobile ? '/mobile-redirect' : '/leaderboard'
     const redirectUrl = `${baseUrl}${redirectPath}?spotify_connected=true&spotify_user_id=${userProfile.id}`
+    
+    console.log('🚀 Redirecting to:', redirectUrl)
     return NextResponse.redirect(redirectUrl)
   } catch (error) {
     console.error('Spotify callback error:', error)
