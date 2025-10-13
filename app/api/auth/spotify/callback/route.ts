@@ -24,13 +24,13 @@ export async function GET(request: NextRequest) {
     if (error) {
       console.error('Spotify auth error:', error)
       const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
-      return NextResponse.redirect(`${baseUrl}/leaderboard?error=spotify_auth_failed&message=${encodeURIComponent(error)}`)
+      return NextResponse.redirect(`${baseUrl}/test-redirect?error=spotify_auth_failed&message=${encodeURIComponent(error)}`)
     }
 
     if (!code) {
       console.error('No authorization code received')
       const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
-      return NextResponse.redirect(`${baseUrl}/leaderboard?error=no_auth_code&message=${encodeURIComponent('No authorization code received')}`)
+      return NextResponse.redirect(`${baseUrl}/test-redirect?error=no_auth_code&message=${encodeURIComponent('No authorization code received')}`)
     }
 
     const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID
@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
       const errorData = await tokenResponse.json()
       console.error('Token exchange failed:', errorData)
       const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
-      return NextResponse.redirect(`${baseUrl}/leaderboard?error=token_exchange_failed`)
+      return NextResponse.redirect(`${baseUrl}/test-redirect?error=token_exchange_failed`)
     }
 
     const tokens: SpotifyTokenResponse = await tokenResponse.json()
@@ -77,7 +77,7 @@ export async function GET(request: NextRequest) {
     if (!userResponse.ok) {
       console.error('Failed to get user profile')
       const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
-      return NextResponse.redirect(`${baseUrl}/leaderboard?error=user_profile_failed`)
+      return NextResponse.redirect(`${baseUrl}/test-redirect?error=user_profile_failed`)
     }
 
     const userProfile = await userResponse.json()
@@ -113,13 +113,13 @@ export async function GET(request: NextRequest) {
               // Continue with redirect even if storage fails
             }
 
-    // Redirect to leaderboard with success and user ID (leaderboard will handle localStorage storage)
+    // Redirect to test page with success and user ID (for testing redirect functionality)
     const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
-    const redirectUrl = `${baseUrl}/leaderboard?spotify_connected=true&spotify_user_id=${userProfile.id}`
+    const redirectUrl = `${baseUrl}/test-redirect?spotify_connected=true&spotify_user_id=${userProfile.id}`
     return NextResponse.redirect(redirectUrl)
   } catch (error) {
     console.error('Spotify callback error:', error)
     const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
-    return NextResponse.redirect(`${baseUrl}/leaderboard?error=callback_failed`)
+    return NextResponse.redirect(`${baseUrl}/test-redirect?error=callback_failed`)
   }
 }
