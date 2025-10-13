@@ -20,12 +20,6 @@ export async function GET(request: NextRequest) {
     const error = searchParams.get('error')
 
     console.log('Spotify callback received:', { code: !!code, state, error })
-    console.log('Callback environment check:', {
-      NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-      VERCEL_URL: process.env.VERCEL_URL,
-      SPOTIFY_REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI,
-      request_url: request.url
-    })
 
     if (error) {
       console.error('Spotify auth error:', error)

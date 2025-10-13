@@ -10,12 +10,6 @@ export async function GET(request: NextRequest) {
     
     console.log('Client ID exists:', !!clientId)
     console.log('Redirect URI exists:', !!redirectUri)
-    console.log('Redirect URI value:', redirectUri)
-    console.log('Environment check:', {
-      NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-      VERCEL_URL: process.env.VERCEL_URL,
-      SPOTIFY_REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI
-    })
     
     if (!clientId || !redirectUri) {
       console.log('❌ Spotify configuration missing')
