@@ -1,0 +1,12 @@
+[33mb6d500d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m Add debug logging to Spotify callback to identify redirect issue
+[33mb6e05fb[m Add debug endpoint to check Vercel environment variables
+[33md9f8543[m Add mobile-friendly Spotify authentication with return-to-app functionality
+[33mbf46ab9[m Restore Spotify callback redirect to leaderboard after successful testing
+[33m848ae76[m Add test redirect page to debug Spotify authentication flow without cookie issues
+[33m8f8f94c[m Clean up test API routes and debug logging
+[33m413bde9[m Redirect Spotify authentication back to leaderboard instead of user page
+[33mee6e707[m Trigger redeploy for updated Spotify redirect URI environment variable
+[33m1a14163[m Enable debug endpoint to check Vercel environment variables
+[33medc5f03[m Add test routes to debug Vercel deployment issue
+[33m472b84b[m Fix undefined redirect URLs in Spotify callback route
+[33mb6dc0df[m Fix Spotify redirect and add API route debugging

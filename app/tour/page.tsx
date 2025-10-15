@@ -1,8 +1,9 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Calendar, MapPin, ExternalLink, Clock, Ticket, Music, Zap } from 'lucide-react'
+import { Calendar, MapPin, ExternalLink, Clock, Ticket, Music, Zap, Users, Bell, Star, TrendingUp } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import { useSpotifyAuth } from '@/lib/useSpotifyAuth'
 
 interface TourDate {
   id: string
@@ -13,45 +14,95 @@ interface TourDate {
   ticketLink: string
   status: string
   layloId?: string
+  capacity?: number
+  sold?: number
+  price?: string
+}
+
+interface LayloStats {
+  totalUsers: number
+  totalCampaigns: number
+  openRate: number
+  clickRate: number
+  connected: boolean
 }
 
 export default function Tour() {
   const [tourDates, setTourDates] = useState<TourDate[]>([])
   const [loading, setLoading] = useState(true)
   const [layloConnected, setLayloConnected] = useState(false)
+  const [layloStats, setLayloStats] = useState<LayloStats | null>(null)
+  const [userJoinedLaylo, setUserJoinedLaylo] = useState(false)
+  const [joiningLaylo, setJoiningLaylo] = useState(false)
+  
+  // Use Spotify authentication
+  const { user, isConnected } = useSpotifyAuth()
 
-  // Load tour dates from Laylo API
+  // Load tour dates and Laylo data
   useEffect(() => {
-    const loadTourDates = async () => {
+    const loadData = async () => {
       try {
-        const response = await fetch('/api/test/simple?type=laylo-tours')
-        if (response.ok) {
-          const data = await response.json()
-          setTourDates(data.tours || [])
-          setLayloConnected(!data.message && !data.error)
-        } else {
-          // Fallback to sample data
-          setTourDates([
-            {
-              id: '1',
-              date: 'March 15, 2025',
-              time: '8:00 PM',
-              venue: 'The Roxy Theatre',
-              city: 'Los Angeles, CA',
-              ticketLink: 'https://example.com/tickets',
-              status: 'On Sale'
-            }
-          ])
+        // Load tour dates
+        const toursResponse = await fetch('/api/laylo?type=tours')
+        if (toursResponse.ok) {
+          const toursData = await toursResponse.json()
+          setTourDates(toursData.tours || [])
+          setLayloConnected(!toursData.error)
         }
+
+        // Load Laylo stats
+        const statsResponse = await fetch('/api/laylo?type=stats')
+        if (statsResponse.ok) {
+          const statsData = await statsResponse.json()
+          setLayloStats(statsData.stats)
+        }
+
         setLoading(false)
       } catch (error) {
-        console.error('Error loading tour dates:', error)
+        console.error('Error loading data:', error)
         setLoading(false)
       }
     }
 
-    loadTourDates()
+    loadData()
   }, [])
+
+  // Join Laylo fan list
+  const handleJoinLaylo = async () => {
+    if (!user || !isConnected) {
+      alert('Please connect your Spotify account first!')
+      return
+    }
+
+    setJoiningLaylo(true)
+    try {
+      const response = await fetch('/api/laylo?action=add-user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          spotifyUserId: user.spotify_id,
+          email: user.email,
+          displayName: user.display_name,
+          profileImage: user.profile_image
+        })
+      })
+
+      if (response.ok) {
+        setUserJoinedLaylo(true)
+        alert('Successfully joined the fan list! You\'ll receive exclusive tour updates.')
+      } else {
+        const error = await response.json()
+        alert(`Failed to join fan list: ${error.message || 'Unknown error'}`)
+      }
+    } catch (error) {
+      console.error('Error joining Laylo:', error)
+      alert('Failed to join fan list. Please try again.')
+    } finally {
+      setJoiningLaylo(false)
+    }
+  }
 
   return (
     <div className="min-h-screen py-16">
@@ -138,6 +189,28 @@ export default function Tour() {
                   <span>{show.time}</span>
                 </div>
 
+                {/* Capacity and Price Info */}
+                {show.capacity && show.sold && (
+                  <div className="mb-4">
+                    <div className="flex items-center justify-between text-sm text-white/60 mb-2">
+                      <span>Capacity</span>
+                      <span>{show.sold} / {show.capacity}</span>
+                    </div>
+                    <div className="w-full bg-gray-700 rounded-full h-2">
+                      <div 
+                        className="bg-orange-400 h-2 rounded-full transition-all duration-300"
+                        style={{ width: `${(show.sold / show.capacity) * 100}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                )}
+
+                {show.price && (
+                  <div className="text-orange-400 font-bold text-lg mb-4">
+                    {show.price}
+                  </div>
+                )}
+
                 {/* Ticket Button */}
                 <a
                   href={show.ticketLink}
@@ -217,15 +290,82 @@ export default function Tour() {
                 Get exclusive access to presales, VIP experiences, and behind-the-scenes content.
                 Powered by Laylo for the best fan experience.
               </p>
-              <a
-                href="https://laylo.com/early20storture"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-primary inline-flex items-center space-x-2"
-              >
-                <span>Join Fan List</span>
-                <ExternalLink className="h-4 w-4" />
-              </a>
+              
+              {isConnected && user ? (
+                <div>
+                  {userJoinedLaylo ? (
+                    <div className="bg-green-500/20 text-green-400 px-6 py-3 rounded-lg mb-4">
+                      <div className="flex items-center justify-center space-x-2">
+                        <Star className="h-5 w-5" />
+                        <span>You're on the fan list! 🎉</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={handleJoinLaylo}
+                      disabled={joiningLaylo}
+                      className="btn-primary inline-flex items-center space-x-2 disabled:opacity-50"
+                    >
+                      {joiningLaylo ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                          <span>Joining...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Users className="h-4 w-4" />
+                          <span>Join Fan List</span>
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <div>
+                  <p className="text-white/60 mb-4">Connect your Spotify account to join the fan list</p>
+                  <a
+                    href="/leaderboard"
+                    className="btn-primary inline-flex items-center space-x-2"
+                  >
+                    <span>Connect Spotify</span>
+                    <ExternalLink className="h-4 w-4" />
+                  </a>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Laylo Stats */}
+        {layloStats && layloStats.connected && (
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="grid md:grid-cols-4 gap-6 mb-16"
+          >
+            <div className="card text-center">
+              <Users className="h-8 w-8 text-orange-400 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-white">{layloStats.totalUsers}</div>
+              <div className="text-white/60 text-sm">Fan List Members</div>
+            </div>
+            
+            <div className="card text-center">
+              <Bell className="h-8 w-8 text-orange-400 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-white">{layloStats.totalCampaigns}</div>
+              <div className="text-white/60 text-sm">Campaigns Sent</div>
+            </div>
+            
+            <div className="card text-center">
+              <TrendingUp className="h-8 w-8 text-orange-400 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-white">{Math.round(layloStats.openRate * 100)}%</div>
+              <div className="text-white/60 text-sm">Open Rate</div>
+            </div>
+            
+            <div className="card text-center">
+              <Zap className="h-8 w-8 text-orange-400 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-white">{Math.round(layloStats.clickRate * 100)}%</div>
+              <div className="text-white/60 text-sm">Click Rate</div>
             </div>
           </motion.div>
         )}
