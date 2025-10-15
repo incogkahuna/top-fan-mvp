@@ -95,7 +95,7 @@ async function addUserToLaylo(request: NextRequest) {
     }
     
     // Check if user already exists in our database
-    const { data: existingUser } = await supabaseAdmin
+    const { data: existingUser } = await supabaseAdmin!
       .from('users')
       .select('*')
       .eq('spotify_id', spotifyUserId)
@@ -138,7 +138,7 @@ async function addUserToLaylo(request: NextRequest) {
     const layloResponse = await response.json()
     
     // Update our database with Laylo user ID
-    await supabaseAdmin
+    await supabaseAdmin!
       .from('users')
       .update({ 
         laylo_user_id: layloResponse.id,

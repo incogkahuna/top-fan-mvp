@@ -20,11 +20,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Get users to notify
-    let usersToNotify = []
+    let usersToNotify: any[] = []
     
     if (targetUsers === 'all') {
       // Get all users with Laylo integration
-      const { data: users } = await supabaseAdmin
+      const { data: users } = await supabaseAdmin!
         .from('users')
         .select('spotify_id, display_name, email, laylo_user_id')
         .not('laylo_user_id', 'is', null)
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
       usersToNotify = users || []
     } else if (targetUsers === 'top_fans') {
       // Get top 10 fans by listening time
-      const { data: topFans } = await supabaseAdmin
+      const { data: topFans } = await supabaseAdmin!
         .from('users')
         .select('spotify_id, display_name, email, laylo_user_id, total_plays')
         .not('laylo_user_id', 'is', null)
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
       usersToNotify = topFans || []
     } else if (Array.isArray(targetUsers)) {
       // Specific user IDs
-      const { data: specificUsers } = await supabaseAdmin
+      const { data: specificUsers } = await supabaseAdmin!
         .from('users')
         .select('spotify_id, display_name, email, laylo_user_id')
         .in('spotify_id', targetUsers)
@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
     const layloResult = await layloResponse.json()
 
     // Log notification in database
-    await supabaseAdmin
+    await supabaseAdmin!
       .from('notifications')
       .insert({
         type: notificationType,
@@ -115,7 +115,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const limit = parseInt(searchParams.get('limit') || '10')
 
-    const { data: notifications, error } = await supabaseAdmin
+    const { data: notifications, error } = await supabaseAdmin!
       .from('notifications')
       .select('*')
       .order('sent_at', { ascending: false })

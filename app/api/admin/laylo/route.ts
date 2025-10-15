@@ -56,18 +56,18 @@ export async function POST(request: NextRequest) {
 async function getLayloAdminStats() {
   try {
     // Get user stats
-    const { data: userStats } = await supabaseAdmin
+    const { data: userStats } = await supabaseAdmin!
       .from('users')
       .select('laylo_user_id, total_plays, created_at')
       .not('laylo_user_id', 'is', null)
 
     // Get notification stats
-    const { data: notificationStats } = await supabaseAdmin
+    const { data: notificationStats } = await supabaseAdmin!
       .from('notifications')
       .select('type, target_count, sent_at')
 
     // Get leaderboard stats
-    const { data: leaderboardStats } = await supabaseAdmin
+    const { data: leaderboardStats } = await supabaseAdmin!
       .from('users')
       .select('total_plays, total_listening_time')
       .not('total_plays', 'is', null)
@@ -106,7 +106,7 @@ async function getLayloAdminStats() {
 // Get Laylo users with additional info
 async function getLayloUsers() {
   try {
-    const { data: users, error } = await supabaseAdmin
+    const { data: users, error } = await supabaseAdmin!
       .from('users')
       .select(`
         spotify_id,
@@ -151,7 +151,7 @@ async function getLayloCampaigns() {
 // Get notification history
 async function getNotificationHistory() {
   try {
-    const { data: notifications, error } = await supabaseAdmin
+    const { data: notifications, error } = await supabaseAdmin!
       .from('notifications')
       .select('*')
       .order('sent_at', { ascending: false })
@@ -175,7 +175,12 @@ async function getNotificationHistory() {
 async function sendTourNotification(request: NextRequest) {
   try {
     const body = await request.json()
-    const { tourId, message, subject, targetUsers = 'all' }
+    const { tourId, message, subject, targetUsers = 'all' }: {
+      tourId?: string
+      message: string
+      subject: string
+      targetUsers?: string | string[]
+    } = body
 
     if (!message || !subject) {
       return NextResponse.json({ error: 'Missing message or subject' }, { status: 400 })
@@ -218,7 +223,12 @@ async function sendTourNotification(request: NextRequest) {
 async function createCampaign(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, subject, message, targetUsers = 'all' }
+    const { name, subject, message, targetUsers = 'all' }: {
+      name: string
+      subject: string
+      message: string
+      targetUsers?: string | string[]
+    } = body
 
     if (!name || !subject || !message) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -263,7 +273,7 @@ async function syncUsersToLaylo(request: NextRequest) {
     const { limit = 10 } = body
 
     // Get users not yet synced to Laylo
-    const { data: usersToSync, error } = await supabaseAdmin
+    const { data: usersToSync, error } = await supabaseAdmin!
       .from('users')
       .select('spotify_id, display_name, email, profile_image')
       .is('laylo_user_id', null)
