@@ -249,73 +249,57 @@ async function createLayloCampaign(request: NextRequest) {
   }
 }
 
-// Get Laylo tours
+// Get tours from database (real tour dates)
 async function getLayloTours() {
   try {
-    const config = getLayloConfig()
-    
-    const response = await fetch(`${config.baseUrl}/tours`, {
-      headers: {
-        'Authorization': `Bearer ${config.apiKey}`,
-        'Content-Type': 'application/json'
-      }
-    })
-    
-    if (!response.ok) {
-      throw new Error(`Laylo API error: ${response.status}`)
+    // Fetch tour dates from our database
+    const { data: tourDates, error } = await supabaseAdmin!
+      .from('tour_dates')
+      .select('*')
+      .eq('is_active', true)
+      .gte('date', new Date().toISOString().split('T')[0]) // Only future dates
+      .order('date', { ascending: true })
+
+    if (error) {
+      console.error('Error fetching tour dates from database:', error)
+      throw error
     }
-    
-    const data = await response.json()
-    
-    // Transform Laylo data to our format
-    const tours = data.tours?.map((tour: any) => ({
+
+    // Transform database data to our format
+    const tours = tourDates?.map((tour: any) => ({
       id: tour.id,
-      date: tour.date,
-      time: tour.time,
+      date: new Date(tour.date).toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      }),
+      time: tour.time ? new Date(`2000-01-01T${tour.time}`).toLocaleTimeString('en-US', { 
+        hour: 'numeric', 
+        minute: '2-digit',
+        hour12: true 
+      }) : 'TBA',
       venue: tour.venue,
-      city: tour.city,
-      ticketLink: tour.ticketLink,
+      city: `${tour.city}${tour.state ? `, ${tour.state}` : ''}`,
+      ticketLink: tour.ticket_link || '#',
       status: tour.status,
-      layloId: tour.id,
+      layloId: tour.laylo_id,
       capacity: tour.capacity,
       sold: tour.sold,
-      price: tour.price
+      price: tour.ticket_price ? `$${tour.ticket_price.toFixed(2)}` : 'TBA',
+      description: tour.description
     })) || []
-    
-    return NextResponse.json({ tours })
+
+    return NextResponse.json({ 
+      tours,
+      total: tours.length,
+      message: tours.length > 0 ? 'Real tour dates from database' : 'No upcoming tour dates scheduled'
+    })
   } catch (error) {
-    console.error('Error fetching Laylo tours:', error)
-    // Return sample data on error
+    console.error('Error fetching tour dates:', error)
+    // Return empty array on error
     return NextResponse.json({
-      tours: [
-        {
-          id: '1',
-          date: 'March 15, 2025',
-          time: '8:00 PM',
-          venue: 'The Roxy Theatre',
-          city: 'Los Angeles, CA',
-          ticketLink: 'https://laylo.com/early20storture/la',
-          status: 'On Sale',
-          layloId: 'laylo-1',
-          capacity: 500,
-          sold: 150,
-          price: '$25'
-        },
-        {
-          id: '2',
-          date: 'March 22, 2025',
-          time: '9:00 PM',
-          venue: 'The Fillmore',
-          city: 'San Francisco, CA',
-          ticketLink: 'https://laylo.com/early20storture/sf',
-          status: 'Sold Out',
-          layloId: 'laylo-2',
-          capacity: 1200,
-          sold: 1200,
-          price: '$30'
-        }
-      ],
-      error: 'Using sample data due to API error'
+      tours: [],
+      error: 'Failed to fetch tour dates from database'
     })
   }
 }
