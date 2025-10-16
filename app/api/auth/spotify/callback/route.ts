@@ -28,14 +28,14 @@ export async function GET(request: NextRequest) {
     if (error) {
       console.error('Spotify auth error:', error)
       const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
-      const redirectPath = isMobile ? '/mobile-redirect' : '/test-redirect'
+      const redirectPath = isMobile ? '/mobile-redirect' : '/profile'
       return NextResponse.redirect(`${baseUrl}${redirectPath}?error=spotify_auth_failed&message=${encodeURIComponent(error)}`)
     }
 
     if (!code) {
       console.error('No authorization code received')
       const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
-      const redirectPath = isMobile ? '/mobile-redirect' : '/test-redirect'
+      const redirectPath = isMobile ? '/mobile-redirect' : '/profile'
       return NextResponse.redirect(`${baseUrl}${redirectPath}?error=no_auth_code&message=${encodeURIComponent('No authorization code received')}`)
     }
 
@@ -131,7 +131,7 @@ export async function GET(request: NextRequest) {
     })
     
     const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
-    const redirectPath = isMobile ? '/mobile-redirect' : '/leaderboard'
+    const redirectPath = isMobile ? '/mobile-redirect' : '/profile'
     const redirectUrl = `${baseUrl}${redirectPath}?spotify_connected=true&spotify_user_id=${userProfile.id}`
     
     console.log('🚀 Redirecting to:', redirectUrl)
@@ -141,7 +141,7 @@ export async function GET(request: NextRequest) {
     const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
     const userAgent = request.headers.get('user-agent') || ''
     const isMobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase())
-    const redirectPath = isMobile ? '/mobile-redirect' : '/leaderboard'
+    const redirectPath = isMobile ? '/mobile-redirect' : '/profile'
     return NextResponse.redirect(`${baseUrl}${redirectPath}?error=callback_failed`)
   }
 }

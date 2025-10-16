@@ -17,14 +17,14 @@ export default function MobileRedirectPage() {
         setCountdown(countdown - 1)
       }, 1000)
       return () => clearTimeout(timer)
-    } else if (spotifyConnected && countdown === 0) {
-      // Auto-redirect to leaderboard after countdown
-      window.location.href = '/leaderboard'
-    }
+           } else if (spotifyConnected && countdown === 0) {
+             // Auto-redirect to profile after countdown
+             window.location.href = '/profile'
+           }
   }, [spotifyConnected, countdown])
 
   const handleReturnToApp = () => {
-    window.location.href = '/leaderboard'
+    window.location.href = '/profile'
   }
 
   if (error) {
