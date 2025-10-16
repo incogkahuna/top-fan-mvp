@@ -17,6 +17,9 @@ interface TourDate {
   capacity?: number
   sold?: number
   price?: string
+  platform?: string
+  title?: string
+  description?: string
 }
 
 interface LayloStats {
@@ -38,28 +41,24 @@ export default function Tour() {
   // Use Spotify authentication
   const { user, isConnected } = useSpotifyAuth()
 
-  // Load tour dates and Laylo data
+  // Load tour dates from real ticketing platforms
   useEffect(() => {
     const loadData = async () => {
       try {
-        // Load tour dates
-        const toursResponse = await fetch('/api/laylo?type=tours')
+        // Load tour dates from all ticketing sources
+        const toursResponse = await fetch('/api/ticketing?source=all')
         if (toursResponse.ok) {
           const toursData = await toursResponse.json()
-          setTourDates(toursData.tours || [])
-          // Set Laylo as connected if we get tours data (even if it's sample data)
-          setLayloConnected(true)
+          setTourDates(toursData.events || [])
+          // Set Laylo as connected if we get any tour data
+          setLayloConnected((toursData.events || []).length > 0)
         }
 
-        // Load Laylo stats
+        // Load Laylo stats (for fan engagement features)
         const statsResponse = await fetch('/api/laylo?type=stats')
         if (statsResponse.ok) {
           const statsData = await statsResponse.json()
           setLayloStats(statsData.stats)
-          // Also set connected based on stats if tours didn't work
-          if (!layloConnected && statsData.connected) {
-            setLayloConnected(true)
-          }
         }
 
         setLoading(false)
@@ -121,7 +120,7 @@ export default function Tour() {
           <h1 className="text-6xl font-bold text-white mb-4 logo-font">Tour Dates</h1>
           <p className="text-white/60 text-lg">Come see Early Twenties Torture live</p>
           
-          {/* Laylo Connection Status */}
+          {/* Integration Status */}
           {layloConnected && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -129,7 +128,7 @@ export default function Tour() {
               className="inline-flex items-center space-x-2 bg-green-500/20 text-green-400 px-4 py-2 rounded-full text-sm mt-4"
             >
               <Zap className="h-4 w-4" />
-              <span>Powered by Laylo</span>
+              <span>Live Ticket Integration</span>
             </motion.div>
           )}
         </motion.div>
@@ -172,13 +171,22 @@ export default function Tour() {
                     <Calendar className="h-5 w-5 text-orange-400" />
                     <span className="text-white font-semibold">{show.date}</span>
                   </div>
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                    show.status === 'Sold Out' 
-                      ? 'bg-red-500/20 text-red-400' 
-                      : 'bg-green-500/20 text-green-400'
-                  }`}>
-                    {show.status}
-                  </span>
+                  <div className="flex items-center space-x-2">
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      show.status === 'Sold Out' 
+                        ? 'bg-red-500/20 text-red-400' 
+                        : 'bg-green-500/20 text-green-400'
+                    }`}>
+                      {show.status}
+                    </span>
+                    {show.platform && (
+                      <span className="px-2 py-1 rounded text-xs bg-blue-500/20 text-blue-400">
+                        {show.platform === 'ticketmaster' ? 'TM' : 
+                         show.platform === 'eventbrite' ? 'EB' : 
+                         show.platform === 'manual' ? 'Custom' : show.platform}
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 {/* Venue Info */}
