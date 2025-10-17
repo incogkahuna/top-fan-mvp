@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { ArrowRight, AlertCircle, Music } from 'lucide-react'
+import { ArrowRight, Music } from 'lucide-react'
 
 export default function SpotifyConnectPage() {
   const [countdown, setCountdown] = useState(3)
@@ -89,25 +89,6 @@ export default function SpotifyConnectPage() {
           </div>
         </div>
 
-        <div className="bg-orange-900/30 border border-orange-700/50 rounded-xl p-4 mb-6">
-          <div className="flex items-start space-x-3">
-            <AlertCircle className="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="text-orange-400 font-semibold text-sm mb-2">Important for Mobile Users</p>
-              <p className="text-orange-300/90 text-sm mb-3">
-                If you get stuck on a Spotify page, manually navigate to:
-              </p>
-              <div className="bg-[#1a1a1a] rounded px-3 py-2 mb-2">
-                <code className="text-[#E98B8B] text-xs break-all">
-                  {typeof window !== 'undefined' ? window.location.origin + '/mobile-redirect' : '/mobile-redirect'}
-                </code>
-              </div>
-              <p className="text-orange-300/90 text-xs">
-                Or use the "Already Connected?" button below
-              </p>
-            </div>
-          </div>
-        </div>
         
         <button
           onClick={handleConnect}
