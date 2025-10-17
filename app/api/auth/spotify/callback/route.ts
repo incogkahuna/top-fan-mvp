@@ -122,15 +122,18 @@ export async function GET(request: NextRequest) {
             }
 
     // Redirect to appropriate page based on device type
-    // Debug logging for base URL calculation
-    console.log('🔍 Base URL Debug:', {
-      NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-      VERCEL_URL: process.env.VERCEL_URL,
-      calculatedBaseUrl: process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002'),
-      host: request.headers.get('host')
-    })
+    // Enhanced debug logging for base URL calculation
+    console.log('🔍 Vercel Debug - NEXTAUTH_URL:', process.env.NEXTAUTH_URL);
+    console.log('🔍 Vercel Debug - VERCEL_URL:', process.env.VERCEL_URL);
+    console.log('🔍 Vercel Debug - Request Host:', request.headers.get('host'));
     
-    const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
+    // Alternative base URL logic with request host header fallback
+    const requestHost = request.headers.get('host');
+    const baseUrl = process.env.NEXTAUTH_URL || 
+      (requestHost ? `https://${requestHost}` : 
+       (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002'));
+
+    console.log('🔍 Vercel Debug - Calculated baseUrl:', baseUrl);
     const redirectPath = isMobile ? '/mobile-redirect' : '/auth-success'
     const redirectUrl = `${baseUrl}${redirectPath}?spotify_connected=true&spotify_user_id=${userProfile.id}&display_name=${encodeURIComponent(userProfile.display_name || '')}&email=${encodeURIComponent(userProfile.email || '')}&profile_image=${encodeURIComponent(userProfile.images?.[0]?.url || '')}`
     
