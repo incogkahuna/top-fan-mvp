@@ -8,11 +8,12 @@ export async function GET(request: NextRequest) {
     }
 
     // Test user data that matches what we're trying to insert
+    const testUserId = 'test_spotify_id_' + Date.now()
     const testUserData = {
-      music_id: 'test_music_id_' + Date.now(), // Use music_id as required by schema
+      music_id: testUserId, // Use Spotify ID as music_id (same as our fix)
       display_name: 'Test User',
       email: 'test@example.com',
-      spotify_id: 'test_spotify_id_' + Date.now(),
+      spotify_id: testUserId,
       spotify_access_token: 'test_access_token',
       spotify_refresh_token: 'test_refresh_token',
       token_expires_at: new Date(Date.now() + 3600000).toISOString(), // 1 hour from now
@@ -45,7 +46,7 @@ export async function GET(request: NextRequest) {
     await supabaseAdmin
       .from('users')
       .delete()
-      .eq('spotify_id', testUserData.spotify_id)
+      .eq('spotify_id', testUserId)
 
     return NextResponse.json({ 
       success: true, 
