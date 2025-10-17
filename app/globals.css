@@ -163,4 +163,23 @@
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
     background: rgb(107 114 128);
   }
+  
+  /* Mobile scrollbar utilities */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
+  }
+  
+  .horizontal-scroll {
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+  }
+  
+  .horizontal-scroll > * {
+    scroll-snap-align: start;
+  }
 }

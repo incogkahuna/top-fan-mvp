@@ -3,11 +3,10 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { Menu, X, LogOut, User, Settings, Music } from 'lucide-react'
+import { LogOut, User, Music } from 'lucide-react'
 import { useSpotifyAuth } from '@/lib/useSpotifyAuth'
 
 export default function Navigation() {
-  const [isOpen, setIsOpen] = useState(false)
   const [showUserMenu, setShowUserMenu] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
@@ -161,114 +160,110 @@ export default function Navigation() {
             </div>
           </div>
 
-          {/* Mobile menu button */}
+          {/* Mobile User Status - Always visible */}
           <div className="md:hidden">
-                <button
-                  onClick={() => setIsOpen(!isOpen)}
-                  className="text-[#f5f1e8] hover:text-[#f5f1e8]/60 focus:outline-none"
-                >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
+            {user ? (
+              <div className="flex items-center space-x-2">
+                {user.profile_image ? (
+                  <img 
+                    src={user.profile_image} 
+                    alt={user.display_name}
+                    className="w-8 h-8 rounded-full object-cover border border-[#1DB954]/50"
+                  />
+                ) : (
+                  <div className="w-8 h-8 bg-[#1DB954] text-white rounded-full flex items-center justify-center">
+                    <Music className="h-4 w-4" />
+                  </div>
+                )}
+                <span className="text-sm font-medium text-[#f5f1e8] truncate max-w-[120px]">{user.display_name}</span>
+              </div>
+            ) : authLoading ? (
+              <div className="flex items-center space-x-2">
+                <div className="w-6 h-6 border-2 border-[#f5f1e8]/30 border-t-[#f5f1e8] rounded-full animate-spin"></div>
+              </div>
+            ) : (
+              <Link 
+                href="/user"
+                className="flex items-center space-x-2 text-sm font-medium text-[#f5f1e8]/80 hover:text-[#f5f1e8]"
+              >
+                <User className="h-5 w-5" />
+                <span>Login</span>
+              </Link>
+            )}
           </div>
         </div>
 
-        {/* Mobile Navigation */}
-        {isOpen && (
-            <div className="md:hidden border-t border-white/10">
-              <div className="py-4 space-y-1">
-                {navItems.map((item) => {
-                  const isActive = pathname === item.href
-                  
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                          className={`block px-4 py-3 text-sm font-medium ${
-                            isActive
-                              ? 'bg-[#8B3A3A] text-white rounded-full mx-2'
-                              : 'text-[#f5f1e8]/60 hover:text-[#f5f1e8] hover:bg-[#8B3A3A] hover:text-white hover:rounded-full hover:mx-2'
-                          }`}
-                      onClick={() => setIsOpen(false)}
-                    >
-                      {item.label}
-                    </Link>
-                  )
-                })}
-                
-                {/* Mobile User Status */}
-                <div className="border-t border-[#f5f1e8]/10 mt-4 pt-4">
-                  {user ? (
-                    // LOGGED IN
-                    <>
-                      <div className="flex items-center space-x-3 px-4 py-2 bg-[#1DB954]/10 rounded-lg mx-2 mb-3">
-                        {user.profile_image ? (
-                          <img 
-                            src={user.profile_image} 
-                            alt={user.display_name}
-                            className="w-10 h-10 rounded-full object-cover border border-[#1DB954]/50"
-                          />
-                        ) : (
-                          <div className="w-10 h-10 bg-[#1DB954] text-white rounded-full flex items-center justify-center">
-                            <Music className="h-5 w-5" />
-                          </div>
-                        )}
-                        <div>
-                          <p className="text-sm font-medium text-[#f5f1e8]">{user.display_name}</p>
-                          <p className="text-xs text-[#1DB954]">● Connected</p>
-                        </div>
-                      </div>
-                    
-                    <button
-                      onClick={() => {
-                        setIsOpen(false)
-                        router.push('/profile')
-                      }}
-                      className="w-full text-left px-4 py-2 text-sm font-medium text-[#f5f1e8]/60 hover:text-[#f5f1e8] hover:bg-[#f5f1e8]/5"
-                    >
-                      My Profile
-                    </button>
-                    
-                    <button
-                      onClick={() => {
-                        setIsOpen(false)
-                        window.open('https://open.spotify.com/user/' + user.spotify_id, '_blank')
-                      }}
-                      className="w-full text-left px-4 py-2 text-sm font-medium text-[#f5f1e8]/60 hover:text-[#f5f1e8] hover:bg-[#f5f1e8]/5"
-                    >
-                      Open Spotify
-                    </button>
-                    
-                    <button
-                      onClick={() => {
-                        setIsOpen(false)
-                        handleLogout()
-                      }}
-                      className="w-full text-left px-4 py-2 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10"
-                    >
-                      Logout
-                    </button>
-                    </>
-                  ) : authLoading ? (
-                    // LOADING
-                    <div className="flex items-center space-x-3 px-4 py-2 text-[#f5f1e8]/60">
-                      <div className="w-6 h-6 border-2 border-[#f5f1e8]/30 border-t-[#f5f1e8] rounded-full animate-spin"></div>
-                      <span>Loading...</span>
-                    </div>
-                  ) : (
-                    // NOT LOGGED IN
-                    <Link 
-                      href="/user"
-                      className="flex items-center space-x-3 px-4 py-2 text-sm font-medium text-[#f5f1e8]/80 hover:text-[#f5f1e8] hover:bg-[#f5f1e8]/5 rounded-lg mx-2"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <User className="h-5 w-5" />
-                      <span>Login to Spotify</span>
-                    </Link>
-                  )}
+        {/* Mobile Navigation - Horizontal Scroll */}
+        <div className="md:hidden">
+          {/* User Status Bar */}
+          <div className="flex items-center justify-between px-4 py-3 border-t border-white/10">
+            {user ? (
+              <div className="flex items-center space-x-3">
+                {user.profile_image ? (
+                  <img 
+                    src={user.profile_image} 
+                    alt={user.display_name}
+                    className="w-8 h-8 rounded-full object-cover border border-[#1DB954]/50"
+                  />
+                ) : (
+                  <div className="w-8 h-8 bg-[#1DB954] text-white rounded-full flex items-center justify-center">
+                    <Music className="h-4 w-4" />
+                  </div>
+                )}
+                <div>
+                  <p className="text-sm font-medium text-[#f5f1e8]">{user.display_name}</p>
+                  <p className="text-xs text-[#1DB954]">● Connected</p>
                 </div>
               </div>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <User className="h-5 w-5 text-[#f5f1e8]/60" />
+                <span className="text-sm text-[#f5f1e8]/60">Not logged in</span>
+              </div>
+            )}
+            
+            {/* Profile/Logout Buttons */}
+            {user && (
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => router.push('/profile')}
+                  className="text-sm text-[#f5f1e8]/60 hover:text-[#f5f1e8] px-2 py-1"
+                >
+                  Profile
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="text-sm text-red-400 hover:text-red-300 px-2 py-1"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Horizontal Scrolling Navigation */}
+          <div className="overflow-x-auto scrollbar-hide">
+            <div className="flex items-center space-x-1 px-4 py-3 min-w-max">
+              {navItems.map((item) => {
+                const isActive = pathname === item.href
+                
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`whitespace-nowrap px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${
+                      isActive
+                        ? 'bg-[#8B3A3A] text-white shadow-md'
+                        : 'text-[#f5f1e8]/60 hover:text-[#f5f1e8] hover:bg-[#f5f1e8]/10'
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                )
+              })}
             </div>
-        )}
+          </div>
+        </div>
       </div>
     </nav>
   )
