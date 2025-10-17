@@ -20,17 +20,11 @@ export async function GET(request: NextRequest) {
       }, { status: 500 })
     }
 
-    // Get the table structure
+    // Get the table structure - try a simple query first
     const { data: tableInfo, error: tableError } = await supabaseAdmin
-      .rpc('get_table_info', { table_name: 'users' })
-      .catch(async () => {
-        // If the RPC doesn't exist, try a different approach
-        const { data, error } = await supabaseAdmin
-          .from('users')
-          .select('*')
-          .limit(1)
-        return { data, error }
-      })
+      .from('users')
+      .select('*')
+      .limit(1)
 
     return NextResponse.json({ 
       success: true,
