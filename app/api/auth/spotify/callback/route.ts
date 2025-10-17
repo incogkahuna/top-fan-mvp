@@ -94,6 +94,9 @@ export async function GET(request: NextRequest) {
             try {
               const expiresAt = Date.now() + (tokens.expires_in * 1000)
               
+              console.log('🔄 Attempting to store tokens for user:', userProfile.id)
+              console.log('🔍 Supabase admin client exists:', !!supabaseAdmin)
+              
               await storeSpotifyTokens(
                 userProfile.id,
                 {

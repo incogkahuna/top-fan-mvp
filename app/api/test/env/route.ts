@@ -3,11 +3,15 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function GET(request: NextRequest) {
   try {
     const envCheck = {
-      supabaseUrl: process.env.SUPABASE_URL ? 'Set' : 'Missing',
+      supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL ? 'Set' : 'Missing',
       supabaseServiceKey: process.env.SUPABASE_SERVICE_ROLE_KEY ? 'Set' : 'Missing',
-      supabaseAnonKey: process.env.SUPABASE_ANON_KEY ? 'Set' : 'Missing',
+      supabaseAnonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'Set' : 'Missing',
       nextAuthUrl: process.env.NEXTAUTH_URL ? 'Set' : 'Missing',
-      vercelUrl: process.env.VERCEL_URL ? 'Set' : 'Missing'
+      vercelUrl: process.env.VERCEL_URL ? 'Set' : 'Missing',
+      // Also check if the values are actually loaded
+      supabaseUrlLength: process.env.NEXT_PUBLIC_SUPABASE_URL?.length || 0,
+      supabaseServiceKeyLength: process.env.SUPABASE_SERVICE_ROLE_KEY?.length || 0,
+      supabaseAnonKeyLength: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.length || 0
     }
 
     // Don't expose actual values for security
