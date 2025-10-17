@@ -110,15 +110,20 @@ export async function GET(request: NextRequest) {
                 }
               )
               
-              console.log('User authenticated and tokens stored:', {
+              console.log('✅ User authenticated and tokens stored:', {
                 spotifyId: userProfile.id,
                 displayName: userProfile.display_name,
                 hasAccessToken: !!tokens.access_token,
                 hasRefreshToken: !!tokens.refresh_token
               })
             } catch (storageError) {
-              console.error('Failed to store tokens:', storageError)
-              // Continue with redirect even if storage fails
+              console.error('❌ CRITICAL: Failed to store tokens:', storageError)
+              console.error('❌ This means the user will not be able to access their profile!')
+              
+              // Redirect to error page instead of continuing
+              const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
+              const redirectPath = isMobile ? '/mobile-redirect' : '/auth-success'
+              return NextResponse.redirect(`${baseUrl}${redirectPath}?error=storage_failed&message=${encodeURIComponent('Failed to save user data. Please try again.')}`)
             }
 
     // Redirect to appropriate page based on device type

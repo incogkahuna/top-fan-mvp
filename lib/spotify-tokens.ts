@@ -51,22 +51,34 @@ export async function storeSpotifyTokens(
 
     if (existingUser) {
       // Update existing user
+      console.log('🔄 Updating existing user:', userId)
       const { error } = await supabaseAdmin
         .from('users')
         .update(userData)
         .eq('spotify_id', userId)
       
-      if (error) throw error
+      if (error) {
+        console.error('❌ Error updating user:', error)
+        throw error
+      }
+      console.log('✅ User updated successfully')
     } else {
       // Create new user
-      const { error } = await supabaseAdmin
+      console.log('🆕 Creating new user:', userId, userData)
+      const { data, error } = await supabaseAdmin
         .from('users')
         .insert({
           ...userData,
           created_at: new Date().toISOString()
         })
+        .select()
       
-      if (error) throw error
+      if (error) {
+        console.error('❌ Error creating user:', error)
+        console.error('❌ User data that failed:', userData)
+        throw error
+      }
+      console.log('✅ User created successfully:', data)
     }
 
     return { success: true }
