@@ -14,6 +14,7 @@ interface SpotifyTokenResponse {
 
 export async function GET(request: NextRequest) {
   try {
+    console.log('🎯 Spotify OAuth callback started')
     const { searchParams } = new URL(request.url)
     const code = searchParams.get('code')
     const state = searchParams.get('state')
@@ -23,7 +24,7 @@ export async function GET(request: NextRequest) {
     const userAgent = request.headers.get('user-agent') || ''
     const isMobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase())
 
-    console.log('Spotify callback received:', { code: !!code, state, error, isMobile })
+    console.log('🎯 Spotify callback received:', { code: !!code, state, error, isMobile })
 
     if (error) {
       console.error('Spotify auth error:', error)
@@ -51,6 +52,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Exchange code for tokens
+    console.log('🔄 Attempting token exchange with Spotify...')
     const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
       method: 'POST',
       headers: {
@@ -64,9 +66,11 @@ export async function GET(request: NextRequest) {
       })
     })
 
+    console.log('🔍 Token exchange response status:', tokenResponse.status)
+
     if (!tokenResponse.ok) {
       const errorData = await tokenResponse.json()
-      console.error('Token exchange failed:', errorData)
+      console.error('❌ Token exchange failed:', errorData)
       const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
       const redirectPath = isMobile ? '/mobile-redirect' : '/test-redirect'
       return NextResponse.redirect(`${baseUrl}${redirectPath}?error=token_exchange_failed`)
@@ -75,20 +79,24 @@ export async function GET(request: NextRequest) {
     const tokens: SpotifyTokenResponse = await tokenResponse.json()
 
     // Get user profile to identify the user
+    console.log('🔄 Fetching user profile from Spotify...')
     const userResponse = await fetch('https://api.spotify.com/v1/me', {
       headers: {
         'Authorization': `Bearer ${tokens.access_token}`
       }
     })
 
+    console.log('🔍 User profile response status:', userResponse.status)
+
     if (!userResponse.ok) {
-      console.error('Failed to get user profile')
+      console.error('❌ Failed to get user profile, status:', userResponse.status)
       const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
       const redirectPath = isMobile ? '/mobile-redirect' : '/test-redirect'
       return NextResponse.redirect(`${baseUrl}${redirectPath}?error=user_profile_failed`)
     }
 
     const userProfile = await userResponse.json()
+    console.log('✅ User profile fetched successfully:', userProfile.id, userProfile.display_name)
 
             // Store tokens in database
             try {
