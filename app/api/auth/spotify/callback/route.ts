@@ -131,8 +131,8 @@ export async function GET(request: NextRequest) {
     })
     
     const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
-    const redirectPath = isMobile ? '/mobile-redirect' : '/profile'
-    const redirectUrl = `${baseUrl}${redirectPath}?spotify_connected=true&spotify_user_id=${userProfile.id}`
+    const redirectPath = isMobile ? '/mobile-redirect' : '/auth-success'
+    const redirectUrl = `${baseUrl}${redirectPath}?spotify_connected=true&spotify_user_id=${userProfile.id}&display_name=${encodeURIComponent(userProfile.display_name || '')}&email=${encodeURIComponent(userProfile.email || '')}&profile_image=${encodeURIComponent(userProfile.images?.[0]?.url || '')}`
     
     console.log('🚀 Redirecting to:', redirectUrl)
     return NextResponse.redirect(redirectUrl)

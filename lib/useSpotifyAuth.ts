@@ -48,6 +48,19 @@ export function useSpotifyAuth(): UseSpotifyAuthReturn {
       const spotifyUserId = getSpotifyUserId()
       
       if (!spotifyUserId) {
+        // Check if there's user data stored directly in localStorage
+        const storedUserData = localStorage.getItem('spotify_user_data')
+        if (storedUserData) {
+          try {
+            const userData = JSON.parse(storedUserData)
+            setUser(userData)
+            // Also store the user ID properly
+            setSpotifyUserId(userData.spotify_id)
+          } catch (parseError) {
+            console.error('Error parsing stored user data:', parseError)
+            localStorage.removeItem('spotify_user_data')
+          }
+        }
         setIsLoading(false)
         return
       }
@@ -60,11 +73,13 @@ export function useSpotifyAuth(): UseSpotifyAuthReturn {
       } else {
         // Clear invalid storage
         removeSpotifyUserId()
+        localStorage.removeItem('spotify_user_data')
       }
     } catch (error) {
       console.error('Error checking auth status:', error)
       // Clear storage on error
       removeSpotifyUserId()
+      localStorage.removeItem('spotify_user_data')
     } finally {
       setIsLoading(false)
     }
@@ -72,7 +87,8 @@ export function useSpotifyAuth(): UseSpotifyAuthReturn {
 
   const connectSpotify = () => {
     if (typeof window !== 'undefined') {
-      window.location.href = 'https://accounts.spotify.com/authorize?scope=user-read-recently-played%20user-top-read%20user-read-private&response_type=code&redirect_uri=http%3A%2F%2F127.0.0.1%3A3002%2Fapi%2Fauth%2Fspotify%2Fcallback&client_id=3d8d032ed282470cac128ad3e41ccf6a'
+      // Use the Spotify auth API route instead of hardcoded URL
+      window.location.href = '/api/auth/spotify'
     }
   }
 
@@ -81,8 +97,9 @@ export function useSpotifyAuth(): UseSpotifyAuthReturn {
       // Clear all auth storage
       removeSpotifyUserId()
       
-      // Also clear sessionStorage for good measure
+      // Clear additional user data
       if (typeof window !== 'undefined') {
+        localStorage.removeItem('spotify_user_data')
         sessionStorage.removeItem('spotify_user_id')
       }
       
