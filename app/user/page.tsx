@@ -156,7 +156,7 @@ export default function UserPage() {
           </p>
 
           <a
-            href="/api/auth/spotify"
+            href="/spotify-connect"
             className="inline-block bg-[#1DB954] text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-[#1ed760] transition-colors hover:scale-105 transform"
           >
             Connect Spotify

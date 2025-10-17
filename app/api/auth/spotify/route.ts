@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
       scope: scopes,
       redirect_uri: redirectUri,
       state: state,
-      show_dialog: 'false', // Skip showing Spotify accounts page if already logged in
+      show_dialog: 'true', // Force showing authorization dialog to ensure proper redirect
     })
 
     const spotifyAuthUrl = `https://accounts.spotify.com/authorize?${params.toString()}`

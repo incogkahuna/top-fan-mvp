@@ -10,6 +10,7 @@ export default function MobileRedirectPage() {
   const spotifyConnected = searchParams.get('spotify_connected') === 'true'
   const spotifyUserId = searchParams.get('spotify_user_id')
   const error = searchParams.get('error')
+  const manualReturn = searchParams.get('manual') === 'true'
 
   useEffect(() => {
     // Immediately try to redirect on mount if successful
@@ -28,6 +29,38 @@ export default function MobileRedirectPage() {
 
   const handleReturnToApp = () => {
     window.location.href = '/profile'
+  }
+
+  // If user manually navigated here (stuck on Spotify page)
+  if (manualReturn || (!spotifyConnected && !error)) {
+    return (
+      <div className="min-h-screen bg-[#282828] text-white flex flex-col items-center justify-center p-4">
+        <div className="bg-[#1a1a1a] rounded-2xl p-8 max-w-md w-full text-center">
+          <div className="w-16 h-16 bg-[#E98B8B] rounded-full flex items-center justify-center mx-auto mb-6">
+            <Smartphone className="w-10 h-10 text-white" />
+          </div>
+          
+          <h1 className="text-2xl font-bold mb-3 text-[#f5f1e8]">Stuck on Spotify?</h1>
+          <p className="text-[#f5f1e8]/80 mb-6">
+            No problem! Click the button below to return to your profile.
+          </p>
+          
+          <button
+            onClick={handleReturnToApp}
+            className="w-full bg-[#E98B8B] hover:bg-[#f0a0a0] text-white font-semibold py-4 px-6 rounded-full transition-colors duration-200 flex items-center justify-center space-x-2 mb-4"
+          >
+            <ArrowRight className="w-5 h-5" />
+            <span>Go to Profile</span>
+          </button>
+
+          <div className="bg-[#282828] rounded-xl p-4 mt-4">
+            <p className="text-[#f5f1e8]/60 text-sm mb-2">
+              💡 <strong>Tip:</strong> Bookmark this page or save your app URL for easy access
+            </p>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   if (error) {
