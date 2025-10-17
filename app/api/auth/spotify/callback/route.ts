@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { storeSpotifyTokens } from '@/lib/spotify-tokens'
+import { supabaseAdmin } from '@/lib/supabase'
 
 // Force dynamic rendering for this API route
 export const dynamic = 'force-dynamic'
