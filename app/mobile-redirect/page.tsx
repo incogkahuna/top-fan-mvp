@@ -3,17 +3,40 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { CheckCircle, ExternalLink, Smartphone, Globe, ArrowRight } from 'lucide-react'
+import { setSpotifyUserId } from '@/lib/auth-storage'
 
 export default function MobileRedirectPage() {
   const searchParams = useSearchParams()
   const [countdown, setCountdown] = useState(3)
   const spotifyConnected = searchParams.get('spotify_connected') === 'true'
   const spotifyUserId = searchParams.get('spotify_user_id')
+  const displayName = searchParams.get('display_name')
+  const email = searchParams.get('email')
+  const profileImage = searchParams.get('profile_image')
   const error = searchParams.get('error')
   const manualReturn = searchParams.get('manual') === 'true'
 
   useEffect(() => {
-    // Immediately try to redirect on mount if successful
+    // Store user data when OAuth succeeds
+    if (spotifyConnected && spotifyUserId) {
+      console.log('🔍 Mobile redirect - storing user data:', { spotifyUserId, displayName, email })
+      
+      // Store user ID in auth storage
+      setSpotifyUserId(spotifyUserId)
+      
+      // Store complete user data in localStorage for immediate use
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('spotify_user_data', JSON.stringify({
+          spotify_id: spotifyUserId,
+          display_name: displayName,
+          email: email,
+          profile_image: profileImage
+        }))
+        console.log('✅ Stored user data in localStorage')
+      }
+    }
+    
+    // Handle countdown and redirect
     if (spotifyConnected) {
       if (countdown > 0) {
         const timer = setTimeout(() => {
@@ -25,7 +48,7 @@ export default function MobileRedirectPage() {
         window.location.href = '/profile'
       }
     }
-  }, [spotifyConnected, countdown])
+  }, [spotifyConnected, spotifyUserId, displayName, email, profileImage, countdown])
 
   const handleReturnToApp = () => {
     window.location.href = '/profile'
