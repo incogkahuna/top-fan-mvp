@@ -38,7 +38,6 @@ export async function storeSpotifyTokens(
     }
 
     const userData = {
-      music_id: userId, // Required field from original schema - use Spotify ID as music_id
       spotify_id: userId,
       display_name: userProfile.display_name,
       email: userProfile.email,

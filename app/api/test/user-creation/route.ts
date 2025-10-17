@@ -10,7 +10,6 @@ export async function GET(request: NextRequest) {
     // Test user data that matches what we're trying to insert
     const testUserId = 'test_spotify_id_' + Date.now()
     const testUserData = {
-      music_id: testUserId, // Use Spotify ID as music_id (same as our fix)
       display_name: 'Test User',
       email: 'test@example.com',
       spotify_id: testUserId,
