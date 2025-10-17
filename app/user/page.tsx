@@ -156,7 +156,7 @@ export default function UserPage() {
           </p>
 
           <a
-            href="https://accounts.spotify.com/authorize?scope=user-read-recently-played%20user-top-read%20user-read-private&response_type=code&redirect_uri=http%3A%2F%2F127.0.0.1%3A3002%2Fapi%2Fauth%2Fspotify%2Fcallback&client_id=3d8d032ed282470cac128ad3e41ccf6a"
+            href="/api/auth/spotify"
             className="inline-block bg-[#1DB954] text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-[#1ed760] transition-colors hover:scale-105 transform"
           >
             Connect Spotify

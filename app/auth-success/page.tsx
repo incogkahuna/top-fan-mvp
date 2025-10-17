@@ -51,13 +51,19 @@ export default function AuthSuccessPage() {
   }, [router, searchParams])
 
   return (
-    <div className="min-h-screen bg-[#1a1a1a] flex items-center justify-center">
-      <div className="text-center">
-        <div className="text-[#f5f1e8] text-xl mb-4">🎉 Successfully connected to Spotify!</div>
-        <div className="text-[#f5f1e8]/60">Redirecting to your profile...</div>
-        <div className="mt-4">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#E98B8B] mx-auto"></div>
+    <div className="min-h-screen bg-[#282828] flex items-center justify-center p-4">
+      <div className="text-center bg-[#1a1a1a] rounded-2xl p-8 max-w-md w-full">
+        <div className="text-[#f5f1e8] text-2xl font-bold mb-4">🎉 Successfully Connected!</div>
+        <div className="text-[#f5f1e8]/80 mb-6">Redirecting to your profile...</div>
+        <div className="mt-4 mb-6">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#E98B8B] border-t-transparent mx-auto"></div>
         </div>
+        <a 
+          href="/profile"
+          className="inline-block bg-[#E98B8B] hover:bg-[#f0a0a0] text-white font-medium py-3 px-6 rounded-full transition-colors duration-200"
+        >
+          Click here if not redirected
+        </a>
       </div>
     </div>
   )

@@ -2,25 +2,28 @@
 
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { CheckCircle, ExternalLink, Smartphone, Globe } from 'lucide-react'
+import { CheckCircle, ExternalLink, Smartphone, Globe, ArrowRight } from 'lucide-react'
 
 export default function MobileRedirectPage() {
   const searchParams = useSearchParams()
-  const [countdown, setCountdown] = useState(5)
+  const [countdown, setCountdown] = useState(3)
   const spotifyConnected = searchParams.get('spotify_connected') === 'true'
   const spotifyUserId = searchParams.get('spotify_user_id')
   const error = searchParams.get('error')
 
   useEffect(() => {
-    if (spotifyConnected && countdown > 0) {
-      const timer = setTimeout(() => {
-        setCountdown(countdown - 1)
-      }, 1000)
-      return () => clearTimeout(timer)
-           } else if (spotifyConnected && countdown === 0) {
-             // Auto-redirect to profile after countdown
-             window.location.href = '/profile'
-           }
+    // Immediately try to redirect on mount if successful
+    if (spotifyConnected) {
+      if (countdown > 0) {
+        const timer = setTimeout(() => {
+          setCountdown(countdown - 1)
+        }, 1000)
+        return () => clearTimeout(timer)
+      } else if (countdown === 0) {
+        // Auto-redirect to profile after countdown
+        window.location.href = '/profile'
+      }
+    }
   }, [spotifyConnected, countdown])
 
   const handleReturnToApp = () => {
@@ -53,40 +56,55 @@ export default function MobileRedirectPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-4">
-      <div className="bg-gray-800 rounded-xl p-8 max-w-md w-full text-center border border-green-500/20">
-        <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+    <div className="min-h-screen bg-[#282828] text-white flex flex-col items-center justify-center p-4">
+      <div className="bg-[#1a1a1a] rounded-2xl p-8 max-w-md w-full text-center">
+        <div className="w-16 h-16 bg-[#E98B8B] rounded-full flex items-center justify-center mx-auto mb-6">
           <CheckCircle className="w-10 h-10 text-white" />
         </div>
         
-        <h1 className="text-2xl font-bold mb-4 text-green-400">Successfully Connected!</h1>
-        <p className="text-gray-300 mb-6">
-          Your Spotify account has been connected successfully. You can now return to the app.
+        <h1 className="text-3xl font-bold mb-3 text-[#f5f1e8]">Successfully Connected!</h1>
+        <p className="text-[#f5f1e8]/80 mb-2 text-lg">
+          Your Spotify account is now linked
+        </p>
+        <p className="text-[#f5f1e8]/60 mb-8 text-sm">
+          Tap the button below to return to the app
         </p>
         
-        <div className="bg-gray-700 rounded-lg p-4 mb-6">
-          <div className="flex items-center justify-center space-x-2 mb-2">
-            <Smartphone className="w-5 h-5 text-blue-400" />
-            <span className="text-sm font-medium text-blue-400">Mobile Users</span>
-          </div>
-          <p className="text-sm text-gray-300">
-            Tap the button below to return to the app
-          </p>
-        </div>
-        
+        {/* Clean button matching app style */}
         <button
           onClick={handleReturnToApp}
-          className="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 mb-4"
+          className="w-full bg-[#E98B8B] hover:bg-[#f0a0a0] text-white font-semibold py-4 px-6 rounded-full transition-colors duration-200 flex items-center justify-center space-x-2 mb-6"
         >
-          <Globe className="w-5 h-5" />
+          <ArrowRight className="w-5 h-5" />
           <span>Return to App</span>
         </button>
         
         {countdown > 0 && (
-          <p className="text-sm text-gray-400">
-            Auto-redirecting in {countdown} seconds...
-          </p>
+          <div className="text-center">
+            <p className="text-sm text-[#f5f1e8]/60 mb-2">
+              Auto-redirecting in <span className="text-[#E98B8B] font-semibold">{countdown}</span> seconds...
+            </p>
+            <div className="w-full bg-[#282828] rounded-full h-1.5">
+              <div 
+                className="bg-[#E98B8B] h-1.5 rounded-full transition-all duration-1000"
+                style={{ width: `${((3 - countdown) / 3) * 100}%` }}
+              ></div>
+            </div>
+          </div>
         )}
+      </div>
+      
+      {/* Backup link at bottom */}
+      <div className="mt-6 text-center">
+        <p className="text-[#f5f1e8]/50 text-sm mb-2">
+          Still on the Spotify page?
+        </p>
+        <a
+          href="/profile"
+          className="text-[#E98B8B] hover:text-[#f0a0a0] underline font-medium"
+        >
+          Click here to return
+        </a>
       </div>
     </div>
   )
