@@ -532,7 +532,8 @@ function LeaderboardContent() {
                       </div>
                     )}
 
-                    <div className="flex items-center justify-between p-6">
+                    {/* Desktop Layout */}
+                    <div className="hidden md:flex items-center justify-between p-6">
                       <div className="flex items-center space-x-6">
                         {/* Rank Number */}
                         <div className="flex items-center justify-center w-16 h-16">
@@ -611,12 +612,70 @@ function LeaderboardContent() {
                               </div>
                             </div>
                           )}
+
+                    {/* Mobile Layout */}
+                    <div className="md:hidden p-4">
+                      <div className="flex items-center space-x-3 mb-3">
+                        {/* Rank Number */}
+                        <div className="flex items-center justify-center w-8 h-8">
+                          {getRankIcon(user.rank)}
+                        </div>
                         
+                        {/* Profile Picture */}
+                        <div className="relative">
+                          {user.profileImageUrl ? (
+                            <img 
+                              src={user.profileImageUrl} 
+                              alt={user.displayName}
+                              className="w-10 h-10 rounded-full border-2 border-[#f5f1e8]/20 object-cover"
+                            />
+                          ) : (
+                            <div className="w-10 h-10 bg-gradient-to-br from-[#E98B8B] to-[#8B3A3A] rounded-full flex items-center justify-center">
+                              <span className="text-white font-bold text-sm">
+                                {user.displayName.charAt(0).toUpperCase()}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* User Name */}
+                        <div className="flex-1">
+                          <h3 className="text-lg font-bold text-[#f5f1e8] truncate">
+                            {user.displayName}
+                          </h3>
+                        </div>
+                        
+                        {/* Stats Squares */}
+                        <div className="flex items-center space-x-2">
+                          {/* Plays Square */}
+                          <div className="bg-[#E98B8B]/20 rounded-lg p-2 min-w-[50px] text-center">
+                            <div className="text-sm font-bold text-[#E98B8B]">
+                              {user.totalPlays}
+                            </div>
+                            <div className="text-xs text-[#f5f1e8]/60">Plays</div>
+                          </div>
+                          
+                          {/* Points Square */}
+                          <div className="bg-[#1DB954]/20 rounded-lg p-2 min-w-[50px] text-center">
+                            <div className="text-sm font-bold text-[#1DB954]">
+                              {user.points}
+                            </div>
+                            <div className="text-xs text-[#f5f1e8]/60">Points</div>
+                          </div>
+                          
+                          {/* Listening Time Square */}
+                          <div className="bg-[#8B3A3A]/20 rounded-lg p-2 min-w-[50px] text-center">
+                            <div className="text-sm font-bold text-[#8B3A3A]">
+                              {user.totalListeningTime}m
+                            </div>
+                            <div className="text-xs text-[#f5f1e8]/60">Time</div>
+                          </div>
                         </div>
                       </div>
+                    </div>
 
-                      {/* Right Side - Stats & Actions */}
-                      <div className="flex flex-col items-end space-y-3">
+                    {/* Right Side - Stats & Actions (Desktop Only) */}
+                    <div className="hidden md:flex flex-col items-end space-y-3">
                         {/* Rank Badge */}
                         <div className="text-right">
                           <div className="text-3xl font-bold text-[#f5f1e8] mb-1">
