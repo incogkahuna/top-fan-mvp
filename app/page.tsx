@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { Play, Music, Clock, Upload, Image } from 'lucide-react'
+import { Play } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import LeaderboardPreview from '@/components/LeaderboardPreview'
 import CountdownTimer from '@/components/CountdownTimer'
@@ -198,45 +198,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Content Grid */}
-      <div className="container mx-auto px-4 sm:px-6 py-12 sm:py-16">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="max-w-7xl mx-auto"
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {/* Photos Card */}
-            <Link href="/photos" className="card group hover:scale-105 transition-transform duration-300">
-              <div className="aspect-square bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-lg mb-4 flex items-center justify-center">
-                <div className="text-4xl sm:text-6xl">📸</div>
-              </div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-[#f5f1e8] mb-2">Photos</h3>
-                  <p className="text-[#f5f1e8]/60 text-sm sm:text-base">View our latest gallery</p>
-            </Link>
-
-            {/* Tour Card */}
-            <Link href="/tour" className="card group hover:scale-105 transition-transform duration-300">
-              <div className="aspect-square bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-lg mb-4 flex items-center justify-center">
-                <div className="text-4xl sm:text-6xl">T</div>
-              </div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-[#f5f1e8] mb-2">Tour Dates</h3>
-                  <p className="text-[#f5f1e8]/60 text-sm sm:text-base">Find us on the road</p>
-            </Link>
-
-            {/* JeanMail Card */}
-            <Link href="/jeanmail" className="card group hover:scale-105 transition-transform duration-300">
-              <div className="aspect-square bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-lg mb-4 flex items-center justify-center">
-                <div className="text-4xl sm:text-6xl">@</div>
-              </div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-[#f5f1e8] mb-2">JeanMail</h3>
-                  <p className="text-[#f5f1e8]/60 text-sm sm:text-base">Stay updated</p>
-            </Link>
-          </div>
-        </motion.div>
-
-      </div>
 
       {/* Footer */}
       <footer className="border-t border-white/10 py-12 mt-32">
