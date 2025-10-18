@@ -2,14 +2,21 @@ import { NextResponse } from 'next/server'
 
 export async function POST() {
   try {
-    const response = NextResponse.json({ success: true, message: 'Logged out successfully' })
+    // For Spotify auth, we just clear the response since we use localStorage
+    // The frontend will handle clearing localStorage and sessionStorage
     
-    // Clear the session cookie
-    response.cookies.set('music_access_token', '', {
+    const response = NextResponse.json({ 
+      success: true, 
+      message: 'Logged out successfully' 
+    })
+    
+    // Clear any potential cookies (though we primarily use localStorage)
+    response.cookies.set('auth_token', '', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 0 // Expire immediately
+      maxAge: 0,
+      path: '/'
     })
     
     return response

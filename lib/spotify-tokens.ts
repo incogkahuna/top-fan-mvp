@@ -1,5 +1,39 @@
 import { supabaseAdmin } from '@/lib/supabase'
 
+// Fetch comprehensive user profile from Spotify
+export async function fetchSpotifyUserProfile(accessToken: string): Promise<SpotifyUser | null> {
+  try {
+    const response = await fetch('https://api.spotify.com/v1/me', {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    })
+
+    if (!response.ok) {
+      console.error('Failed to fetch Spotify user profile:', response.status, response.statusText)
+      return null
+    }
+
+    const profile = await response.json()
+    
+    return {
+      spotify_id: profile.id,
+      display_name: profile.display_name || '',
+      email: profile.email,
+      profile_image: profile.images?.[0]?.url,
+      country: profile.country,
+      followers: profile.followers?.total,
+      product: profile.product,
+      external_urls: profile.external_urls,
+      href: profile.href,
+      uri: profile.uri
+    }
+  } catch (error) {
+    console.error('Error fetching Spotify user profile:', error)
+    return null
+  }
+}
+
 export interface SpotifyTokens {
   access_token: string
   refresh_token: string
@@ -12,6 +46,14 @@ export interface SpotifyUser {
   display_name: string
   email?: string
   profile_image?: string
+  country?: string
+  followers?: number
+  product?: string
+  external_urls?: {
+    spotify?: string
+  }
+  href?: string
+  uri?: string
 }
 
 // Store tokens in Supabase

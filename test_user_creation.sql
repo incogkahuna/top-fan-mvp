@@ -35,3 +35,4 @@ SELECT * FROM users WHERE spotify_id = 'test_spotify_id_456';
 
 -- Clean up test data
 DELETE FROM users WHERE spotify_id = 'test_spotify_id_456';
+

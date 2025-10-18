@@ -8,31 +8,92 @@ export default function ProfileSetupPage() {
   const searchParams = useSearchParams()
   const router = useRouter()
   
-  // Extract data from URL parameters
+  // Extract spotify_id from URL parameters
   const spotifyId = searchParams.get('spotify_id')
-  const displayName = searchParams.get('display_name')
-  const email = searchParams.get('email')
-  const profileImage = searchParams.get('profile_image')
-  const accessToken = searchParams.get('access_token')
-  const refreshToken = searchParams.get('refresh_token')
-  const expiresAt = searchParams.get('expires_at')
-  const scope = searchParams.get('scope')
+  
+  // State for user data
+  const [userData, setUserData] = useState({
+    spotify_id: '',
+    display_name: '',
+    email: '',
+    profile_image: '',
+    access_token: '',
+    refresh_token: '',
+    expires_at: '',
+    scope: ''
+  })
+  
+  const [isLoadingData, setIsLoadingData] = useState(true)
 
-  // Debug logging
+  // Fetch user setup data from temporary storage or database
   useEffect(() => {
-    console.log('🔍 Profile setup page - Received URL parameters:', {
-      spotify_id: spotifyId,
-      display_name: displayName,
-      email: email,
-      profile_image: profileImage,
-      has_access_token: !!accessToken,
-      has_refresh_token: !!refreshToken,
-      expires_at: expiresAt,
-      scope: scope
-    })
+    const fetchUserData = async () => {
+      if (!spotifyId) {
+        setError('Missing spotify_id parameter')
+        setIsLoadingData(false)
+        return
+      }
+      
+      try {
+        console.log('🔍 Fetching user setup data for:', spotifyId)
+        
+        // First try to get from temporary storage
+        const response = await fetch(`/api/user/setup-data?spotify_id=${spotifyId}`)
+        
+        if (response.ok) {
+          const result = await response.json()
+          
+          console.log('✅ User setup data retrieved from temporary storage:', {
+            spotify_id: result.data.spotify_id,
+            display_name: result.data.display_name,
+            email: result.data.email,
+            has_access_token: !!result.data.access_token
+          })
+          
+          setUserData(result.data)
+          setIsLoadingData(false)
+          return
+        }
+        
+        // If temporary storage fails, try to get from database
+        console.log('🔄 Temporary storage failed, trying database...')
+        const dbResponse = await fetch(`/api/auth/me?userId=${spotifyId}`)
+        
+        if (dbResponse.ok) {
+          const dbResult = await dbResponse.json()
+          
+          console.log('✅ User data retrieved from database:', {
+            spotify_id: dbResult.spotify_id,
+            display_name: dbResult.display_name,
+            email: dbResult.email
+          })
+          
+          // Set basic user data (without tokens - those should be in database already)
+          setUserData({
+            spotify_id: dbResult.spotify_id,
+            display_name: dbResult.display_name,
+            email: dbResult.email,
+            profile_image: dbResult.profile_image,
+            access_token: '', // Tokens are already in database
+            refresh_token: '',
+            expires_at: '',
+            scope: ''
+          })
+          setIsLoadingData(false)
+          return
+        }
+        
+        throw new Error('Failed to fetch user data from both temporary storage and database')
+        
+      } catch (err) {
+        console.error('❌ Error fetching user setup data:', err)
+        setError(err instanceof Error ? err.message : 'Failed to load user data')
+        setIsLoadingData(false)
+      }
+    }
     
-    console.log('🔍 All search params:', Object.fromEntries(searchParams.entries()))
-  }, [searchParams, spotifyId, displayName, email, profileImage, accessToken, refreshToken, expiresAt, scope])
+    fetchUserData()
+  }, [spotifyId])
 
   // Form state
   const [formData, setFormData] = useState({
@@ -51,10 +112,10 @@ export default function ProfileSetupPage() {
 
   // Validate required data
   useEffect(() => {
-    if (!spotifyId || !displayName || !email) {
+    if (!isLoadingData && (!spotifyId || !userData.display_name || !userData.email)) {
       setError('Missing required user data. Please try signing in again.')
     }
-  }, [spotifyId, displayName, email])
+  }, [isLoadingData, spotifyId, userData.display_name, userData.email])
 
   const handleInputChange = (field: string, value: any) => {
     if (field.includes('.')) {
@@ -87,13 +148,13 @@ export default function ProfileSetupPage() {
         },
         body: JSON.stringify({
           spotify_id: spotifyId,
-          display_name: displayName,
-          email: email,
-          profile_image: profileImage,
-          access_token: accessToken,
-          refresh_token: refreshToken,
-          expires_at: expiresAt,
-          scope: scope,
+          display_name: userData.display_name,
+          email: userData.email,
+          profile_image: userData.profile_image,
+          access_token: userData.access_token,
+          refresh_token: userData.refresh_token,
+          expires_at: userData.expires_at,
+          scope: userData.scope,
           custom_handle: formData.customHandle,
           bio: formData.bio,
           privacy_settings: formData.privacySettings
@@ -118,6 +179,18 @@ export default function ProfileSetupPage() {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  if (isLoadingData) {
+    return (
+      <div className="min-h-screen bg-[#282828] flex items-center justify-center p-4">
+        <div className="bg-[#1a1a1a] rounded-2xl p-8 max-w-md w-full text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#E98B8B] border-t-transparent mx-auto mb-4"></div>
+          <h1 className="text-2xl font-bold text-[#f5f1e8] mb-4">Loading Your Profile</h1>
+          <p className="text-[#f5f1e8]/80 mb-6">Fetching your Spotify data...</p>
+        </div>
+      </div>
+    )
   }
 
   if (error && !spotifyId) {
@@ -171,17 +244,17 @@ export default function ProfileSetupPage() {
           </h2>
           <div className="flex items-center space-x-4">
             <div className="w-16 h-16 rounded-full overflow-hidden bg-[#1DB954] flex items-center justify-center">
-              {profileImage ? (
-                <img src={profileImage} alt={displayName || 'User'} className="w-full h-full object-cover" />
+              {userData.profile_image ? (
+                <img src={userData.profile_image} alt={userData.display_name || 'User'} className="w-full h-full object-cover" />
               ) : (
                 <User className="w-8 h-8 text-white" />
               )}
             </div>
             <div>
-              <h3 className="text-lg font-medium text-[#f5f1e8]">{displayName || 'User'}</h3>
+              <h3 className="text-lg font-medium text-[#f5f1e8]">{userData.display_name || 'User'}</h3>
               <p className="text-[#f5f1e8]/60 flex items-center">
                 <Mail className="w-4 h-4 mr-1" />
-                {email || 'No email'}
+                {userData.email || 'No email'}
               </p>
             </div>
           </div>

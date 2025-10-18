@@ -19,10 +19,20 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 })
     }
     
-    // Get user from database
+    // Get user data from database (using existing columns)
     const { data: user, error: userError } = await supabaseAdmin
       .from('users')
-      .select('spotify_id, display_name, email, profile_image')
+      .select(`
+        spotify_id, 
+        display_name, 
+        email, 
+        profile_image,
+        custom_handle,
+        bio,
+        privacy_settings,
+        created_at,
+        updated_at
+      `)
       .eq('spotify_id', spotifyUserId)
       .single()
 
@@ -35,7 +45,12 @@ export async function GET(request: NextRequest) {
       spotify_id: user.spotify_id,
       display_name: user.display_name,
       email: user.email,
-      profile_image: user.profile_image
+      profile_image: user.profile_image,
+      custom_handle: user.custom_handle,
+      bio: user.bio,
+      privacy_settings: user.privacy_settings,
+      created_at: user.created_at,
+      updated_at: user.updated_at
     })
   } catch (error) {
     console.error('Auth me error:', error)
