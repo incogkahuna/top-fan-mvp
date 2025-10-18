@@ -74,13 +74,24 @@ export async function GET(request: NextRequest) {
     }
 
     const tokens: SpotifyTokenResponse = await tokenResponse.json()
+    
+    console.log('✅ Token exchange successful:', {
+      hasAccessToken: !!tokens.access_token,
+      hasRefreshToken: !!tokens.refresh_token,
+      scope: tokens.scope,
+      expiresIn: tokens.expires_in
+    })
 
     // Get user profile to identify the user
+    console.log('🔍 Fetching user profile with token:', tokens.access_token.substring(0, 20) + '...')
+    
     const userResponse = await fetch('https://api.spotify.com/v1/me', {
       headers: {
         'Authorization': `Bearer ${tokens.access_token}`
       }
     })
+    
+    console.log('📊 User profile response status:', userResponse.status, userResponse.statusText)
 
     if (!userResponse.ok) {
       console.error('Failed to get user profile:', {
