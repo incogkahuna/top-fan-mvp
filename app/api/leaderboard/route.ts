@@ -138,7 +138,7 @@ export async function GET(request: NextRequest) {
         startDate = new Date(0) // All time
     }
 
-    // Get all users first
+    // Get all users first - don't rely on total_plays field as it may be outdated
     const { data: users, error: usersError } = await supabaseAdmin
       .from('users')
       .select(`
@@ -151,7 +151,7 @@ export async function GET(request: NextRequest) {
         total_plays
       `)
       .not('spotify_id', 'is', null)
-      .order('total_plays', { ascending: false }) // Order by total plays (most active users first)
+      .order('created_at', { ascending: false }) // Order by creation date to get all users
       .limit(limit)
 
     console.log('📊 Leaderboard: Found', users?.length || 0, 'users')

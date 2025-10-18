@@ -101,16 +101,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to store listening data' }, { status: 500 })
     }
 
-    // Update user's total plays count
-    const { data: playCount } = await supabaseAdmin
+    // Update user's total plays count - count only Sadie Jean tracks to match leaderboard logic
+    const { data: sadieJeanPlayCount } = await supabaseAdmin
       .from('listening_data')
       .select('id', { count: 'exact' })
       .eq('user_id', userId)
+      .ilike('artist_name', '%sadie jean%') // Only count Sadie Jean tracks
 
     await supabaseAdmin
       .from('users')
       .update({ 
-        total_plays: playCount?.length || 0,
+        total_plays: sadieJeanPlayCount?.length || 0,
         updated_at: new Date().toISOString()
       })
       .eq('id', userId)
@@ -118,7 +119,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ 
       success: true, 
       synced: listeningData.length,
-      totalPlays: playCount?.length || 0,
+      totalPlays: sadieJeanPlayCount?.length || 0,
       message: 'Sync completed successfully'
     })
   } catch (error) {
