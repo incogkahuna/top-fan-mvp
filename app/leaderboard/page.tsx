@@ -352,9 +352,6 @@ function LeaderboardContent() {
             ))}
           </div>
 
-          <button className="px-4 py-2 rounded-full transition-colors bg-transparent text-[#f5f1e8]/60 hover:text-[#f5f1e8] hover:bg-[#f5f1e8]/5 text-sm">
-            Sadie Jean Only
-          </button>
         </div>
 
         {/* Enhanced Stats Cards - Tonal Inspired */}
