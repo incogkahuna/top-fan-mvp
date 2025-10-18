@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { User, Mail, Image, Camera, Save, AlertCircle } from 'lucide-react'
+import ProfilePhotoUpload from '@/components/ProfilePhotoUpload'
 
 export default function ProfileSetupPage() {
   const searchParams = useSearchParams()
@@ -99,6 +100,7 @@ export default function ProfileSetupPage() {
   const [formData, setFormData] = useState({
     customHandle: '',
     bio: '',
+    customProfileImage: null as string | null,
     privacySettings: {
       showListeningData: true,
       showProfile: true,
@@ -135,6 +137,13 @@ export default function ProfileSetupPage() {
     }
   }
 
+  const handleProfileImageChange = (imageUrl: string | null) => {
+    setFormData(prev => ({
+      ...prev,
+      customProfileImage: imageUrl
+    }))
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
@@ -157,6 +166,7 @@ export default function ProfileSetupPage() {
           scope: userData.scope,
           custom_handle: formData.customHandle,
           bio: formData.bio,
+          custom_profile_image: formData.customProfileImage,
           privacy_settings: formData.privacySettings
         }),
       })
@@ -240,22 +250,24 @@ export default function ProfileSetupPage() {
         <div className="bg-[#1a1a1a] rounded-2xl p-6 mb-8">
           <h2 className="text-xl font-semibold text-[#f5f1e8] mb-4 flex items-center">
             <User className="w-5 h-5 mr-2" />
-            Your Spotify Profile
+            Your Profile
           </h2>
-          <div className="flex items-center space-x-4">
-            <div className="w-16 h-16 rounded-full overflow-hidden bg-[#1DB954] flex items-center justify-center">
-              {userData.profile_image ? (
-                <img src={userData.profile_image} alt={userData.display_name || 'User'} className="w-full h-full object-cover" />
-              ) : (
-                <User className="w-8 h-8 text-white" />
-              )}
+          <div className="flex items-center space-x-6">
+            {/* Profile Photo Upload */}
+            <div className="flex-shrink-0">
+              <ProfilePhotoUpload
+                currentImageUrl={userData.profile_image}
+                onImageChange={handleProfileImageChange}
+                userId={spotifyId || ''}
+              />
             </div>
-            <div>
-              <h3 className="text-lg font-medium text-[#f5f1e8]">{userData.display_name || 'User'}</h3>
-              <p className="text-[#f5f1e8]/60 flex items-center">
+            <div className="flex-1">
+              <h3 className="text-lg font-medium text-[#f5f1e8] mb-1">{userData.display_name || 'User'}</h3>
+              <p className="text-[#f5f1e8]/60 flex items-center mb-2">
                 <Mail className="w-4 h-4 mr-1" />
                 {userData.email || 'No email'}
               </p>
+              <p className="text-[#f5f1e8]/40 text-sm">Upload a custom profile photo or use your Spotify photo</p>
             </div>
           </div>
         </div>
