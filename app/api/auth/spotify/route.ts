@@ -23,7 +23,8 @@ export async function GET(request: NextRequest) {
     const scopes = [
       'user-read-recently-played',
       'user-top-read',
-      'user-read-private'
+      'user-read-private',
+      'user-read-email'
     ].join(' ')
 
     // Generate state parameter for security
