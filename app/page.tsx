@@ -3,12 +3,34 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Play, Music, Clock, Upload, Image } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import LeaderboardPreview from '@/components/LeaderboardPreview'
 import CountdownTimer from '@/components/CountdownTimer'
 
 export default function Home() {
   const albumCover = '/album-cover.jpg' // Permanent album cover
+  const [leaderboardData, setLeaderboardData] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+
+  // Fetch real leaderboard data
+  useEffect(() => {
+    const fetchLeaderboard = async () => {
+      try {
+        const response = await fetch('/api/leaderboard?limit=5')
+        const data = await response.json()
+        
+        if (data.success && data.leaderboard) {
+          setLeaderboardData(data.leaderboard)
+        }
+      } catch (error) {
+        console.error('Error fetching leaderboard:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchLeaderboard()
+  }, [])
 
   // Album cover is now permanent - no upload functionality needed
 
@@ -95,34 +117,78 @@ export default function Home() {
 
             {/* Compact Leaderboard */}
             <div className="bg-transparent backdrop-blur-sm rounded-2xl p-6 sm:p-8 lg:p-12 border border-[#f5f1e8]/10 mb-8 sm:mb-12">
-              {/* Top 5 Preview */}
-              <div className="space-y-4 sm:space-y-6 mb-8 sm:mb-12">
-                {[1, 2, 3, 4, 5].map((rank) => (
-                  <motion.div
-                    key={rank}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: rank * 0.1 }}
-                    className="flex items-center justify-between p-4 sm:p-6 bg-[#f5f1e8]/5 rounded-lg hover:bg-[#f5f1e8]/10 transition-colors"
-                  >
-                    <div className="flex items-center space-x-3 sm:space-x-4">
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#8B3A3A] to-[#A04747] rounded-full flex items-center justify-center">
-                        <span className="text-white font-bold text-sm sm:text-base">#{rank}</span>
+              {loading ? (
+                /* Loading State */
+                <div className="space-y-4 sm:space-y-6 mb-8 sm:mb-12">
+                  {[1, 2, 3, 4, 5].map((rank) => (
+                    <div key={rank} className="flex items-center justify-between p-4 sm:p-6 bg-[#f5f1e8]/5 rounded-lg animate-pulse">
+                      <div className="flex items-center space-x-3 sm:space-x-4">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#f5f1e8]/20 rounded-full"></div>
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#f5f1e8]/20 rounded-full"></div>
+                        <div>
+                          <div className="h-4 w-20 bg-[#f5f1e8]/20 rounded mb-2"></div>
+                          <div className="h-3 w-16 bg-[#f5f1e8]/20 rounded"></div>
+                        </div>
                       </div>
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#E98B8B] to-[#E98B8B]/80 rounded-full flex items-center justify-center">
-                        <span className="text-white font-bold text-sm sm:text-base">F</span>
-                      </div>
-                      <div>
-                        <p className="text-[#f5f1e8] font-medium text-base sm:text-lg">Fan {rank}</p>
-                        <p className="text-sm sm:text-base text-[#f5f1e8]/60">{Math.floor(Math.random() * 1000) + 100} plays</p>
-                      </div>
+                      <div className="w-8 h-8 bg-[#f5f1e8]/20 rounded-full"></div>
                     </div>
-                    <div className="text-right">
-                      <p className="text-lg sm:text-xl font-bold text-[#E98B8B]">#{rank}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : leaderboardData.length > 0 ? (
+                /* Real Leaderboard Data */
+                <div className="space-y-4 sm:space-y-6 mb-8 sm:mb-12">
+                  {leaderboardData.map((user, index) => (
+                    <motion.div
+                      key={user.spotify_id || index}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="flex items-center justify-between p-4 sm:p-6 bg-[#f5f1e8]/5 rounded-lg hover:bg-[#f5f1e8]/10 transition-colors"
+                    >
+                      <div className="flex items-center space-x-3 sm:space-x-4">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#8B3A3A] to-[#A04747] rounded-full flex items-center justify-center">
+                          <span className="text-white font-bold text-sm sm:text-base">#{user.rank}</span>
+                        </div>
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#E98B8B] to-[#E98B8B]/80 rounded-full flex items-center justify-center overflow-hidden">
+                          {user.custom_avatar_url ? (
+                            <img 
+                              src={user.custom_avatar_url} 
+                              alt={user.display_name}
+                              className="w-full h-full object-cover rounded-full"
+                            />
+                          ) : user.profile_image_url ? (
+                            <img 
+                              src={user.profile_image_url} 
+                              alt={user.display_name}
+                              className="w-full h-full object-cover rounded-full"
+                            />
+                          ) : (
+                            <span className="text-white font-bold text-sm sm:text-base">
+                              {user.display_name?.charAt(0)?.toUpperCase() || 'F'}
+                            </span>
+                          )}
+                        </div>
+                        <div>
+                          <p className="text-[#f5f1e8] font-medium text-base sm:text-lg">
+                            {user.custom_handle || user.display_name || `Fan ${user.rank}`}
+                          </p>
+                          <p className="text-sm sm:text-base text-[#f5f1e8]/60">{user.totalPlays || 0} plays</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-lg sm:text-xl font-bold text-[#E98B8B]">#{user.rank}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              ) : (
+                /* No Data State */
+                <div className="text-center py-12">
+                  <div className="text-6xl mb-4">🎵</div>
+                  <h3 className="text-xl font-semibold text-[#f5f1e8] mb-2">No Leaderboard Data Yet</h3>
+                  <p className="text-[#f5f1e8]/60">Be the first to listen and appear on the leaderboard!</p>
+                </div>
+              )}
               
               <Link href="/leaderboard" className="w-full btn-primary text-center block py-4 sm:py-6 text-lg sm:text-xl">
                 View Full Leaderboard
