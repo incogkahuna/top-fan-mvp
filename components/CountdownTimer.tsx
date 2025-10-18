@@ -125,11 +125,6 @@ export default function CountdownTimer() {
       transition={{ duration: 0.6 }}
       className="bg-transparent backdrop-blur-sm rounded-2xl p-4 sm:p-8 mb-8 border border-[#f5f1e8]/10 text-center"
     >
-      {countdownData.title && (
-        <div className="flex items-center justify-center mb-4">
-          <h3 className="text-2xl typewriter-font text-[#f5f1e8]">{countdownData.title}</h3>
-        </div>
-      )}
 
       {hasExpired ? (
         <div className="mb-6">
