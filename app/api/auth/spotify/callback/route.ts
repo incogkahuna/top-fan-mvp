@@ -83,10 +83,25 @@ export async function GET(request: NextRequest) {
     })
 
     if (!userResponse.ok) {
-      console.error('Failed to get user profile')
+      console.error('Failed to get user profile:', {
+        status: userResponse.status,
+        statusText: userResponse.statusText,
+        url: userResponse.url
+      })
+      
+      // Try to get more details about the error
+      let errorDetails = ''
+      try {
+        const errorData = await userResponse.text()
+        console.error('User profile error details:', errorData)
+        errorDetails = errorData
+      } catch (e) {
+        console.error('Could not parse error response:', e)
+      }
+      
       const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
       const redirectPath = isMobile ? '/mobile-redirect' : '/test-redirect'
-      return NextResponse.redirect(`${baseUrl}${redirectPath}?error=user_profile_failed`)
+      return NextResponse.redirect(`${baseUrl}${redirectPath}?error=user_profile_failed&details=${encodeURIComponent(errorDetails)}&status=${userResponse.status}`)
     }
 
     const userProfile = await userResponse.json()
@@ -96,7 +111,9 @@ export async function GET(request: NextRequest) {
             
             if (!comprehensiveProfile) {
               console.error('❌ Failed to fetch comprehensive user profile')
-              throw new Error('Failed to fetch user profile')
+              const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
+              const redirectPath = isMobile ? '/mobile-redirect' : '/test-redirect'
+              return NextResponse.redirect(`${baseUrl}${redirectPath}?error=comprehensive_profile_failed&message=Failed to fetch comprehensive user profile`)
             }
 
             // Store tokens and comprehensive user data in database

@@ -10,7 +10,20 @@ export async function fetchSpotifyUserProfile(accessToken: string): Promise<Spot
     })
 
     if (!response.ok) {
-      console.error('Failed to fetch Spotify user profile:', response.status, response.statusText)
+      console.error('Failed to fetch Spotify user profile:', {
+        status: response.status,
+        statusText: response.statusText,
+        url: response.url
+      })
+      
+      // Try to get error details
+      try {
+        const errorData = await response.text()
+        console.error('Spotify API error response:', errorData)
+      } catch (e) {
+        console.error('Could not parse Spotify API error response:', e)
+      }
+      
       return null
     }
 
