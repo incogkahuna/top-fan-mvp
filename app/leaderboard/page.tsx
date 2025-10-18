@@ -478,9 +478,6 @@ function LeaderboardContent() {
             <div className="space-y-4">
               {leaderboard.length === 0 ? (
                 <div className="text-center py-12">
-          <div className="w-20 h-20 bg-[#E98B8B]/20 rounded-full flex items-center justify-center mx-auto mb-6">
-            <span className="text-3xl text-[#E98B8B] font-bold">F</span>
-          </div>
                   <h3 className="text-xl font-bold text-[#f5f1e8] mb-2">Be the First Fan!</h3>
                   <p className="text-[#f5f1e8]/60 mb-6">Connect your account to start tracking and become the top fan</p>
                   {!user && (
@@ -726,12 +723,6 @@ function LeaderboardContent() {
               transition={{ delay: 1, duration: 0.6, type: "spring", stiffness: 200 }}
               className="flex items-center justify-center space-x-4 mb-6"
             >
-            <motion.div
-              animate={{ rotate: [0, 10, -10, 0] }}
-              transition={{ duration: 3, repeat: Infinity }}
-            >
-              <span className="text-4xl text-[#E98B8B] font-bold">F</span>
-            </motion.div>
         </motion.div>
             
             
