@@ -127,7 +127,7 @@ export default function CountdownTimer() {
     >
       {countdownData.title && (
         <div className="flex items-center justify-center mb-4">
-          <h3 className="text-2xl font-bold text-[#f5f1e8]">{countdownData.title}</h3>
+          <h3 className="text-2xl typewriter-font text-[#f5f1e8]">{countdownData.title}</h3>
         </div>
       )}
 
