@@ -2,57 +2,54 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { refreshAccessToken, getRecentlyPlayed } from '@/lib/spotify-api'
 
+// Force dynamic rendering for this API route
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   try {
     if (!supabaseAdmin) {
       return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 })
     }
 
-    const { userId, spotify_id } = await request.json()
-
-    if (!userId && !spotify_id) {
-      return NextResponse.json({ error: 'User ID or Spotify ID required' }, { status: 400 })
+    const { spotify_id } = await request.json()
+    
+    if (!spotify_id) {
+      return NextResponse.json({ error: 'Spotify ID required' }, { status: 400 })
     }
 
-    let databaseUserId = userId
+    console.log('🔄 Force sync: Starting sync for Spotify ID:', spotify_id)
 
-    // If Spotify ID provided, find the database user ID
-    if (spotify_id && !userId) {
-      const { data: user, error: userError } = await supabaseAdmin
-        .from('users')
-        .select('id')
-        .eq('spotify_id', spotify_id)
-        .single()
-
-      if (userError || !user) {
-        return NextResponse.json({ error: 'User not found with provided Spotify ID' }, { status: 404 })
-      }
-
-      databaseUserId = user.id
-      console.log('🔄 Found database user ID for Spotify ID:', spotify_id, '->', databaseUserId)
-    }
-
-    // Get user's tokens from users table (Spotify auth stores tokens here)
-    const { data: tokenData, error: tokenError } = await supabaseAdmin
+    // Find user by Spotify ID
+    const { data: user, error: userError } = await supabaseAdmin
       .from('users')
-      .select('spotify_access_token, spotify_refresh_token, token_expires_at')
-      .eq('id', databaseUserId)
+      .select('id, spotify_id, display_name, spotify_access_token, spotify_refresh_token, token_expires_at')
+      .eq('spotify_id', spotify_id)
       .single()
 
-    if (tokenError || !tokenData || !tokenData.spotify_access_token) {
-      return NextResponse.json({ error: 'No valid Spotify token found' }, { status: 401 })
+    if (userError) {
+      if (userError.code === 'PGRST116') {
+        return NextResponse.json({ error: 'User not found in database' }, { status: 404 })
+      }
+      throw userError
     }
 
-    let accessToken = tokenData.spotify_access_token
+    console.log('✅ User found:', user.id, user.display_name)
+
+    // Get user's tokens
+    if (!user.spotify_access_token) {
+      return NextResponse.json({ error: 'No Spotify access token found for user' }, { status: 401 })
+    }
+
+    let accessToken = user.spotify_access_token
 
     // Check if token is expired and refresh if needed
     const now = new Date()
-    const expiresAt = new Date(tokenData.token_expires_at)
+    const expiresAt = new Date(user.token_expires_at)
     
     if (now >= expiresAt) {
-      console.log('Access token expired, refreshing...')
+      console.log('🔄 Access token expired, refreshing...')
       try {
-        const refreshResult = await refreshAccessToken(tokenData.spotify_refresh_token)
+        const refreshResult = await refreshAccessToken(user.spotify_refresh_token)
         accessToken = refreshResult.access_token
         
         // Update the token in users table
@@ -63,17 +60,17 @@ export async function POST(request: NextRequest) {
             token_expires_at: new Date(Date.now() + refreshResult.expires_in * 1000).toISOString(),
             updated_at: new Date().toISOString()
           })
-          .eq('id', databaseUserId)
+          .eq('id', user.id)
         
-        console.log('Token refreshed successfully')
+        console.log('✅ Token refreshed successfully')
       } catch (refreshError) {
-        console.error('Token refresh failed:', refreshError)
+        console.error('❌ Token refresh failed:', refreshError)
         return NextResponse.json({ error: 'Failed to refresh access token. Please reconnect to Spotify.' }, { status: 401 })
       }
     }
 
-    // Fetch recently played tracks (limit to 20 for faster response)
-    const recentlyPlayed = await getRecentlyPlayed(accessToken, 20)
+    // Fetch recently played tracks (limit to 50 for more data)
+    const recentlyPlayed = await getRecentlyPlayed(accessToken, 50)
     
     if (!recentlyPlayed.items || recentlyPlayed.items.length === 0) {
       return NextResponse.json({ 
@@ -83,11 +80,15 @@ export async function POST(request: NextRequest) {
       })
     }
 
+    console.log('📊 Found', recentlyPlayed.items.length, 'recently played tracks')
+
     // Filter for only Sadie Jean tracks
     const sadieJeanTracks = recentlyPlayed.items.filter((item: any) => {
       const artistName = item.track.artists[0]?.name?.toLowerCase() || ''
       return artistName.includes('sadie jean')
     })
+
+    console.log('🎵 Found', sadieJeanTracks.length, 'Sadie Jean tracks')
 
     if (sadieJeanTracks.length === 0) {
       return NextResponse.json({ 
@@ -97,9 +98,9 @@ export async function POST(request: NextRequest) {
       })
     }
     
-    // Process and store only Sadie Jean listening data
+    // Process and store Sadie Jean listening data
     const listeningData = sadieJeanTracks.map((item: any) => ({
-      user_id: databaseUserId,
+      user_id: user.id,
       track_id: item.track.id,
       track_name: item.track.name,
       artist_name: item.track.artists[0].name,
@@ -115,15 +116,17 @@ export async function POST(request: NextRequest) {
       })
 
     if (insertError) {
-      console.error('Insert error:', insertError)
+      console.error('❌ Insert error:', insertError)
       return NextResponse.json({ error: 'Failed to store listening data' }, { status: 500 })
     }
 
-    // Update user's total plays count - count only Sadie Jean tracks to match leaderboard logic
+    console.log('✅ Listening data stored successfully')
+
+    // Update user's total plays count - count only Sadie Jean tracks
     const { data: sadieJeanPlayCount } = await supabaseAdmin
       .from('listening_data')
       .select('id', { count: 'exact' })
-      .eq('user_id', databaseUserId)
+      .eq('user_id', user.id)
       .ilike('artist_name', '%sadie jean%') // Only count Sadie Jean tracks
 
     await supabaseAdmin
@@ -132,16 +135,27 @@ export async function POST(request: NextRequest) {
         total_plays: sadieJeanPlayCount?.length || 0,
         updated_at: new Date().toISOString()
       })
-      .eq('id', databaseUserId)
+      .eq('id', user.id)
+
+    console.log('✅ Updated total_plays to:', sadieJeanPlayCount?.length || 0)
 
     return NextResponse.json({ 
       success: true, 
-      synced: listeningData.length,
-      totalPlays: sadieJeanPlayCount?.length || 0,
+      user: {
+        database_id: user.id,
+        spotify_id: user.spotify_id,
+        display_name: user.display_name
+      },
+      sync_results: {
+        total_tracks_found: recentlyPlayed.items.length,
+        sadie_jean_tracks_synced: listeningData.length,
+        total_plays_updated: sadieJeanPlayCount?.length || 0
+      },
       message: 'Sync completed successfully'
     })
+
   } catch (error) {
-    console.error('Data sync error:', error)
-    return NextResponse.json({ error: 'Sync failed' }, { status: 500 })
+    console.error('Force sync error:', error)
+    return NextResponse.json({ error: 'Force sync failed' }, { status: 500 })
   }
 }
