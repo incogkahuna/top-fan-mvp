@@ -14,43 +14,43 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'User ID required' }, { status: 400 })
     }
 
-    // Get user's tokens using admin client
+    // Get user's tokens from users table (Spotify auth stores tokens here)
     const { data: tokenData, error: tokenError } = await supabaseAdmin
-      .from('user_tokens')
-      .select('access_token, refresh_token, expires_at')
-      .eq('user_id', userId)
+      .from('users')
+      .select('spotify_access_token, spotify_refresh_token, token_expires_at')
+      .eq('id', userId)
       .single()
 
-    if (tokenError || !tokenData) {
-      return NextResponse.json({ error: 'No valid token found' }, { status: 401 })
+    if (tokenError || !tokenData || !tokenData.spotify_access_token) {
+      return NextResponse.json({ error: 'No valid Spotify token found' }, { status: 401 })
     }
 
-    let accessToken = tokenData.access_token
+    let accessToken = tokenData.spotify_access_token
 
     // Check if token is expired and refresh if needed
     const now = new Date()
-    const expiresAt = new Date(tokenData.expires_at)
+    const expiresAt = new Date(tokenData.token_expires_at)
     
     if (now >= expiresAt) {
       console.log('Access token expired, refreshing...')
       try {
-        const refreshResult = await refreshAccessToken(tokenData.refresh_token)
+        const refreshResult = await refreshAccessToken(tokenData.spotify_refresh_token)
         accessToken = refreshResult.access_token
         
-        // Update the token in database
+        // Update the token in users table
         await supabaseAdmin
-          .from('user_tokens')
+          .from('users')
           .update({
-            access_token: refreshResult.access_token,
-            expires_at: new Date(Date.now() + refreshResult.expires_in * 1000).toISOString(),
+            spotify_access_token: refreshResult.access_token,
+            token_expires_at: new Date(Date.now() + refreshResult.expires_in * 1000).toISOString(),
             updated_at: new Date().toISOString()
           })
-          .eq('user_id', userId)
+          .eq('id', userId)
         
         console.log('Token refreshed successfully')
       } catch (refreshError) {
         console.error('Token refresh failed:', refreshError)
-        return NextResponse.json({ error: 'Failed to refresh access token. Please reconnect to music service.' }, { status: 401 })
+        return NextResponse.json({ error: 'Failed to refresh access token. Please reconnect to Spotify.' }, { status: 401 })
       }
     }
 
