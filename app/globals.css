@@ -24,6 +24,15 @@
     text-transform: lowercase;
   }
   
+  /* Hide scrollbars for horizontal navigation */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+  }
+  
   .btn-primary {
     @apply text-white font-medium py-3 px-8 rounded-full transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl;
     background: #8B3A3A;
