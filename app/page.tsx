@@ -19,7 +19,7 @@ export default function Home() {
         const response = await fetch('/api/leaderboard?limit=5')
         const data = await response.json()
         
-        if (data.success && data.leaderboard) {
+        if (data.leaderboard && data.leaderboard.length > 0) {
           setLeaderboardData(data.leaderboard)
         }
       } catch (error) {
@@ -150,27 +150,21 @@ export default function Home() {
                           <span className="text-white font-bold text-sm sm:text-base">#{user.rank}</span>
                         </div>
                         <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#E98B8B] to-[#E98B8B]/80 rounded-full flex items-center justify-center overflow-hidden">
-                          {user.custom_avatar_url ? (
+                          {user.profileImageUrl ? (
                             <img 
-                              src={user.custom_avatar_url} 
-                              alt={user.display_name}
-                              className="w-full h-full object-cover rounded-full"
-                            />
-                          ) : user.profile_image_url ? (
-                            <img 
-                              src={user.profile_image_url} 
-                              alt={user.display_name}
+                              src={user.profileImageUrl} 
+                              alt={user.displayName}
                               className="w-full h-full object-cover rounded-full"
                             />
                           ) : (
                             <span className="text-white font-bold text-sm sm:text-base">
-                              {user.display_name?.charAt(0)?.toUpperCase() || 'F'}
+                              {user.displayName?.charAt(0)?.toUpperCase() || 'F'}
                             </span>
                           )}
                         </div>
                         <div>
                           <p className="text-[#f5f1e8] font-medium text-base sm:text-lg">
-                            {user.custom_handle || user.display_name || `Fan ${user.rank}`}
+                            {user.displayName || `Fan ${user.rank}`}
                           </p>
                           <p className="text-sm sm:text-base text-[#f5f1e8]/60">{user.totalPlays || 0} plays</p>
                         </div>
