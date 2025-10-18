@@ -151,8 +151,10 @@ export async function GET(request: NextRequest) {
         total_plays
       `)
       .not('spotify_id', 'is', null)
-      .order('total_plays', { ascending: false })
+      .order('created_at', { ascending: false }) // Order by newest first for better visibility
       .limit(limit)
+
+    console.log('📊 Leaderboard: Found', users?.length || 0, 'users')
 
     if (usersError) {
       console.error('Users query error:', usersError)
@@ -167,12 +169,14 @@ export async function GET(request: NextRequest) {
           .from('listening_data')
           .select('track_name, artist_name, played_at, duration_ms, user_id')
           .eq('user_id', user.id) // Use database id, not spotify_id
-          .eq('artist_name', 'Sadie Jean')
+          .ilike('artist_name', '%sadie jean%') // Case-insensitive search for Sadie Jean
         
         if (sadieError) {
           console.error('Sadie Jean data error for user', user.id, ':', sadieError)
           return { ...user, listening_data: [] }
         }
+        
+        console.log(`📊 User ${user.display_name} (${user.spotify_id}): Found ${sadieData?.length || 0} Sadie Jean tracks`)
         
         return { ...user, listening_data: sadieData || [] }
       })
@@ -208,7 +212,7 @@ export async function GET(request: NextRequest) {
         uniqueSongs: uniqueSongs,
         avgSessionLength: Math.round(avgSessionLength / 1000 / 60) // minutes
       }
-    }).filter(user => user.totalPlays > 0) || [] // Only show users with Sadie Jean plays
+    }) || [] // Show all users, even with 0 plays
 
     return NextResponse.json({ leaderboard })
   } catch (error) {
