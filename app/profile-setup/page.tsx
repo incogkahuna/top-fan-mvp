@@ -179,6 +179,17 @@ export default function ProfileSetupPage() {
 
       setSuccess(true)
       
+      // Store user authentication state in localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('spotify_user_id', spotifyId || '')
+        localStorage.setItem('spotify_user_data', JSON.stringify({
+          spotify_id: spotifyId,
+          display_name: userData.display_name,
+          email: userData.email,
+          profile_image: userData.profile_image
+        }))
+      }
+      
       // Redirect to profile page after a brief success message
       setTimeout(() => {
         router.push('/profile')

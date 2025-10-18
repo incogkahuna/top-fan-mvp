@@ -113,11 +113,23 @@ export async function POST(request: NextRequest) {
     }
 
     console.log('✅ New user created successfully:', newUser.id)
+    console.log('✅ User data saved to database:', {
+      spotify_id: newUser.spotify_id,
+      display_name: newUser.display_name,
+      email: newUser.email,
+      custom_handle: newUser.custom_handle,
+      bio: newUser.bio
+    })
     
     return NextResponse.json({ 
       success: true, 
       message: 'Profile created successfully',
-      user_id: newUser.id
+      user_id: newUser.id,
+      user_data: {
+        spotify_id: newUser.spotify_id,
+        display_name: newUser.display_name,
+        email: newUser.email
+      }
     })
 
   } catch (error) {
