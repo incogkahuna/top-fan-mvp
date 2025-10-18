@@ -10,7 +10,11 @@ export async function POST(request: NextRequest) {
       display_name: body.display_name,
       email: body.email,
       has_custom_handle: !!body.custom_handle,
-      has_bio: !!body.bio
+      has_bio: !!body.bio,
+      has_profile_image: !!body.profile_image,
+      has_access_token: !!body.access_token,
+      has_refresh_token: !!body.refresh_token,
+      expires_at: body.expires_at
     })
 
     if (!supabaseAdmin) {

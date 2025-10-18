@@ -18,6 +18,22 @@ export default function ProfileSetupPage() {
   const expiresAt = searchParams.get('expires_at')
   const scope = searchParams.get('scope')
 
+  // Debug logging
+  useEffect(() => {
+    console.log('🔍 Profile setup page - Received URL parameters:', {
+      spotify_id: spotifyId,
+      display_name: displayName,
+      email: email,
+      profile_image: profileImage,
+      has_access_token: !!accessToken,
+      has_refresh_token: !!refreshToken,
+      expires_at: expiresAt,
+      scope: scope
+    })
+    
+    console.log('🔍 All search params:', Object.fromEntries(searchParams.entries()))
+  }, [searchParams, spotifyId, displayName, email, profileImage, accessToken, refreshToken, expiresAt, scope])
+
   // Form state
   const [formData, setFormData] = useState({
     customHandle: '',

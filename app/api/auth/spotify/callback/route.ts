@@ -101,6 +101,13 @@ export async function GET(request: NextRequest) {
     const expiresAt = Date.now() + (tokens.expires_in * 1000)
     
     console.log('🔄 Redirecting to profile setup for new user:', userProfile.id)
+    console.log('🔍 Spotify profile data:', {
+      id: userProfile.id,
+      display_name: userProfile.display_name,
+      email: userProfile.email,
+      has_images: !!userProfile.images?.length,
+      image_url: userProfile.images?.[0]?.url
+    })
     
     // Redirect to profile setup page with user data as URL parameters
     const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
@@ -116,7 +123,11 @@ export async function GET(request: NextRequest) {
       scope: tokens.scope || ''
     })
     
-    return NextResponse.redirect(`${baseUrl}/profile-setup?${setupParams.toString()}`)
+    const finalUrl = `${baseUrl}/profile-setup?${setupParams.toString()}`
+    console.log('🔍 Generated URL parameters:', setupParams.toString())
+    console.log('🚀 Final redirect URL:', finalUrl)
+    
+    return NextResponse.redirect(finalUrl)
   } catch (error) {
     console.error('Spotify callback error:', error)
     const baseUrl = process.env.NEXTAUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3002')
