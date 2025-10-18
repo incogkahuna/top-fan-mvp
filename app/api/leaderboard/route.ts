@@ -151,7 +151,7 @@ export async function GET(request: NextRequest) {
         total_plays
       `)
       .not('spotify_id', 'is', null)
-      .order('created_at', { ascending: false }) // Order by newest first for better visibility
+      .order('total_plays', { ascending: false }) // Order by total plays (most active users first)
       .limit(limit)
 
     console.log('📊 Leaderboard: Found', users?.length || 0, 'users')
@@ -183,7 +183,7 @@ export async function GET(request: NextRequest) {
     )
 
     // Calculate detailed stats for each user using only Sadie Jean data
-    const leaderboard = usersWithSadieData?.map((user, index) => {
+    const usersWithStats = usersWithSadieData?.map((user) => {
       const sadieJeanData = user.listening_data || []
       
       // Calculate points using our point system (only Sadie Jean tracks)
@@ -201,7 +201,6 @@ export async function GET(request: NextRequest) {
       const sadieJeanPlays = sadieJeanData.length
       
       return {
-        rank: index + 1,
         userId: user.spotify_id, // Use spotify_id instead of id
         displayName: user.display_name || user.email?.split('@')[0] || 'Anonymous',
         profileImageUrl: user.custom_avatar_url || user.profile_image_url,
@@ -212,7 +211,22 @@ export async function GET(request: NextRequest) {
         uniqueSongs: uniqueSongs,
         avgSessionLength: Math.round(avgSessionLength / 1000 / 60) // minutes
       }
-    }) || [] // Show all users, even with 0 plays
+    }) || []
+
+    // Sort by total plays (descending) and then by points (descending) for proper ranking
+    const sortedUsers = usersWithStats.sort((a, b) => {
+      if (b.totalPlays !== a.totalPlays) {
+        return b.totalPlays - a.totalPlays // Primary sort by total plays
+      }
+      return b.points - a.points // Secondary sort by points
+    })
+
+    // Filter out users with 0 plays to remove fake users, then add rank numbers
+    const activeUsers = sortedUsers.filter(user => user.totalPlays > 0)
+    const leaderboard = activeUsers.map((user, index) => ({
+      ...user,
+      rank: index + 1
+    }))
 
     return NextResponse.json({ leaderboard })
   } catch (error) {
