@@ -16,7 +16,7 @@ export default function Home() {
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        const response = await fetch('/api/leaderboard?limit=5')
+        const response = await fetch('/api/leaderboard?limit=10')
         const data = await response.json()
         
         if (data.leaderboard && data.leaderboard.length > 0) {
@@ -112,7 +112,7 @@ export default function Home() {
               <div className="text-center mb-4 sm:mb-6">
                 <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#f5f1e8]">Top Fans</h3>
               </div>
-              <p className="text-lg sm:text-xl lg:text-2xl text-[#f5f1e8]/60 px-4">See who's leading the Sadie Jean listening charts</p>
+              <p className="text-lg sm:text-xl lg:text-2xl text-[#f5f1e8]/60 px-4">See who's leading the Sadie Jean listening charts - Top 10</p>
             </div>
 
             {/* Compact Leaderboard */}
@@ -120,7 +120,7 @@ export default function Home() {
               {loading ? (
                 /* Loading State */
                 <div className="space-y-4 sm:space-y-6 mb-8 sm:mb-12">
-                  {[1, 2, 3, 4, 5].map((rank) => (
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((rank) => (
                     <div key={rank} className="flex items-center justify-between p-4 sm:p-6 bg-[#f5f1e8]/5 rounded-lg animate-pulse">
                       <div className="flex items-center space-x-3 sm:space-x-4">
                         <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#f5f1e8]/20 rounded-full"></div>
