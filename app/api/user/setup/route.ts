@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
+import { syncUserListeningData } from '@/lib/sync-service'
 
 export async function POST(request: NextRequest) {
   try {
@@ -120,6 +121,25 @@ export async function POST(request: NextRequest) {
       custom_handle: newUser.custom_handle,
       bio: newUser.bio
     })
+
+    // Automatically sync user's listening data after profile creation
+    console.log('🔄 Starting automatic sync for new user:', newUser.spotify_id)
+    
+    try {
+      const syncResult = await syncUserListeningData(newUser.spotify_id, true)
+      
+      if (syncResult.success) {
+        console.log('✅ Automatic sync completed:', {
+          synced: syncResult.synced,
+          totalPlays: syncResult.totalPlays
+        })
+      } else {
+        console.log('⚠️ Automatic sync failed (non-critical):', syncResult.error)
+      }
+    } catch (syncError) {
+      console.log('⚠️ Automatic sync error (non-critical):', syncError)
+      // Don't fail profile creation if sync fails
+    }
     
     return NextResponse.json({ 
       success: true, 

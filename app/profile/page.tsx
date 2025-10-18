@@ -35,6 +35,12 @@ interface SadieJeanStats {
   recentPlays: Array<{ track_name: string; played_at: string; duration_ms: number }>
 }
 
+interface SyncStatus {
+  lastSync: string | null
+  isSyncing: boolean
+  syncError: string | null
+}
+
 export default function ProfilePage() {
   const { user, isLoading: authLoading, disconnectSpotify } = useSpotifyAuth()
   const router = useRouter()
@@ -46,6 +52,11 @@ export default function ProfilePage() {
   const [editing, setEditing] = useState(false)
   const [tempProfile, setTempProfile] = useState<ProfileData>({})
   const [error, setError] = useState<string | null>(null)
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>({
+    lastSync: null,
+    isSyncing: false,
+    syncError: null
+  })
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -168,6 +179,48 @@ export default function ProfilePage() {
     } catch (error) {
       console.error('Photo upload error:', error)
       setError('Failed to upload photo. Please try again.')
+    }
+  }
+
+  const handleManualSync = async () => {
+    if (!user?.spotify_id || syncStatus.isSyncing) return
+
+    setSyncStatus(prev => ({ ...prev, isSyncing: true, syncError: null }))
+
+    try {
+      const response = await fetch('/api/user/sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ spotify_id: user.spotify_id })
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        setSyncStatus({
+          lastSync: new Date().toISOString(),
+          isSyncing: false,
+          syncError: null
+        })
+        
+        // Reload Sadie Jean stats after sync
+        await loadSadieJeanStats()
+        
+        console.log('✅ Manual sync completed:', result.sync_results)
+      } else {
+        setSyncStatus(prev => ({
+          ...prev,
+          isSyncing: false,
+          syncError: result.error || 'Sync failed'
+        }))
+      }
+    } catch (error) {
+      setSyncStatus(prev => ({
+        ...prev,
+        isSyncing: false,
+        syncError: 'Sync failed - please try again'
+      }))
+      console.error('Manual sync error:', error)
     }
   }
 
@@ -402,7 +455,45 @@ export default function ProfilePage() {
               exit={{ opacity: 0, y: -20 }}
               className="bg-[#282828] rounded-2xl p-8"
             >
-              <h2 className="text-2xl font-bold text-[#f5f1e8] mb-6">Sadie Jean Music Stats</h2>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-[#f5f1e8]">Sadie Jean Music Stats</h2>
+                <button
+                  onClick={handleManualSync}
+                  disabled={syncStatus.isSyncing}
+                  className="flex items-center space-x-2 px-4 py-2 bg-[#E98B8B] hover:bg-[#d67c7c] disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
+                >
+                  {syncStatus.isSyncing ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      <span>Syncing...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Clock className="h-4 w-4" />
+                      <span>Sync Data</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {/* Sync Status */}
+              {syncStatus.lastSync && (
+                <div className="mb-4 p-3 bg-[#1a1a1a] rounded-lg">
+                  <div className="flex items-center space-x-2 text-sm text-[#f5f1e8]/80">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <span>Last synced: {new Date(syncStatus.lastSync).toLocaleString()}</span>
+                  </div>
+                </div>
+              )}
+
+              {syncStatus.syncError && (
+                <div className="mb-4 p-3 bg-red-900/20 border border-red-500/30 rounded-lg">
+                  <div className="flex items-center space-x-2 text-sm text-red-400">
+                    <X className="h-4 w-4" />
+                    <span>Sync error: {syncStatus.syncError}</span>
+                  </div>
+                </div>
+              )}
               
               {sadieJeanStats ? (
                 <div className="space-y-8">
