@@ -167,7 +167,9 @@ function LeaderboardContent() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <div>
+            <div className="text-center">
+              <h1 className="text-4xl font-bold text-[#f5f1e8] mb-2">Leaderboard</h1>
+              <p className="text-[#f5f1e8]/60">Your leaderboard gives you instant reference</p>
             </div>
           </div>
 
