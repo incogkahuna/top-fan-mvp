@@ -121,16 +121,14 @@ export default function Tour() {
           <p className="text-white/60 text-lg">Come see Early Twenties Torture live</p>
           
           {/* Integration Status */}
-          {layloConnected && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center space-x-2 bg-green-500/20 text-green-400 px-4 py-2 rounded-full text-sm mt-4"
-            >
-              <Zap className="h-4 w-4" />
-              <span>Live Ticket Integration</span>
-            </motion.div>
-          )}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center space-x-2 bg-green-500/20 text-green-400 px-4 py-2 rounded-full text-sm mt-4"
+          >
+            <Zap className="h-4 w-4" />
+            <span>Laylo Fan List Integration</span>
+          </motion.div>
         </motion.div>
 
         {/* Tour Dates Grid */}
@@ -287,70 +285,91 @@ export default function Tour() {
         )}
 
         {/* Laylo Fan Signup */}
-        {layloConnected && (
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="text-center mb-16"
-          >
-            <div className="card max-w-2xl mx-auto">
-              <div className="flex items-center justify-center space-x-2 mb-4">
-                <Zap className="h-6 w-6 text-orange-400" />
-                <h2 className="text-3xl font-bold text-white">Join the Fan List</h2>
-              </div>
-              <p className="text-white/60 mb-6">
-                Get exclusive access to presales, VIP experiences, and behind-the-scenes content.
-                Powered by Laylo for the best fan experience.
-              </p>
-              
-              {isConnected && user ? (
-                <div>
-                  {userJoinedLaylo ? (
-                    <div className="bg-green-500/20 text-green-400 px-6 py-3 rounded-lg mb-4">
-                      <div className="flex items-center justify-center space-x-2">
-                        <Star className="h-5 w-5" />
-                        <span>You're on the fan list! 🎉</span>
-                      </div>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={handleJoinLaylo}
-                      disabled={joiningLaylo}
-                      className="btn-primary inline-flex items-center space-x-2 disabled:opacity-50"
-                    >
-                      {joiningLaylo ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                          <span>Joining...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Users className="h-4 w-4" />
-                          <span>Join Fan List</span>
-                        </>
-                      )}
-                    </button>
-                  )}
-                </div>
-              ) : (
-                <div>
-                  <p className="text-white/60 mb-4">Connect your Spotify account to join the fan list</p>
-                  <a
-                    href="/leaderboard"
-                    className="btn-primary inline-flex items-center space-x-2"
-                  >
-                    <span>Connect Spotify</span>
-                    <ExternalLink className="h-4 w-4" />
-                  </a>
-                </div>
-              )}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="text-center mb-16"
+        >
+          <div className="card max-w-2xl mx-auto">
+            <div className="flex items-center justify-center space-x-2 mb-4">
+              <Zap className="h-6 w-6 text-orange-400" />
+              <h2 className="text-3xl font-bold text-white">Join the Fan List</h2>
             </div>
-          </motion.div>
-        )}
+            <p className="text-white/60 mb-6">
+              Get exclusive access to presales, VIP experiences, and behind-the-scenes content.
+              Join Sadie Jean's official fan list on Laylo for the best fan experience.
+            </p>
+            
+            {/* Primary Laylo Link */}
+            <div className="mb-6">
+              <a
+                href="https://laylo.com/sadiejean/m/kVPxra"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary inline-flex items-center space-x-2 text-lg px-8 py-4"
+              >
+                <Users className="h-5 w-5" />
+                <span>Join Sadie Jean's Fan List</span>
+                <ExternalLink className="h-5 w-5" />
+              </a>
+            </div>
+
+            {/* Secondary Integration for Connected Users */}
+            {isConnected && user && (
+              <div className="border-t border-white/10 pt-6">
+                <p className="text-white/60 mb-4 text-sm">
+                  Already connected? You can also join through our integrated system:
+                </p>
+                {userJoinedLaylo ? (
+                  <div className="bg-green-500/20 text-green-400 px-6 py-3 rounded-lg">
+                    <div className="flex items-center justify-center space-x-2">
+                      <Star className="h-5 w-5" />
+                      <span>You're on the fan list! 🎉</span>
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    onClick={handleJoinLaylo}
+                    disabled={joiningLaylo}
+                    className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-lg inline-flex items-center space-x-2 disabled:opacity-50 transition-colors"
+                  >
+                    {joiningLaylo ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        <span>Joining...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Users className="h-4 w-4" />
+                        <span>Join via Integration</span>
+                      </>
+                    )}
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* Call to Action for Non-Connected Users */}
+            {!isConnected && (
+              <div className="border-t border-white/10 pt-6">
+                <p className="text-white/60 mb-4 text-sm">
+                  Want to track your listening stats too? Connect your Spotify account:
+                </p>
+                <a
+                  href="/leaderboard"
+                  className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-lg inline-flex items-center space-x-2 transition-colors"
+                >
+                  <span>Connect Spotify</span>
+                  <ExternalLink className="h-4 w-4" />
+                </a>
+              </div>
+            )}
+          </div>
+        </motion.div>
 
         {/* Laylo Stats */}
-        {layloStats && layloStats.connected && (
+        {layloStats && (
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
