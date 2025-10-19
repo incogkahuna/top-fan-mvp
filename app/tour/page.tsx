@@ -37,6 +37,7 @@ export default function Tour() {
   const [layloStats, setLayloStats] = useState<LayloStats | null>(null)
   const [userJoinedLaylo, setUserJoinedLaylo] = useState(false)
   const [joiningLaylo, setJoiningLaylo] = useState(false)
+  const [visibleTourDates, setVisibleTourDates] = useState(6) // Show first 6 tour dates initially
   
   // Use Spotify authentication
   const { user, isConnected } = useSpotifyAuth()
@@ -194,7 +195,7 @@ export default function Tour() {
             transition={{ delay: 0.2 }}
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16"
           >
-            {tourDates.map((show, index) => (
+            {tourDates.slice(0, visibleTourDates).map((show, index) => (
             <motion.div
               key={show.id}
               initial={{ opacity: 0, y: 20 }}
@@ -294,6 +295,24 @@ export default function Tour() {
             </motion.div>
           ))}
           </motion.div>
+          
+          {/* Load More Button */}
+          {tourDates.length > visibleTourDates && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="text-center mt-8"
+            >
+              <button
+                onClick={() => setVisibleTourDates(Math.min(visibleTourDates + 6, tourDates.length))}
+                className="bg-white/10 hover:bg-white/20 text-white px-8 py-3 rounded-lg font-medium transition-colors inline-flex items-center space-x-2"
+              >
+                <span>Load More Tour Dates</span>
+                <span className="text-sm opacity-60">({tourDates.length - visibleTourDates} remaining)</span>
+              </button>
+            </motion.div>
+          )}
         )}
 
         {/* Tour Info Section */}
