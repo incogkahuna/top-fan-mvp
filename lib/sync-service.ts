@@ -15,14 +15,19 @@ export interface SyncResult {
  * @returns SyncResult with sync statistics
  */
 export async function syncUserListeningData(userId: string, isSpotifyId: boolean = false): Promise<SyncResult> {
+  const startTime = Date.now()
+  console.log(`🚀 [Sync] Starting sync for ${isSpotifyId ? 'Spotify ID' : 'Database ID'}: ${userId}`)
+  
   try {
     if (!supabaseAdmin) {
       return { success: false, synced: 0, totalPlays: 0, error: 'Supabase not configured' }
     }
 
     let databaseUserId = userId
+    let accessToken: string
+    let refreshToken: string
 
-    // If Spotify ID provided, find the database user ID
+    // If Spotify ID provided, find the database user ID and get tokens
     if (isSpotifyId) {
       const { data: user, error: userError } = await supabaseAdmin
         .from('users')
@@ -31,30 +36,32 @@ export async function syncUserListeningData(userId: string, isSpotifyId: boolean
         .single()
 
       if (userError || !user) {
+        console.error(`❌ [Sync] User not found for Spotify ID: ${userId}`, userError?.message)
         return { success: false, synced: 0, totalPlays: 0, error: 'User not found' }
       }
 
       databaseUserId = user.id
+      accessToken = user.spotify_access_token
+      refreshToken = user.spotify_refresh_token
       
-      // Get user's tokens
-      if (!user.spotify_access_token) {
-        return { success: false, synced: 0, totalPlays: 0, error: 'No Spotify access token found' }
+      if (!accessToken || !refreshToken) {
+        console.error(`❌ [Sync] Missing tokens for user: ${userId}`)
+        return { success: false, synced: 0, totalPlays: 0, error: 'No Spotify tokens found' }
       }
 
-      let accessToken = user.spotify_access_token
-
-      // Check if token is expired and refresh if needed
+      // Check if token is expired and refresh if needed (with 5 minute buffer)
       const now = new Date()
       const expiresAt = new Date(user.token_expires_at)
+      const bufferTime = 5 * 60 * 1000 // 5 minutes in milliseconds
       
-      if (now >= expiresAt) {
-        console.log('🔄 Access token expired, refreshing...')
+      if (now.getTime() >= (expiresAt.getTime() - bufferTime)) {
+        console.log('🔄 [Sync] Access token expired or expiring soon, refreshing...')
         try {
-          const refreshResult = await refreshAccessToken(user.spotify_refresh_token)
+          const refreshResult = await refreshAccessToken(refreshToken)
           accessToken = refreshResult.access_token
           
           // Update the token in users table
-          await supabaseAdmin
+          const { error: updateError } = await supabaseAdmin
             .from('users')
             .update({
               spotify_access_token: refreshResult.access_token,
@@ -63,45 +70,62 @@ export async function syncUserListeningData(userId: string, isSpotifyId: boolean
             })
             .eq('id', user.id)
           
-          console.log('✅ Token refreshed successfully')
+          if (updateError) {
+            console.error('⚠️ [Sync] Failed to update token in database:', updateError.message)
+          } else {
+            console.log('✅ [Sync] Token refreshed and updated successfully')
+          }
         } catch (refreshError) {
-          console.error('❌ Token refresh failed:', refreshError)
+          console.error('❌ [Sync] Token refresh failed:', refreshError)
           return { success: false, synced: 0, totalPlays: 0, error: 'Failed to refresh access token' }
         }
       }
 
-      // Fetch recently played tracks (limit to 50 for more data)
+      // Fetch recently played tracks with increased limit for better sync
+      console.log('📊 [Sync] Fetching recently played tracks...')
       const recentlyPlayed = await getRecentlyPlayed(accessToken, 50)
       
       if (!recentlyPlayed.items || recentlyPlayed.items.length === 0) {
+        console.log('ℹ️ [Sync] No recently played tracks found')
         return { success: true, synced: 0, totalPlays: 0 }
       }
 
-      console.log('📊 Found', recentlyPlayed.items.length, 'recently played tracks')
+      console.log(`📊 [Sync] Found ${recentlyPlayed.items.length} recently played tracks`)
 
-      // Filter for only Sadie Jean tracks
+      // Filter for only Sadie Jean tracks (case insensitive)
       const sadieJeanTracks = recentlyPlayed.items.filter((item: any) => {
         const artistName = item.track.artists[0]?.name?.toLowerCase() || ''
         return artistName.includes('sadie jean')
       })
 
-      console.log('🎵 Found', sadieJeanTracks.length, 'Sadie Jean tracks')
+      console.log(`🎵 [Sync] Found ${sadieJeanTracks.length} Sadie Jean tracks`)
 
       if (sadieJeanTracks.length === 0) {
+        console.log('ℹ️ [Sync] No Sadie Jean tracks found in recent plays')
         return { success: true, synced: 0, totalPlays: 0 }
       }
       
-      // Process and store Sadie Jean listening data
+      // Process and store Sadie Jean listening data with more fields
       const listeningData = sadieJeanTracks.map((item: any) => ({
         user_id: databaseUserId,
         track_id: item.track.id,
         track_name: item.track.name,
         artist_name: item.track.artists[0].name,
+        album_name: item.track.album?.name || '',
         played_at: item.played_at,
-        duration_ms: item.track.duration_ms
+        duration_ms: item.track.duration_ms,
+        is_local: item.track.is_local || false,
+        spotify_uri: item.track.uri,
+        album_image_url: item.track.album?.images?.[0]?.url || null,
+        preview_url: item.track.preview_url || null,
+        popularity: item.track.popularity || null,
+        explicit: item.track.explicit || false,
+        added_at: new Date().toISOString()
       }))
 
-      // Batch insert listening data using admin client
+      console.log('💾 [Sync] Storing listening data...')
+
+      // Batch insert listening data using upsert to handle duplicates
       const { error: insertError } = await supabaseAdmin
         .from('listening_data')
         .upsert(listeningData, {
@@ -109,33 +133,49 @@ export async function syncUserListeningData(userId: string, isSpotifyId: boolean
         })
 
       if (insertError) {
-        console.error('❌ Insert error:', insertError)
+        console.error('❌ [Sync] Insert error:', insertError)
         return { success: false, synced: 0, totalPlays: 0, error: 'Failed to store listening data' }
       }
 
-      console.log('✅ Listening data stored successfully')
+      console.log(`✅ [Sync] Successfully stored ${listeningData.length} listening records`)
 
       // Update user's total plays count - count only Sadie Jean tracks
-      const { data: sadieJeanPlayCount } = await supabaseAdmin
+      console.log('📊 [Sync] Updating total plays count...')
+      const { data: sadieJeanPlayCount, error: countError } = await supabaseAdmin
         .from('listening_data')
         .select('id', { count: 'exact' })
         .eq('user_id', databaseUserId)
-        .ilike('artist_name', '%sadie jean%') // Only count Sadie Jean tracks
+        .ilike('artist_name', '%sadie jean%')
 
-      await supabaseAdmin
+      if (countError) {
+        console.error('⚠️ [Sync] Error counting plays:', countError.message)
+      }
+
+      const totalPlays = sadieJeanPlayCount?.length || 0
+      
+      // Update user's total plays and last sync time
+      const { error: updateError } = await supabaseAdmin
         .from('users')
         .update({ 
-          total_plays: sadieJeanPlayCount?.length || 0,
+          total_plays: totalPlays,
+          last_synced_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         })
         .eq('id', databaseUserId)
 
-      console.log('✅ Updated total_plays to:', sadieJeanPlayCount?.length || 0)
+      if (updateError) {
+        console.error('⚠️ [Sync] Error updating user stats:', updateError.message)
+      } else {
+        console.log(`✅ [Sync] Updated total_plays to: ${totalPlays}`)
+      }
+
+      const duration = Date.now() - startTime
+      console.log(`🎉 [Sync] Completed successfully in ${duration}ms - Synced: ${listeningData.length}, Total Plays: ${totalPlays}`)
 
       return { 
         success: true, 
         synced: listeningData.length,
-        totalPlays: sadieJeanPlayCount?.length || 0
+        totalPlays: totalPlays
       }
 
     } else {

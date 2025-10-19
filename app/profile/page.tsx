@@ -188,7 +188,7 @@ export default function ProfilePage() {
     setSyncStatus(prev => ({ ...prev, isSyncing: true, syncError: null }))
 
     try {
-      const response = await fetch('/api/user/sync', {
+      const response = await fetch('/api/user/manual-sync', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ spotify_id: user.spotify_id })
@@ -198,7 +198,7 @@ export default function ProfilePage() {
 
       if (result.success) {
         setSyncStatus({
-          lastSync: new Date().toISOString(),
+          lastSync: result.sync_results.timestamp,
           isSyncing: false,
           syncError: null
         })

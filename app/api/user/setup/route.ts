@@ -126,15 +126,18 @@ export async function POST(request: NextRequest) {
     console.log('🔄 Starting automatic sync for new user:', newUser.spotify_id)
     
     try {
-      const syncResult = await syncUserListeningData(newUser.spotify_id, true)
+      // Use immediate sync for faster response
+      const syncResponse = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3002'}/api/user/immediate-sync`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ spotify_id: newUser.spotify_id })
+      })
       
-      if (syncResult.success) {
-        console.log('✅ Automatic sync completed:', {
-          synced: syncResult.synced,
-          totalPlays: syncResult.totalPlays
-        })
+      if (syncResponse.ok) {
+        const syncData = await syncResponse.json()
+        console.log('✅ Automatic sync completed:', syncData.sync_results)
       } else {
-        console.log('⚠️ Automatic sync failed (non-critical):', syncResult.error)
+        console.log('⚠️ Automatic sync failed (non-critical):', syncResponse.statusText)
       }
     } catch (syncError) {
       console.log('⚠️ Automatic sync error (non-critical):', syncError)
