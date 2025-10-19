@@ -195,11 +195,29 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t border-white/10 py-12 mt-32">
-            <div className="max-w-7xl mx-auto px-6 text-center">
-                  <p className="text-[#f5f1e8]/60 text-sm">
-                    © 2025 Sadie Jean Early Twenties Torture tour. All rights reserved.
-                  </p>
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <div className="text-center md:text-left">
+              <p className="text-[#f5f1e8]/60 text-sm">
+                © 2025 Sadie Jean Early Twenties Torture tour. All rights reserved.
+              </p>
             </div>
+            <div className="flex items-center space-x-6 text-sm">
+              <Link 
+                href="/privacy" 
+                className="text-[#f5f1e8]/40 hover:text-[#f5f1e8]/60 transition-colors"
+              >
+                Privacy Policy
+              </Link>
+              <Link 
+                href="/terms" 
+                className="text-[#f5f1e8]/40 hover:text-[#f5f1e8]/60 transition-colors"
+              >
+                Terms of Service
+              </Link>
+            </div>
+          </div>
+        </div>
       </footer>
     </div>
   )
