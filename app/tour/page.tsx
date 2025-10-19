@@ -45,12 +45,23 @@ export default function Tour() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        // Load tour dates from all ticketing sources
+        // Load Laylo tour dates first (priority)
+        const layloResponse = await fetch('/api/laylo/tour-data')
+        if (layloResponse.ok) {
+          const layloData = await layloResponse.json()
+          if (layloData.success && layloData.tourDates.length > 0) {
+            setTourDates(layloData.tourDates)
+            setLayloConnected(true)
+            setLoading(false)
+            return // Use Laylo data as primary source
+          }
+        }
+
+        // Fallback to other ticketing sources if Laylo fails
         const toursResponse = await fetch('/api/ticketing?source=all')
         if (toursResponse.ok) {
           const toursData = await toursResponse.json()
           setTourDates(toursData.events || [])
-          // Set Laylo as connected if we get any tour data
           setLayloConnected((toursData.events || []).length > 0)
         }
 
@@ -207,8 +218,14 @@ export default function Tour() {
                       {show.status}
                     </span>
                     {show.platform && (
-                      <span className="px-2 py-1 rounded text-xs bg-blue-500/20 text-blue-400">
-                        {show.platform === 'ticketmaster' ? 'TM' : 
+                      <span className={`px-2 py-1 rounded text-xs ${
+                        show.platform === 'laylo' ? 'bg-orange-500/20 text-orange-400' :
+                        show.platform === 'ticketmaster' ? 'bg-blue-500/20 text-blue-400' : 
+                        show.platform === 'eventbrite' ? 'bg-green-500/20 text-green-400' : 
+                        show.platform === 'manual' ? 'bg-purple-500/20 text-purple-400' : 'bg-gray-500/20 text-gray-400'
+                      }`}>
+                        {show.platform === 'laylo' ? 'Laylo' :
+                         show.platform === 'ticketmaster' ? 'TM' : 
                          show.platform === 'eventbrite' ? 'EB' : 
                          show.platform === 'manual' ? 'Custom' : show.platform}
                       </span>
@@ -253,18 +270,23 @@ export default function Tour() {
 
                 {/* Ticket Button */}
                 <a
-                  href={show.ticketLink}
+                  href={show.platform === 'laylo' ? 'https://laylo.com/sadiejean/m/kVPxra' : show.ticketLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`w-full inline-flex items-center justify-center space-x-2 py-3 px-4 rounded-lg font-medium transition-all duration-300 ${
                     show.status === 'Sold Out'
                       ? 'bg-gray-500/20 text-gray-400 cursor-not-allowed'
-                      : 'btn-primary hover:scale-105'
+                      : show.platform === 'laylo' 
+                        ? 'bg-orange-500 hover:bg-orange-600 text-white hover:scale-105'
+                        : 'btn-primary hover:scale-105'
                   }`}
                   onClick={show.status === 'Sold Out' ? (e) => e.preventDefault() : undefined}
                 >
                   <Ticket className="h-4 w-4" />
-                  <span>{show.status === 'Sold Out' ? 'Sold Out' : 'Get Tickets'}</span>
+                  <span>
+                    {show.status === 'Sold Out' ? 'Sold Out' : 
+                     show.platform === 'laylo' ? 'Get Tickets on Laylo' : 'Get Tickets'}
+                  </span>
                   {show.status !== 'Sold Out' && <ExternalLink className="h-4 w-4" />
                   }
                 </a>
