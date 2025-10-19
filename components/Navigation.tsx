@@ -37,7 +37,6 @@ export default function Navigation() {
     { href: '/photos', label: 'Photos' },
     { href: '/tour', label: 'Tour Dates' },
     { href: '/shop', label: 'Shop' },
-    { href: '/jeanmail', label: 'JeanMail' },
     { href: '/admin', label: 'Admin' },
   ]
 

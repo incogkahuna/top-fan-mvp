@@ -483,13 +483,15 @@ export default function Tour() {
             <h2 className="text-3xl font-bold text-white mb-4">Stay Updated</h2>
             <p className="text-white/60 mb-6">
               Want to be the first to know about new tour dates? 
-              Subscribe to JeanMail for exclusive announcements.
+              Join our fan list for exclusive announcements.
             </p>
             <a
-              href="/jeanmail"
+              href="https://laylo.com/sadiejean/m/kVPxra"
+              target="_blank"
+              rel="noopener noreferrer"
               className="btn-primary inline-flex items-center space-x-2"
             >
-              <span>Subscribe to JeanMail</span>
+              <span>Join Fan List</span>
               <ExternalLink className="h-4 w-4" />
             </a>
           </div>
