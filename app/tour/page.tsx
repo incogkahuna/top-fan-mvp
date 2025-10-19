@@ -120,11 +120,40 @@ export default function Tour() {
           <h1 className="text-6xl font-bold text-white mb-4 logo-font">Tour Dates</h1>
           <p className="text-white/60 text-lg">Come see Early Twenties Torture live</p>
           
+          {/* Prominent Laylo Link - Main Artifact */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="mt-8 mb-6"
+          >
+            <div className="bg-gradient-to-r from-[#E98B8B] to-[#d67c7c] rounded-2xl p-6 max-w-2xl mx-auto shadow-2xl border border-[#E98B8B]/30">
+              <div className="flex items-center justify-center space-x-3 mb-4">
+                <Zap className="h-8 w-8 text-white" />
+                <h2 className="text-2xl font-bold text-white">Join Sadie Jean's Fan List</h2>
+              </div>
+              <p className="text-white/90 mb-6 text-lg">
+                Get exclusive access to presales, VIP experiences, and behind-the-scenes content
+              </p>
+              <a
+                href="https://laylo.com/sadiejean/m/kVPxra"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center space-x-3 bg-white text-[#E98B8B] font-bold text-lg px-8 py-4 rounded-xl hover:bg-white/90 transition-all duration-300 hover:scale-105 shadow-lg"
+              >
+                <Users className="h-6 w-6" />
+                <span>Join Fan List on Laylo</span>
+                <ExternalLink className="h-6 w-6" />
+              </a>
+            </div>
+          </motion.div>
+          
           {/* Integration Status */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center space-x-2 bg-green-500/20 text-green-400 px-4 py-2 rounded-full text-sm mt-4"
+            transition={{ delay: 0.5 }}
+            className="inline-flex items-center space-x-2 bg-green-500/20 text-green-400 px-4 py-2 rounded-full text-sm"
           >
             <Zap className="h-4 w-4" />
             <span>Laylo Fan List Integration</span>
