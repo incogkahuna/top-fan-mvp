@@ -215,6 +215,12 @@ export default function Home() {
               >
                 Terms of Service
               </Link>
+              <Link 
+                href="/admin" 
+                className="text-[#f5f1e8]/40 hover:text-[#f5f1e8]/60 transition-colors"
+              >
+                Admin
+              </Link>
             </div>
           </div>
         </div>
