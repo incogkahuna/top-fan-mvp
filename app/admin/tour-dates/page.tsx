@@ -26,6 +26,7 @@ export default function AdminTourDates() {
   const [loading, setLoading] = useState(true)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [showAddForm, setShowAddForm] = useState(false)
+  const [syncing, setSyncing] = useState(false)
   const [formData, setFormData] = useState<Partial<TourDate>>({
     date: '',
     time: '',
@@ -112,6 +113,31 @@ export default function AdminTourDates() {
     }
   }
 
+  const handleSyncLaylo = async () => {
+    setSyncing(true)
+    try {
+      const response = await fetch('/api/admin/tour-dates/sync-laylo', {
+        method: 'POST'
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        console.log('Sync successful:', data.message)
+        await loadTourDates() // Reload the tour dates
+        alert(`Successfully synced ${data.total} tour dates from Laylo!`)
+      } else {
+        const error = await response.json()
+        console.error('Sync failed:', error)
+        alert('Failed to sync from Laylo: ' + (error.error || 'Unknown error'))
+      }
+    } catch (error) {
+      console.error('Error syncing from Laylo:', error)
+      alert('Error syncing from Laylo: ' + (error instanceof Error ? error.message : 'Unknown error'))
+    } finally {
+      setSyncing(false)
+    }
+  }
+
   const startEdit = (tourDate: TourDate) => {
     setEditingId(tourDate.id!)
     setFormData(tourDate)
@@ -153,13 +179,27 @@ export default function AdminTourDates() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold">Tour Dates Management</h1>
-          <button
-            onClick={() => setShowAddForm(true)}
-            className="btn-primary inline-flex items-center space-x-2"
-          >
-            <Plus className="h-5 w-5" />
-            <span>Add Tour Date</span>
-          </button>
+          <div className="flex space-x-4">
+            <button
+              onClick={handleSyncLaylo}
+              disabled={syncing}
+              className="btn-secondary inline-flex items-center space-x-2 disabled:opacity-50"
+            >
+              {syncing ? (
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <Calendar className="h-5 w-5" />
+              )}
+              <span>{syncing ? 'Syncing...' : 'Sync from Laylo'}</span>
+            </button>
+            <button
+              onClick={() => setShowAddForm(true)}
+              className="btn-primary inline-flex items-center space-x-2"
+            >
+              <Plus className="h-5 w-5" />
+              <span>Add Tour Date</span>
+            </button>
+          </div>
         </div>
 
         {/* Add/Edit Form */}
